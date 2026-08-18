@@ -70,6 +70,21 @@ export const BUILTIN_KEYS = {
   // https://dashboard.api-football.com   — free, 100 requests/day
   FOOTBALL_API_KEY: '',
 
+  /* ── BACKGROUND REMOVER ── .removebg ───────────────────────────────
+   * The first provider with a key is used; the rest are failover.
+   * remove.bg's free tier is 50 images/month per key, so a shared public
+   * key burns fast - Photoroom/Slazzer as backups spread the load.      */
+
+  // remove.bg — best edges (hair/fur). 50 free/month.
+  //   https://www.remove.bg/api
+  REMOVEBG_API_KEY: '',
+  // Photoroom — great product/portrait cutouts, cheap top-ups.
+  //   https://www.photoroom.com/api
+  PHOTOROOM_API_KEY: '',
+  // Slazzer — remove.bg-compatible, 50 free credits to start.
+  //   https://www.slazzer.com/api
+  SLAZZER_API_KEY: '',
+
   /* ── CLASSROOM ── the ONE group VENOM SCHOOL is allowed to teach in ──
    * Paste your group's invite link (or its raw jid, 1234567890@g.us).
    * The bot resolves the link once and then refuses to run a class

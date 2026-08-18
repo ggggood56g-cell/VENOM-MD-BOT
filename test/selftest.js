@@ -123,6 +123,14 @@ check('snipe command still registered', findCommand('snipe')?.name === 'snipe')
   check('.snipe reveals a deleted message', sniped.includes('please delete this'))
 }
 
+/* background remover: registered, owner-gated key command, polite with no image */
+check('.removebg registered with aliases', findCommand('rmbg')?.name === 'removebg' && findCommand('cutout')?.name === 'removebg')
+check('.rbgkey is owner only', findCommand('rbgkey')?.owner === true)
+{
+  const noImg = textOf(await run('.removebg'))
+  check('.removebg without an image explains itself', /Reply to an image/i.test(noImg))
+}
+
 console.log('\n3. Config vars')
 check('MODE default is public', getVar('MODE') === 'public', `(got ${getVar('MODE')})`)
 await setVar('CMD_REACT_EMOJI', '🔥')

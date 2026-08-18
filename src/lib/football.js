@@ -32,7 +32,15 @@ const AF_BASE = process.env.PRED_API_SPORTS || 'https://v3.football.api-sports.i
 
 const FIXTURES_TTL = 2 * 60 * 60 * 1000 // a day's fixture list barely changes
 const TABLE_TTL = 6 * 60 * 60 * 1000   // standings move slowly
-const MAX_TABLES = 8                   // standings calls per prediction (rate safety)
+
+/*
+ * Standings calls per prediction run. TheSportsDB's shared keyless key is
+ * tightly rate limited, so stay conservative there; API-Football allows
+ * 100 req/day, so a personal key may widen coverage - more leagues with
+ * real tables means fewer "thin data" matches and stronger picks.
+ */
+const MAX_TABLES_KEYLESS = 8
+const MAX_TABLES_KEYED = 14
 
 /* ------------------------------ keys ------------------------------ */
 
@@ -379,7 +387,8 @@ export async function getBestPicks({ dayOffset = 0, league = '', day = '' } = {}
     if (!byLeague.has(k)) byLeague.set(k, [])
     byLeague.get(k).push(f)
   }
-  const leagueOrder = [...byLeague.entries()].sort((a, b) => b[1].length - a[1].length).slice(0, MAX_TABLES)
+  const maxTables = key ? MAX_TABLES_KEYED : MAX_TABLES_KEYLESS
+  const leagueOrder = [...byLeague.entries()].sort((a, b) => b[1].length - a[1].length).slice(0, maxTables)
 
   const tables = new Map()
   for (const [k, fixturesInLeague] of leagueOrder) {

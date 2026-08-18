@@ -149,8 +149,9 @@ I diffed VENOM's ~540 commands against the plugin lists of GataBot-MD, TheMystic
 | `.backup` | Whole database as a JSON document — **session keys excluded on purpose**, a backup must never be able to log in as you |
 | `.fetch <url>` | Owner: GET a URL, see the JSON |
 | `.horoscope leo` | Daily horoscope, keyless |
+| `.removebg` | Standard background remover — transparent PNG or any solid colour. Fails over remove.bg → Photoroom → Slazzer; a key shipped in `builtin-keys.js` (or `.rbgkey`) works for every deployer |
 
-Deliberately skipped: `jadibot` (multi-session, a support nightmare), `spam` (gets numbers banned), `removebg` (needs a paid key), and the Indonesian/Spanish word games that need locale word lists.
+Deliberately skipped: `jadibot` (multi-session, a support nightmare), `spam` (gets numbers banned), and the Indonesian/Spanish word games that need locale word lists.
 
 ---
 
