@@ -131,6 +131,14 @@ check('.rbgkey is owner only', findCommand('rbgkey')?.owner === true)
   check('.removebg without an image explains itself', /Reply to an image/i.test(noImg))
 }
 
+/* deep scan: registered without stealing the audio .reverse command */
+check('.scan registered with aliases', findCommand('findpic')?.name === 'scan' && findCommand('trace')?.name === 'scan')
+check('.scan does not shadow audio .reverse', findCommand('reverse')?.category === 'CONVERTER')
+{
+  const noImg = textOf(await run('.scan'))
+  check('.scan without an image explains itself', /scan/i.test(noImg) && /caption|reply/i.test(noImg))
+}
+
 console.log('\n3. Config vars')
 check('MODE default is public', getVar('MODE') === 'public', `(got ${getVar('MODE')})`)
 await setVar('CMD_REACT_EMOJI', '🔥')

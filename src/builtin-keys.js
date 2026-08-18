@@ -85,6 +85,14 @@ export const BUILTIN_KEYS = {
   //   https://www.slazzer.com/api
   SLAZZER_API_KEY: '',
 
+  /* ── DEEP SCAN ── .scan reverse image search ───────────────────────
+   * Google Lens + Yandex run keyless. SauceNAO is an optional third
+   * engine that is especially good at finding art/image authors.      */
+
+  // SauceNAO — free account, 200 searches/day.
+  //   https://saucenao.com/user.php  (create account -> API key)
+  SAUCENAO_API_KEY: '',
+
   /* ── CLASSROOM ── the ONE group VENOM SCHOOL is allowed to teach in ──
    * Paste your group's invite link (or its raw jid, 1234567890@g.us).
    * The bot resolves the link once and then refuses to run a class
@@ -115,6 +123,8 @@ export const BUILTIN_KEYS = {
  *   .play .video .song .music .spotify  -> yt-dlp, keyless (npm run setup)
  *   .weather                            -> open-meteo, keyless
  *   .pred football picks                -> TheSportsDB, keyless
+ *   .scan reverse image search          -> Google Lens + Yandex, keyless
+ *                                          (SauceNAO key optional extra)
  *   .ai and friends                     -> keyless fallback, but it is
  *                                          paywalled/rate-limited in 2026,
  *                                          so a Groq key is worth 2 minutes
