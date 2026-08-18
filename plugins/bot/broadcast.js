@@ -134,7 +134,8 @@ export default [
   },
   {
     name: 'fetch',
-    alias: ['get', 'curl'],
+    // 'get' is getvar's alias (plugins/config/setvar.js) - kept there
+    alias: ['curl'],
     category: 'TOOLS',
     desc: 'Fetch a URL and show what it returns',
     usage: '.fetch https://api.github.com/repos/nodejs/node',

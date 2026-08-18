@@ -73,7 +73,7 @@ export default [
   },
   {
     name: 'dice',
-    alias: ['roll'],
+    // 'roll' is the school attendance alias (plugins/school/school.js)
     category: 'ECONOMY',
     desc: 'Beat the dealer\'s dice roll',
     usage: '.dice 500',

@@ -26,7 +26,8 @@ const ALIASES = { scorpion: 'scorpio', sagitarius: 'sagittarius', capricornus: '
 export default [
   {
     name: 'horoscope',
-    alias: ['zodiac', 'zodiak', 'astro'],
+    // 'zodiac' is a textmaker effect name (plugins/textmaker/textmaker.js)
+    alias: ['zodiak', 'astro'],
     category: 'FUN',
     desc: 'Daily horoscope for any star sign',
     usage: '.horoscope leo  |  .horoscope leo tomorrow',

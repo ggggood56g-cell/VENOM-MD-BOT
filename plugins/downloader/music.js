@@ -36,7 +36,8 @@ async function sendTrack(m, url, track, source) {
 export default [
   {
     name: 'music',
-    alias: ['mplay', 'findsong', 'song'],
+    // 'song' belongs to the YouTube .play command (plugins/downloader/youtube.js)
+    alias: ['mplay', 'findsong'],
     category: 'DOWNLOADER',
     desc: 'Find a song on SoundCloud, Audiomack or YouTube and send the audio',
     usage: '.music davido unavailable',

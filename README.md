@@ -6,7 +6,7 @@
 
 <br/>
 
-[![Typing SVG](https://readme-typing-svg.herokuapp.com?font=Orbitron&weight=900&size=22&duration=3000&pause=800&color=8A2BE2&center=true&vCenter=true&width=600&lines=%E2%9A%A1+VENOM+MD+BOT;BUILT+BY+TAPRUSH+EMP+%F0%9F%87%B3%F0%9F%87%AC;401+COMMANDS+%C2%B7+23+CATEGORIES;NO+API+KEYS+NEEDED;FORK+%26+DEPLOY+IN+MINUTES)](https://git.io/typing-svg)
+[![Typing SVG](https://readme-typing-svg.herokuapp.com?font=Orbitron&weight=900&size=22&duration=3000&pause=800&color=8A2BE2&center=true&vCenter=true&width=600&lines=%E2%9A%A1+VENOM+MD+BOT;BUILT+BY+TAPRUSH+EMP+%F0%9F%87%B3%F0%9F%87%AC;546+COMMANDS+%C2%B7+24+CATEGORIES;NO+API+KEYS+NEEDED;FORK+%26+DEPLOY+IN+MINUTES)](https://git.io/typing-svg)
 
 <br/>
 
@@ -37,7 +37,7 @@
 
 | ⌨️ Commands | 🗂️ Categories | 🔑 Keys Needed | 💾 Setup |
 |:---:|:---:|:---:|:---:|
-| **401** | **23** | **0** | **none** |
+| **546** | **24** | **0** | **none** |
 
 </div>
 

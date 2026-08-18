@@ -36,6 +36,15 @@ export const commands = new Map()
 export const middlewares = []
 /** category -> [plugin] for the menu */
 export const categories = new Map()
+/**
+ * Problems found while loading (duplicates, skipped files). Empty on a
+ * healthy boot - the self-test asserts this stays empty so collisions and
+ * silently-dropped hooks never ship again.
+ */
+export const loadIssues = []
+
+/** Lifecycle hooks a plugin may implement - see connection.js / handler.js */
+const HOOKS = ['before', 'onDelete', 'onEdit', 'onStatus', 'onGroupUpdate']
 
 let loadedCount = 0
 
@@ -52,11 +61,19 @@ function walk(dir) {
 
 function register(plugin, file) {
   if (!plugin?.name || typeof plugin.run !== 'function') {
-    if (typeof plugin?.before === 'function') {
+    /*
+     * Not a command - but it may still be a hook-only watcher
+     * (e.g. snipe records deletes/edits without exposing a command of its
+     * own). Any implemented lifecycle hook earns middleware registration;
+     * previously only `before` qualified and the rest were dropped, which
+     * silently disabled the features that depend on them.
+     */
+    if (HOOKS.some((h) => typeof plugin?.[h] === 'function')) {
       middlewares.push(plugin)
       return true
     }
     log.warn(`Skipped ${path.basename(file)} - missing "name" or "run"`)
+    loadIssues.push(`Skipped ${path.basename(file)} - missing "name" or "run"`)
     return false
   }
 
@@ -67,6 +84,7 @@ function register(plugin, file) {
   for (const n of names) {
     if (commands.has(n)) {
       log.warn(`Duplicate command "${n}" in ${path.basename(file)} - overriding`)
+      loadIssues.push(`Duplicate command "${n}" in ${path.basename(file)}`)
     }
     commands.set(n, plugin)
   }
@@ -74,7 +92,14 @@ function register(plugin, file) {
   if (!categories.has(plugin.category)) categories.set(plugin.category, [])
   categories.get(plugin.category).push(plugin)
 
-  if (typeof plugin.before === 'function') middlewares.push(plugin)
+  /*
+   * Any lifecycle hook needs middleware registration, not just `before`.
+   * connection.js dispatches onDelete/onEdit/onGroupUpdate by walking
+   * `middlewares`, so a plugin with only onDelete (antidelete, snipe) or
+   * only onGroupUpdate (welcome) used to be invisible to those events and
+   * its feature silently did nothing.
+   */
+  if (HOOKS.some((h) => typeof plugin[h] === 'function')) middlewares.push(plugin)
   return true
 }
 
@@ -83,6 +108,7 @@ export async function loadPlugins() {
   commands.clear()
   middlewares.length = 0
   categories.clear()
+  loadIssues.length = 0
   loadedCount = 0
 
   const files = walk(config.pluginDir)
@@ -113,4 +139,4 @@ export const pluginCount = () => loadedCount
 /** Resolve a command name or alias. */
 export const findCommand = (name) => commands.get(String(name || '').toLowerCase())
 
-export default { loadPlugins, commands, categories, middlewares, findCommand, pluginCount }
+export default { loadPlugins, commands, categories, middlewares, findCommand, pluginCount, loadIssues }

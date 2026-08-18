@@ -150,6 +150,9 @@ export async function handleMessage(sock, raw, ctx = {}) {
 
     /* ---- middlewares: antilink, afk, chatbot, antidelete ... ---- */
     for (const mw of middlewares) {
+      // hook-only plugins (snipe, antidelete, welcome...) live in this list
+      // without implementing before() - skip them instead of throwing
+      if (typeof mw.before !== 'function') continue
       try {
         const stop = await mw.before({ sock, m, config, DB, getVar, commands, categories: null })
         if (stop === true) return

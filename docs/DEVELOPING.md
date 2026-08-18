@@ -62,11 +62,18 @@ const buf2 = await m.quoted.download()  // the replied-to media
 export default {
   name: 'watcher', category: 'TOOLS', desc: '...',
   async run({ m }) {},
-  async before({ sock, m }) { return false },        // every message; true = stop
-  async onGroupUpdate({ sock, event, metadata }) {}, // joins / leaves
-  async onDelete({ sock, key, messageStore }) {}     // anti-delete
+  async before({ sock, m }) { return false },                 // every message; true = stop
+  async onGroupUpdate({ sock, event, metadata }) {},          // joins / leaves
+  async onDelete({ sock, key, messageStore }) {},             // message deleted
+  async onEdit({ sock, key, edited, messageStore }) {},       // message edited
+  async onStatus({ sock, m }) {}                              // status broadcasts
 }
 ```
+
+A plugin may implement hooks with **no `run` at all** — it is registered as a
+watcher instead of a command (see `plugins/tools/snipe.js`, whose hook records
+deletes/edits while its two commands read them back). Any implemented hook
+registers the plugin automatically; you never opt in manually.
 
 </details>
 
