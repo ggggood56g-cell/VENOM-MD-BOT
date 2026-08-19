@@ -32,7 +32,7 @@ export const BUILTIN_KEYS = {
 
   // Gemini — free, very capable, also reads images and edits photos (.restyle).
   //   https://aistudio.google.com/apikey   (starts with AIza)
-  GEMINI_API_KEY: '',
+  GEMINI_API_KEY: 'AQ.Ab8RN6L5ErDcp-jE0Qmx6FewqDSDyVP0foyI8KO9cMkuBitO9Q',
 
   // Cerebras — free tier, fastest inference anywhere.
   //   https://cloud.cerebras.ai
