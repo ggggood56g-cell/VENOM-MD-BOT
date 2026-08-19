@@ -6,7 +6,7 @@
 
 ## 🎓 VENOM SCHOOL — the bot teaches its own commands
 
-A 380-command menu is unreadable, so people learn six commands and never find the rest. Dumping the menu on them does not fix that. **Teaching one command at a time, on a timetable, with a quiz and a register, does.**
+A 549-command menu is unreadable, so people learn six commands and never find the rest. Dumping the menu on them does not fix that. **Teaching one command at a time, on a timetable, with a quiz and a register, does.**
 
 **One group, pinned in the code.** Put your class group's invite link in `SCHOOL_GROUP` (in [`src/builtin-keys.js`](../src/builtin-keys.js) or `.env`) and school runs *there and nowhere else*:
 
@@ -43,7 +43,7 @@ Three classes a day:
 | `.mygrades` `.classtop` | `.classtime` `.classtz` |
 | `.attendance` `.syllabus` | |
 
-**The syllabus builds itself** from the live plugin registry — 425 lessons today, ordered so consecutive classes come from different categories. Install a plugin and it enters the syllabus by itself; owner-only and hidden commands are excluded so nobody is taught something they cannot run.
+**The syllabus builds itself** from the live plugin registry — 440 lessons today, ordered so consecutive classes come from different categories. Install a plugin and it enters the syllabus by itself; owner-only and hidden commands are excluded so nobody is taught something they cannot run.
 
 Scoring is 1 point for attending, 2 for a correct answer, plus coins (`.setvar SCHOOL_REWARD 100`). Progress, the register and the current class all live in the database, so a restart mid-class resumes and still posts the register.
 
@@ -133,7 +133,7 @@ Tune it live, no redeploy:
 
 ## 🧰 Commands added from a survey of other bots
 
-I diffed VENOM's ~400 commands against the plugin lists of GataBot-MD, TheMystic-Bot-MD, wabot-aq and Levanter (900+ plugin files). Almost everything they had, VENOM already had. These were the real gaps:
+I diffed VENOM's ~540 commands against the plugin lists of GataBot-MD, TheMystic-Bot-MD, wabot-aq and Levanter (900+ plugin files). Almost everything they had, VENOM already had. These were the real gaps:
 
 | Command | Why it earned its place |
 |---|---|
@@ -149,8 +149,10 @@ I diffed VENOM's ~400 commands against the plugin lists of GataBot-MD, TheMystic
 | `.backup` | Whole database as a JSON document — **session keys excluded on purpose**, a backup must never be able to log in as you |
 | `.fetch <url>` | Owner: GET a URL, see the JSON |
 | `.horoscope leo` | Daily horoscope, keyless |
+| `.removebg` | Standard background remover — transparent PNG or any solid colour. Fails over remove.bg → Photoroom → Slazzer; a key shipped in `builtin-keys.js` (or `.rbgkey`) works for every deployer |
+| `.scan` | Deep scan: reply to a photo and it reverse-searches Google Lens + Yandex (+ SauceNAO with a key), groups hits by platform (Facebook, TikTok, Instagram, X, Pinterest...) with profile pages first, and adds a Gemini vision breakdown. Keyless engines; honest about the fact that private accounts are unreachable |
 
-Deliberately skipped: `jadibot` (multi-session, a support nightmare), `spam` (gets numbers banned), `removebg` (needs a paid key), and the Indonesian/Spanish word games that need locale word lists.
+Deliberately skipped: `jadibot` (multi-session, a support nightmare), `spam` (gets numbers banned), and the Indonesian/Spanish word games that need locale word lists.
 
 ---
 

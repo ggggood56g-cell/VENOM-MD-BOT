@@ -9,7 +9,7 @@ import '../src/config.js'
 import config from '../src/config.js'
 import { connectDB } from '../src/lib/database.js'
 import { loadVars, getVar, setVar } from '../src/lib/vars.js'
-import { loadPlugins, commands, categories, pluginCount, findCommand } from '../src/lib/pluginLoader.js'
+import { loadPlugins, commands, categories, pluginCount, findCommand, middlewares, loadIssues } from '../src/lib/pluginLoader.js'
 import { handleMessage } from '../src/handler.js'
 
 let pass = 0
@@ -68,9 +68,12 @@ const run = async (body, opts) => {
 }
 
 // media messages carry their text in `caption`, not `text` (e.g. the menu,
-// which is sent as an image), so read both.
+// which is sent as an image), so read both. Reaction payloads are excluded:
+// they are ack side-effects whose `key` echoes the sender's jid, not message
+// content the bot is actually saying.
 const textOf = (out) =>
   out
+    .filter((s) => !s.content?.react)
     .map((s) => s.content?.text || s.content?.caption || JSON.stringify(s.content).slice(0, 80))
     .join('\n---\n')
 
@@ -93,6 +96,48 @@ check('every plugin has run()', noRun.length === 0, noRun.map((p) => p.name).joi
 check('every plugin has a description', noDesc.length === 0, noDesc.map((p) => p.name).join(','))
 check('aliases resolve', findCommand('p')?.name === 'ping')
 check('alias "help" -> menu', findCommand('help')?.name === 'menu')
+
+console.log('\n2b. Loader health')
+check(
+  'no duplicate/skipped plugins at load',
+  loadIssues.length === 0,
+  `(${loadIssues.join(' | ')})`
+)
+/* hook-only and hook-plus-command plugins must land in middlewares, or the
+ * events in connection.js never reach them and the feature is dead. */
+const hookOf = (name) => middlewares.find((mw) => mw.name === name)
+check('antidelete hook wired', typeof hookOf('antidelete')?.onDelete === 'function')
+check('welcome hook wired', typeof hookOf('welcome')?.onGroupUpdate === 'function')
+check('status hook wired', typeof hookOf('statusinfo')?.onStatus === 'function')
+check('snipe hook-only plugin wired', typeof hookOf('snipe-hook')?.onDelete === 'function')
+check('snipe command still registered', findCommand('snipe')?.name === 'snipe')
+
+/* functional proof: a deleted message must be recoverable via .snipe */
+{
+  const snipeHook = hookOf('snipe-hook')
+  const store = new Map()
+  const key = { id: 'DELTEST1', remoteJid: '120363000000000000@g.us', participant: '2348022222222@s.whatsapp.net' }
+  store.set(key.id, { message: { conversation: 'please delete this' } })
+  await snipeHook.onDelete({ sock: fakeSock, key, messageStore: store })
+  const sniped = textOf(await run('.snipe', { group: true }))
+  check('.snipe reveals a deleted message', sniped.includes('please delete this'))
+}
+
+/* background remover: registered, owner-gated key command, polite with no image */
+check('.removebg registered with aliases', findCommand('rmbg')?.name === 'removebg' && findCommand('cutout')?.name === 'removebg')
+check('.rbgkey is owner only', findCommand('rbgkey')?.owner === true)
+{
+  const noImg = textOf(await run('.removebg'))
+  check('.removebg without an image explains itself', /Reply to an image/i.test(noImg))
+}
+
+/* deep scan: registered without stealing the audio .reverse command */
+check('.scan registered with aliases', findCommand('findpic')?.name === 'scan' && findCommand('trace')?.name === 'scan')
+check('.scan does not shadow audio .reverse', findCommand('reverse')?.category === 'CONVERTER')
+{
+  const noImg = textOf(await run('.scan'))
+  check('.scan without an image explains itself', /scan/i.test(noImg) && /caption|reply/i.test(noImg))
+}
 
 console.log('\n3. Config vars')
 check('MODE default is public', getVar('MODE') === 'public', `(got ${getVar('MODE')})`)

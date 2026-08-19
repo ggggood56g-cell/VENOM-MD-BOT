@@ -28,11 +28,11 @@ export const BUILTIN_KEYS = {
 
   // Groq — best first pick. Free, very generous, fastest.
   //   https://console.groq.com/keys        (starts with gsk_)
-  GROQ_API_KEY: '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',
+  GROQ_API_KEY: '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',
 
   // Gemini — free, very capable, also reads images and edits photos (.restyle).
   //   https://aistudio.google.com/apikey   (starts with AIza)
-  GEMINI_API_KEY: '',
+  GEMINI_API_KEY: 'AQ.Ab8RN6L5ErDcp-jE0Qmx6FewqDSDyVP0foyI8KO9cMkuBitO9Q',
 
   // Cerebras — free tier, fastest inference anywhere.
   //   https://cloud.cerebras.ai
@@ -68,7 +68,30 @@ export const BUILTIN_KEYS = {
    * keyless API. Add a free API-Football key and real bookmaker odds
    * get blended into the prediction model (65% odds / 35% stats).    */
   // https://dashboard.api-football.com   — free, 100 requests/day
-  FOOTBALL_API_KEY: '',
+  FOOTBALL_API_KEY: 'cd393a0fd0a9d5cfd2528723b1c4d51f',
+
+  /* ── BACKGROUND REMOVER ── .removebg ───────────────────────────────
+   * The first provider with a key is used; the rest are failover.
+   * remove.bg's free tier is 50 images/month per key, so a shared public
+   * key burns fast - Photoroom/Slazzer as backups spread the load.      */
+
+  // remove.bg — best edges (hair/fur). 50 free/month.
+  //   https://www.remove.bg/api
+  REMOVEBG_API_KEY: 'g3ErgCBbVwNFBJEPrMtabEZ7',
+  // Photoroom — great product/portrait cutouts, cheap top-ups.
+  //   https://www.photoroom.com/api
+  PHOTOROOM_API_KEY: '',
+  // Slazzer — remove.bg-compatible, 50 free credits to start.
+  //   https://www.slazzer.com/api
+  SLAZZER_API_KEY: '',
+
+  /* ── DEEP SCAN ── .scan reverse image search ───────────────────────
+   * Google Lens + Yandex run keyless. SauceNAO is an optional third
+   * engine that is especially good at finding art/image authors.      */
+
+  // SauceNAO — free account, 200 searches/day.
+  //   https://saucenao.com/user.php  (create account -> API key)
+  SAUCENAO_API_KEY: '',
 
   /* ── CLASSROOM ── the ONE group VENOM SCHOOL is allowed to teach in ──
    * Paste your group's invite link (or its raw jid, 1234567890@g.us).
@@ -100,6 +123,8 @@ export const BUILTIN_KEYS = {
  *   .play .video .song .music .spotify  -> yt-dlp, keyless (npm run setup)
  *   .weather                            -> open-meteo, keyless
  *   .pred football picks                -> TheSportsDB, keyless
+ *   .scan reverse image search          -> Google Lens + Yandex, keyless
+ *                                          (SauceNAO key optional extra)
  *   .ai and friends                     -> keyless fallback, but it is
  *                                          paywalled/rate-limited in 2026,
  *                                          so a Groq key is worth 2 minutes

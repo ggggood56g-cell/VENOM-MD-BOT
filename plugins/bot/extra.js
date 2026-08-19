@@ -14,7 +14,8 @@ const execFileAsync = promisify(execFile)
 export default [
   {
     name: 'repo',
-    alias: ['script', 'sc', 'github-repo'],
+    // 'sc' is the SoundCloud downloader's name (plugins/downloader/music.js)
+    alias: ['script', 'github-repo'],
     category: 'BOT',
     desc: 'Show the bot source repository',
     usage: '.repo',

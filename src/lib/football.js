@@ -32,7 +32,15 @@ const AF_BASE = process.env.PRED_API_SPORTS || 'https://v3.football.api-sports.i
 
 const FIXTURES_TTL = 2 * 60 * 60 * 1000 // a day's fixture list barely changes
 const TABLE_TTL = 6 * 60 * 60 * 1000   // standings move slowly
-const MAX_TABLES = 8                   // standings calls per prediction (rate safety)
+
+/*
+ * Standings calls per prediction run. TheSportsDB's shared keyless key is
+ * tightly rate limited, so stay conservative there; API-Football allows
+ * 100 req/day, so a personal key may widen coverage - more leagues with
+ * real tables means fewer "thin data" matches and stronger picks.
+ */
+const MAX_TABLES_KEYLESS = 8
+const MAX_TABLES_KEYED = 14
 
 /* ------------------------------ keys ------------------------------ */
 
@@ -45,6 +53,8 @@ export async function resolveFootKey() {
   } catch {
     /* no key stored */
   }
+  // Test isolation: never hand suites the live shipped key
+  if (process.env.VENOM_TEST_ISOLATE === '1') return ''
   return builtinKey('FOOTBALL_API_KEY')
 }
 
@@ -353,11 +363,26 @@ async function cachedGet(id, ttl, fetcher) {
 export async function getBestPicks({ dayOffset = 0, league = '', day = '' } = {}) {
   const key = await resolveFootKey()
   const dayStr = day || dayString(dayOffset)
-  const source = key ? 'API-Football' : 'TheSportsDB (keyless)'
+  let source = key ? 'API-Football' : 'TheSportsDB (keyless)'
 
-  const fixtures = await cachedGet(`fixtures:${dayStr}:${key ? 'af' : 'tsdb'}`, FIXTURES_TTL, () =>
-    key ? afFixtures(key, dayStr) : tsdbEvents(dayStr)
-  )
+  /*
+   * A dead/expired API-Football key must never break .pred - fall back to
+   * the keyless source and carry on. Only a keyed run that succeeds keeps
+   * the API-Football label.
+   */
+  let fixtures
+  let useAf = false
+  if (key) {
+    try {
+      fixtures = await cachedGet(`fixtures:${dayStr}:af`, FIXTURES_TTL, () => afFixtures(key, dayStr))
+      useAf = true
+    } catch {
+      source = 'TheSportsDB (keyless, API-Football unavailable)'
+      fixtures = await cachedGet(`fixtures:${dayStr}:tsdb`, FIXTURES_TTL, () => tsdbEvents(dayStr))
+    }
+  } else {
+    fixtures = await cachedGet(`fixtures:${dayStr}:tsdb`, FIXTURES_TTL, () => tsdbEvents(dayStr))
+  }
 
   // playable: not postponed, not finished, not kicked off >6h ago
   const now = Date.now()
@@ -379,7 +404,8 @@ export async function getBestPicks({ dayOffset = 0, league = '', day = '' } = {}
     if (!byLeague.has(k)) byLeague.set(k, [])
     byLeague.get(k).push(f)
   }
-  const leagueOrder = [...byLeague.entries()].sort((a, b) => b[1].length - a[1].length).slice(0, MAX_TABLES)
+  const maxTables = useAf ? MAX_TABLES_KEYED : MAX_TABLES_KEYLESS
+  const leagueOrder = [...byLeague.entries()].sort((a, b) => b[1].length - a[1].length).slice(0, maxTables)
 
   const tables = new Map()
   for (const [k, fixturesInLeague] of leagueOrder) {
@@ -387,9 +413,13 @@ export async function getBestPicks({ dayOffset = 0, league = '', day = '' } = {}
     tables.set(
       k,
       await cachedGet(`table:${k}`, TABLE_TTL, async () => {
-        if (key) {
-          const rows = await afStandings(key, sample)
-          return rows ? { source: 'af', rows } : null
+        if (useAf) {
+          try {
+            const rows = await afStandings(key, sample)
+            return rows ? { source: 'af', rows } : null
+          } catch {
+            return null /* one league's failure never kills the whole card */
+          }
         }
         const rows = await tsdbTable(sample.leagueId, sample, dayStr)
         return rows ? { source: 'tsdb', rows } : null
@@ -421,5 +451,5 @@ export async function getBestPicks({ dayOffset = 0, league = '', day = '' } = {}
 
   const matches = [...evaluated].sort((a, b) => new Date(a.fixture.kickoff) - new Date(b.fixture.kickoff))
 
-  return { day: dayStr, tz: TZ, source, keyed: !!key, matches, picks, total: playable.length }
+  return { day: dayStr, tz: TZ, source, keyed: useAf, matches, picks, total: playable.length }
 }

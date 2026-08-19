@@ -6,7 +6,7 @@
 
 <br/>
 
-[![Typing SVG](https://readme-typing-svg.herokuapp.com?font=Orbitron&weight=900&size=22&duration=3000&pause=800&color=8A2BE2&center=true&vCenter=true&width=600&lines=%E2%9A%A1+VENOM+MD+BOT;BUILT+BY+TAPRUSH+EMP+%F0%9F%87%B3%F0%9F%87%AC;401+COMMANDS+%C2%B7+23+CATEGORIES;NO+API+KEYS+NEEDED;FORK+%26+DEPLOY+IN+MINUTES)](https://git.io/typing-svg)
+[![Typing SVG](https://readme-typing-svg.herokuapp.com?font=Orbitron&weight=900&size=22&duration=3000&pause=800&color=8A2BE2&center=true&vCenter=true&width=600&lines=%E2%9A%A1+VENOM+MD+BOT;BUILT+BY+TAPRUSH+EMP+%F0%9F%87%B3%F0%9F%87%AC;549+COMMANDS+%C2%B7+24+CATEGORIES;NO+API+KEYS+NEEDED;FORK+%26+DEPLOY+IN+MINUTES)](https://git.io/typing-svg)
 
 <br/>
 
@@ -37,7 +37,7 @@
 
 | ⌨️ Commands | 🗂️ Categories | 🔑 Keys Needed | 💾 Setup |
 |:---:|:---:|:---:|:---:|
-| **401** | **23** | **0** | **none** |
+| **549** | **24** | **0** | **none** |
 
 </div>
 
@@ -102,6 +102,8 @@ Scan the QR, or use a pairing code with `npm run pair`. On panels with no termin
 | 🤝 **Affiliate** | Everyone gets a referral code and link; invites pay coins and earn VIP |
 | 📡 **Downloads that survive hosting** | Six keyless YouTube routes with failover — `.play` and `.ytv` keep working where yt-dlp gets IP-blocked |
 | 🎬 **`.capcut`** | Plain-English video editing: *"cut 0-10, speed 2x, add subtitles"* |
+| ✂️ **`.removebg`** | Standard background remover — transparent PNG or any colour, remove.bg / Photoroom / Slazzer failover |
+| 🔎 **`.scan`** | Deep scan a photo — reverse search (Lens + Yandex + SauceNAO), social profile hits grouped by platform, AI breakdown of the picture |
 | 🍿 **`.movie`** | Say a film or episode by name and get the file |
 | 🧹 **Self-cleaning DB** | Sweeps spent records every 6h so the free 512 MB never fills — balances and logins untouched |
 
@@ -126,7 +128,7 @@ Scan the QR, or use a pairing code with `npm run pair`. On panels with no termin
 | **USER** · 36 | `clone` `unclone` `clonestatus` `cloneinfo` `pp` `rank` `affiliate` `mygrades` `classtop` |
 | **TOOLS** · 21 | `snipe` `afk` `remind` `schedule` `setcmd` `msgs` `listonline` |
 | **BOT** · 20 | `ping` `stats` `alive` `broadcast` `grouplist` `backup` `dbsize` |
-| **SEARCH** · 13 | `news` `tvshow` `img` `wallpaper` `github` `lyrics` `shazam` |
+| **SEARCH** · 14 | `scan` deep reverse-image search · `news` `tvshow` `img` `wallpaper` `github` `lyrics` `shazam` |
 | **SPORTS** · 2 | `pred` — daily top football picks, any league · `predkey` |
 | **+9 more** | ANIME · IMAGE · GAME · MISC · PRIVACY · AUTOREPLY · PLUGINS · PROCESS · HELP |
 

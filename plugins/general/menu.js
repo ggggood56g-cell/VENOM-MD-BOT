@@ -96,9 +96,9 @@ function block(name, plugins) {
 /** Order categories so the important ones surface first. */
 const ORDER = [
   'HELP', 'AI', 'ANIME', 'FUN', 'DOWNLOADER', 'CONVERTER', 'SEARCH',
-  'ECONOMY', 'TEXTMAKER', 'GAME', 'GROUP', 'TOOLS', 'IMAGE', 'IMAGE-MEME',
-  'BOT', 'PROCESS', 'MISC', 'UTILITIES', 'PLUGINS', 'CONFIG', 'USER',
-  'PRIVACY', 'AUTOREPLY'
+  'ECONOMY', 'TEXTMAKER', 'GAME', 'SPORTS', 'GROUP', 'TOOLS', 'IMAGE',
+  'IMAGE-MEME', 'BOT', 'PROCESS', 'MISC', 'UTILITIES', 'PLUGINS', 'CONFIG',
+  'USER', 'PRIVACY', 'AUTOREPLY'
 ]
 
 const sortCategories = () => {
