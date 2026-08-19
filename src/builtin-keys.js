@@ -77,7 +77,7 @@ export const BUILTIN_KEYS = {
 
   // remove.bg — best edges (hair/fur). 50 free/month.
   //   https://www.remove.bg/api
-  REMOVEBG_API_KEY: '',
+  REMOVEBG_API_KEY: 'g3ErgCBbVwNFBJEPrMtabEZ7',
   // Photoroom — great product/portrait cutouts, cheap top-ups.
   //   https://www.photoroom.com/api
   PHOTOROOM_API_KEY: '',
