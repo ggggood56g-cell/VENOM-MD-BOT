@@ -68,7 +68,7 @@ export const BUILTIN_KEYS = {
    * keyless API. Add a free API-Football key and real bookmaker odds
    * get blended into the prediction model (65% odds / 35% stats).    */
   // https://dashboard.api-football.com   — free, 100 requests/day
-  FOOTBALL_API_KEY: '',
+  FOOTBALL_API_KEY: 'cd393a0fd0a9d5cfd2528723b1c4d51f',
 
   /* ── BACKGROUND REMOVER ── .removebg ───────────────────────────────
    * The first provider with a key is used; the rest are failover.
