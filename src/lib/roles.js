@@ -71,7 +71,7 @@ export const invalidateRoles = () => {
 }
 
 async function roleMap() {
-  if (Date.now() - cache.at < 30_000) return cache.map
+  if (Date.now() - cache.at < 5 * 60_000) return cache.map
   const map = new Map()
   try {
     for (const row of await DB.roles.all()) {

@@ -8,15 +8,28 @@ import { getBuffer } from '../../src/lib/api.js'
 
 const YT_URL = /(?:youtube\.com\/(?:watch\?v=|shorts\/|live\/|embed\/)|youtu\.be\/)([A-Za-z0-9_-]{11})/
 
-/** Accept a URL or a search phrase; return a watch URL. */
+/** Accept a URL or search phrase and preserve the search metadata as a hint. */
 async function resolve(input) {
   if (isUrl(input)) {
     if (!YT_URL.test(input)) throw new Error('That is not a YouTube link.')
-    return input
+    return { url: input, hint: null }
   }
   const [first] = await youtubeSearchSmart(input, 1)
   if (!first) throw new Error(`No YouTube results for "${input}".`)
-  return first.url
+  return { url: first.url, hint: first }
+}
+
+/** Fill metadata gaps without replacing real values returned by YouTube. */
+export function mergeYoutubeInfo(info = {}, hint = {}) {
+  return {
+    ...hint,
+    ...info,
+    title: info.title || hint.title || '',
+    author: info.author || hint.author || '',
+    duration: Number(info.duration || hint.duration || 0),
+    views: Number(info.views || hint.views || 0),
+    thumbnail: info.thumbnail || hint.thumbnail || ''
+  }
 }
 
 export default [
@@ -33,9 +46,9 @@ export default [
       await m.react('⏳')
       let ytTitle = null // kept for the multi-source fallback if YouTube refuses
       try {
-        const url = await resolve(text)
-        const info = await youtubeInfoSmart(url)
-        ytTitle = info.title
+        const { url, hint } = await resolve(text)
+        const info = mergeYoutubeInfo(await youtubeInfoSmart(url), hint)
+        ytTitle = info.title || hint?.title || null
 
         if (info.duration > 1800) {
           await m.react('❌')
@@ -71,7 +84,9 @@ export default [
          * Audiomack, which don't bot-check. If the user gave a bare link and
          * we never got a title, there's nothing to search elsewhere with.
          */
-        const query = ytTitle || (isUrl(text) ? null : text)
+        // For a name search, the user's words are safer than a weak metadata
+        // fallback. For a pasted URL, use the exact title obtained above.
+        const query = isUrl(text) ? ytTitle : text
         if (!query) {
           await m.react('❌')
           return m.reply(
@@ -124,8 +139,8 @@ export default [
 
       await m.react('⏳')
       try {
-        const url = await resolve(query)
-        const info = await youtubeInfoSmart(url)
+        const { url, hint } = await resolve(query)
+        const info = mergeYoutubeInfo(await youtubeInfoSmart(url), hint)
 
         if (info.duration > 900) {
           await m.react('❌')
@@ -210,7 +225,8 @@ export default [
       if (!text) return m.reply('📝 Usage: .ytinfo https://youtu.be/...')
       await m.react('⏳')
       try {
-        const info = await youtubeInfoSmart(await resolve(text))
+        const { url, hint } = await resolve(text)
+        const info = mergeYoutubeInfo(await youtubeInfoSmart(url), hint)
         const date = info.upload ? `${info.upload.slice(6, 8)}/${info.upload.slice(4, 6)}/${info.upload.slice(0, 4)}` : 'unknown'
         const caption =
           `╭━━━〔 *VIDEO INFO* 〕━━━╮\n` +

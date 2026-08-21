@@ -157,6 +157,17 @@ WhatsApp > Settings > Linked devices > Link with phone number
       log.ok(`Connected as ${sock.user?.name || 'bot'} (${me.split('@')[0]})`)
       log.ok(`${pluginCount()} plugins ready | prefix "${config.prefix}" | mode ${getVar('MODE')}`)
 
+      // Warm group permissions in the background. Without this, the first
+      // command in every group waits for a metadata network round-trip even
+      // though WhatsApp already supplied the participating-group snapshot.
+      void sock.groupFetchAllParticipating()
+        .then((groups) => {
+          for (const group of Object.values(groups || {})) {
+            if (group?.id) groupCache.set(group.id, group)
+          }
+        })
+        .catch(() => {})
+
       if (getVar('STARTUP_MESSAGE')) {
         const owner = config.ownerNumbers[0]
         if (owner) {

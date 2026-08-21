@@ -21,7 +21,9 @@ export default [
     async run({ sock, m, args }) {
       const target = resolveTarget(m, args)
       if (!target) return m.reply('📝 Tag, reply to, or give the number of the person to kick.')
-      if (target === m.botJid) return m.reply('🙃 I am not kicking myself.')
+      if ([m.botJid, m.botLid].filter(Boolean).some((jid) => target === jid)) {
+        return m.reply('🙃 I am not kicking myself.')
+      }
       try {
         await sock.groupParticipantsUpdate(m.chat, [target], 'remove')
         await m.reply(`✅ Removed @${target.split('@')[0]}`, { mentions: [target] })

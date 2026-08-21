@@ -91,7 +91,9 @@ export default [
     },
 
     async before({ m }) {
-      if (m.fromMe || !m.chat) return false
+      // Commands already receive CMD_REACT feedback centrally, and auto-react
+      // is a group feature. Do not query group settings for every DM/.ping.
+      if (m.fromMe || !m.isGroup || m.isCommand) return false
       const row = await DB.groups.findOne({ id: m.chat })
       if (!row?.areact) return false
       await m.react(row.areact).catch(() => {})
@@ -121,7 +123,8 @@ export default [
     async before({ m }) {
       if (m.fromMe || !m.body) return false
       const id = m.senderNumber
-      if (id) await DB.users.inc({ id }, 'msgCount', 1).catch(() => {})
+      // Statistics must never sit in the command's critical response path.
+      if (id) void DB.users.inc({ id }, 'msgCount', 1).catch(() => {})
       return false
     }
   },

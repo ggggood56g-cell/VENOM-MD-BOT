@@ -14,7 +14,7 @@ A 549-command menu is unreadable, so people learn six commands and never find th
 SCHOOL_GROUP: 'https://chat.whatsapp.com/YourClassGroupLink',
 ```
 
-**This bot ships with `SCHOOL_GROUP: 'support'`** — class is held in the force-join group from `SUPPORT_GROUP_LINK`, which is where the members already are. Change `SUPPORT_GROUP_LINK` and the classroom follows it; put a link or jid in `SCHOOL_GROUP` to teach somewhere else entirely.
+**This bot ships with `SCHOOL_GROUP: 'support'`** — class is held in the force-join group from `SUPPORT_GROUP_LINK`, which is where the members already are. Change `SUPPORT_GROUP_LINK` in `src/builtin-keys.js` (or override it in `.env`) and the classroom follows it; put a link or jid in `SCHOOL_GROUP` to teach somewhere else entirely.
 
 Left blank, **no class runs anywhere** until the owner sends `.school on` in the group they want. It never guesses — the force-join group is usually not where you want to teach.
 
@@ -178,7 +178,7 @@ Six keyless providers are tried in order, and the JSON parser is shape-agnostic 
 .setvar DL_SOURCE ytdlp         force local downloads
 ```
 
-Search and metadata fall back the same way, through Piped and Invidious, so `.ytsearch` and `.ytinfo` work even with no yt-dlp installed at all.
+Search falls back through Piped/Invidious, while metadata first uses YouTube's official keyless oEmbed endpoint, so `.ytsearch` and `.ytinfo` still work without yt-dlp.
 
 ---
 
@@ -190,7 +190,7 @@ Search and metadata fall back the same way, through Piped and Invidious, so `.yt
 
 | Platform | Status | How |
 |:---|:---:|:---|
-| **YouTube** | ✅ Keyless | `yt-dlp` with the `android_vr` player client |
+| **YouTube** | ✅ Keyless | Current `yt-dlp` with visionOS/TV client rotation + API fallback |
 | **SoundCloud** | ✅ Keyless | `.music` / `.sc` - no bot-check, works from server IPs |
 | **Audiomack** | ✅ Keyless | `.music` / `.audiomack` - search + track links |
 | **Spotify** | ✅ Keyless | metadata via oEmbed/JSON-LD, audio matched on any source |
@@ -206,7 +206,7 @@ Search and metadata fall back the same way, through Piped and Invidious, so `.yt
 
 <br/>
 
-1. **YouTube's pre-muxed stream (format 18) returns HTTP 403 from server IPs.** Most player clients (`web`, `ios`, `tv`, `mweb`) refuse to list formats at all. Only `android_vr` works — and then only with *separate* DASH video+audio merged by ffmpeg. That combination is what the code uses.
+1. **YouTube changes its player restrictions constantly.** The former `android_vr` workaround was blocked in August 2026, so the bot now requires yt-dlp 2026.08.19+ and rotates through `visionos`, `tv`, `web_safari`, and `web_embedded`. Audio/video formats are retried across clients, with public download services as the other route.
 
 2. **YouTube throttles bursts from one IP.** A single download nearly always works; the second or third in quick succession gets a 403. Fixed with a serialising queue (6s gap), client rotation, format cycling, and exponential retry. Measured: a burst that failed 1-in-4 now passes 6/6.
 
