@@ -1,8 +1,11 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import {
+  configuredMongoUri,
+  isLocalMongoUri,
   parseMongoUri,
   parsePhoneNumbers,
+  resolveMongoUri,
   parsePrefix,
   parseProviderKeys,
   parseSessionId,
@@ -42,6 +45,31 @@ test("prefix, session, and Mongo configuration reject unsafe values", () => {
   assert.equal(
     parseMongoUri("https://example.invalid/database"),
     "mongodb://127.0.0.1:27017/venom",
+  );
+});
+
+test("Mongo URI resolution supports the alias and fails closed in production", () => {
+  assert.equal(
+    configuredMongoUri("not-a-uri", " mongodb+srv://cluster.example/venom "),
+    "mongodb+srv://cluster.example/venom",
+  );
+  assert.equal(isLocalMongoUri("mongodb://127.0.0.1:27017/venom"), true);
+  assert.equal(isLocalMongoUri("mongodb+srv://cluster.example/venom"), false);
+  assert.equal(
+    resolveMongoUri(["not-a-uri"], { production: true }),
+    "",
+  );
+  assert.equal(
+    resolveMongoUri(["mongodb://127.0.0.1:27017/venom"], { production: true }),
+    "",
+  );
+  assert.equal(
+    resolveMongoUri(["not-a-uri"], { production: false }),
+    "mongodb://127.0.0.1:27017/venom",
+  );
+  assert.equal(
+    resolveMongoUri(["", "mongodb://db.example/venom"], { production: true }),
+    "mongodb://db.example/venom",
   );
 });
 

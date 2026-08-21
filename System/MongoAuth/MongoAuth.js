@@ -3,6 +3,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { useMultiFileAuthState, BufferJSON } from "baileys";
+import mongoose from "mongoose";
 import { sessionSchema } from "./Schema/index.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -12,6 +13,8 @@ const __dirname = path.dirname(__filename);
 const SESSION_BASE_DIR = path.join(__dirname, "..", "session");
 const MAX_CREDENTIAL_BASE64_BYTES = 2 * 1024 * 1024;
 const MAX_CREDENTIAL_JSON_BYTES = 1024 * 1024;
+
+const mongoReady = () => mongoose.connection.readyState === 1;
 
 const isRecord = (value) =>
   Boolean(value && typeof value === "object" && !Array.isArray(value));
@@ -204,6 +207,8 @@ export default class MongoAuth {
    * Called by the periodic background sync (GC interval).
    */
   async pushToMongoDB() {
+    if (!mongoReady()) return;
+
     const localExists = await this._localExists();
     if (!localExists) return;
 
@@ -275,6 +280,7 @@ export default class MongoAuth {
   }
 
   async _mongoExists() {
+    if (!mongoReady()) return false;
     try {
       const doc = await sessionSchema.findOne({ sessionId: this.sessionId });
       if (!doc) return false;
@@ -293,6 +299,7 @@ export default class MongoAuth {
   }
 
   async _downloadToLocal() {
+    if (!mongoReady()) return;
     const doc = await sessionSchema.findOne({ sessionId: this.sessionId });
     if (!doc) return;
 
@@ -377,12 +384,16 @@ export default class MongoAuth {
   async _clearSession() {
     await fs.promises.rm(this.dir, { recursive: true, force: true });
 
-    try {
-      await sessionSchema.deleteOne({ sessionId: this.sessionId });
-    } catch {
-      // local is already cleared
+    if (mongoReady()) {
+      try {
+        await sessionSchema.deleteOne({ sessionId: this.sessionId });
+      } catch {
+        // local is already cleared
+      }
     }
 
-    console.log(`[ VENOM ] Session cleared from local storage and MongoDB.`);
+    console.log(
+      `[ VENOM ] Session cleared from local storage${mongoReady() ? " and MongoDB" : ""}.`,
+    );
   }
 }

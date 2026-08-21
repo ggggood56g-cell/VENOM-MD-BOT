@@ -58,12 +58,58 @@ if (pendingSessionCredential && configuredSessionId === pendingSessionCredential
   delete process.env.SESSION_ID;
 }
 
-export const parseMongoUri = (value) => {
+export const LOCAL_MONGO_URI = "mongodb://127.0.0.1:27017/venom";
+
+export const isMongoUri = (value) =>
+  /^mongodb(?:\+srv)?:\/\//i.test(String(value || "").trim());
+
+export const isLocalMongoUri = (value) => {
   const uri = String(value || "").trim();
-  return /^mongodb(?:\+srv)?:\/\//i.test(uri)
-    ? uri.slice(0, 2048)
-    : "mongodb://127.0.0.1:27017/venom";
+  if (!isMongoUri(uri)) return false;
+  try {
+    const hostname = new URL(uri).hostname.toLowerCase();
+    return (
+      hostname === "localhost" ||
+      hostname === "[::1]" ||
+      hostname === "0.0.0.0" ||
+      hostname.startsWith("127.")
+    );
+  } catch {
+    return false;
+  }
 };
+
+/**
+ * Return the first valid MongoDB URI from the supplied candidates. MONGODB is
+ * the documented name, while MONGO_URI is accepted for hosts and templates
+ * that use the more common convention.
+ */
+export const configuredMongoUri = (...values) => {
+  for (const value of values.flat()) {
+    const uri = String(value || "").trim();
+    if (isMongoUri(uri)) return uri.slice(0, 2048);
+  }
+  return "";
+};
+
+/**
+ * Keep a localhost default for development, but never silently point a
+ * production deployment at its own container. Render and similar hosts do
+ * not run MongoDB at 127.0.0.1:27017.
+ */
+export const resolveMongoUri = (values, { production = false } = {}) => {
+  const candidates = Array.isArray(values) ? values : [values];
+  const configured = configuredMongoUri(
+    ...(production
+      ? candidates.filter((candidate) => !isLocalMongoUri(candidate))
+      : candidates),
+  );
+  return configured || (production ? "" : LOCAL_MONGO_URI);
+};
+
+// Retain the original development-friendly helper for compatibility.
+export const parseMongoUri = (value) =>
+  resolveMongoUri(value, { production: false });
 
 global.pickKey = (keys) => {
   if (!Array.isArray(keys) || keys.length === 0) return null;
@@ -80,7 +126,16 @@ global.suppL = BRAND.supportGroup;
 global.owner = parsePhoneNumbers(process.env.MODS);
 if (global.owner.length === 0) global.owner = [BRAND.creatorNumber];
 
-global.mongodb = parseMongoUri(process.env.MONGODB);
+const mongoCandidates = [process.env.MONGODB, process.env.MONGO_URI];
+const isProduction =
+  String(process.env.NODE_ENV || "").trim().toLowerCase() === "production";
+
+// MONGODB is canonical; MONGO_URI keeps existing deployments compatible.
+// In production, an omitted/invalid/local value remains empty so the optional
+// database layer can choose local JSON storage instead of retrying localhost.
+global.mongodb = resolveMongoUri(mongoCandidates, { production: isProduction });
+global.mongoConfigured =
+  Boolean(global.mongodb) && Boolean(configuredMongoUri(...mongoCandidates));
 global.sessionId = parseSessionId(
   process.env.SESSION_NAMESPACE ||
     (/^[a-zA-Z0-9_-]{1,64}$/.test(configuredSessionId)

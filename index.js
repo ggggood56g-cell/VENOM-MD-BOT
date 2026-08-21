@@ -311,13 +311,33 @@ const scheduleReconnect = (reason, { clearAuth = false, immediate = false } = {}
 };
 
 const ensureMongo = async () => {
-  if (mongoose.connection.readyState === 1) return;
+  if (mongoose.connection.readyState === 1) return true;
+
+  // MongoDB is an optional persistence layer. The compatibility database
+  // already falls back to bounded local JSON storage when no URI is set, and
+  // MongoAuth can keep the active Baileys session locally in the meantime.
+  if (!global.mongoConfigured || !global.mongodb) {
+    console.warn(
+      "[ VENOM ] MongoDB is not configured; using local JSON storage. MongoAuth will remain local until MongoDB is enabled.",
+    );
+    return false;
+  }
+
   runtime.status = "database";
-  await mongoose.connect(global.mongodb, {
-    serverSelectionTimeoutMS: 10_000,
-    maxPoolSize: 10,
-  });
-  console.log("[ VENOM ] MongoDB connected ✓");
+  try {
+    await mongoose.connect(global.mongodb, {
+      serverSelectionTimeoutMS: 10_000,
+      maxPoolSize: 10,
+    });
+    console.log("[ VENOM ] MongoDB connected ✓");
+    return true;
+  } catch (error) {
+    await mongoose.disconnect().catch(() => {});
+    console.warn(
+      `[ VENOM ] MongoDB unavailable; continuing with local JSON storage: ${error.message}`,
+    );
+    return false;
+  }
 };
 
 const loadBuffer = async (input) => {
@@ -693,6 +713,11 @@ app.get(
   (_request, response) => {
     response.json({
       status: runtime.status,
+      database: mongoose.connection.readyState === 1
+        ? "connected"
+        : global.mongoConfigured
+          ? "unavailable"
+          : "local-json",
       websocketOpen: socketIsOpen(),
       reconnectAttempt: runtime.reconnectAttempt,
       startedAt: new Date(runtime.startedAt).toISOString(),
