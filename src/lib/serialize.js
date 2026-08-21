@@ -29,15 +29,24 @@ export async function serialize(sock, raw, store) {
   // bot's own jid
   const botJid = jidNormalizedUser(sock.user?.id || '')
   m.botJid = botJid
+  // New WhatsApp groups address members by privacy-preserving LIDs. Baileys
+  // exposes the bot's LID separately from its phone-number jid.
+  m.botLid = jidNormalizedUser(sock.user?.lid || '')
   m.botNumber = botJid.split('@')[0].split(':')[0]
 
-  // sender resolution: in groups the participant is the real author
+  // sender resolution: in groups the participant is the real author. Keep
+  // participantAlt too: it is normally the PN counterpart when participant
+  // is a LID (or vice versa).
   m.sender = m.isGroup
     ? jidNormalizedUser(raw.key.participant || raw.participant || '')
     : m.fromMe
       ? botJid
       : jidNormalizedUser(m.chat)
-  m.senderNumber = (m.sender || '').split('@')[0].split(':')[0]
+  m.senderAlt = m.isGroup
+    ? jidNormalizedUser(raw.key.participantAlt || raw.participantAlt || '')
+    : ''
+  const senderPn = [m.sender, m.senderAlt].find((jid) => jid.endsWith('@s.whatsapp.net'))
+  m.senderNumber = (senderPn || m.sender || '').split('@')[0].split(':')[0]
 
   // unwrap ephemeral / view-once / device-sent envelopes
   let content = raw.message
@@ -197,11 +206,22 @@ export async function resolvePermissions(sock, m, sudoList = []) {
       m.groupName = m.groupMetadata.subject
       m.participants = m.groupMetadata.participants || []
 
-      const find = (jid) =>
-        m.participants.find((p) => areJidsSameUser(p.id, jid) || areJidsSameUser(p.jid || '', jid))
+      /*
+       * Baileys v7 group metadata may identify a participant by @lid while
+       * sock.user.id is the same account's @s.whatsapp.net jid. Comparing
+       * only `participant.id` therefore makes a real admin look like a
+       * normal member. Check every PN/LID alias supplied by WhatsApp.
+       */
+      const find = (...wanted) => {
+        const needles = wanted.filter(Boolean)
+        return m.participants.find((p) => {
+          const aliases = [p.id, p.jid, p.lid, p.phoneNumber].filter(Boolean)
+          return needles.some((jid) => aliases.some((alias) => areJidsSameUser(alias, jid)))
+        })
+      }
 
-      const me = find(m.sender)
-      const bot = find(m.botJid)
+      const me = find(m.sender, m.senderAlt)
+      const bot = find(m.botJid, m.botLid)
       m.isAdmin = !!(me?.admin === 'admin' || me?.admin === 'superadmin' || me?.isAdmin || me?.isSuperAdmin)
       m.isBotAdmin = !!(bot?.admin === 'admin' || bot?.admin === 'superadmin' || bot?.isAdmin || bot?.isSuperAdmin)
       m.groupOwner = m.groupMetadata.owner
