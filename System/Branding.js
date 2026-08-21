@@ -1,6 +1,9 @@
 export const BRAND = Object.freeze({
   botName: "VENOM MD BOT",
   shortName: "VENOM MD",
+  tagline: "Power. Speed. Control. VENOM in every command.",
+  description:
+    "A powerful, feature-rich WhatsApp multi-device bot engineered for speed, stability, security, and style.",
   creator: "TAPRUSH EMP (Micheal)",
   creatorNumber: "2348021016309",
   creatorJid: "2348021016309@s.whatsapp.net",

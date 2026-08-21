@@ -3,11 +3,19 @@
 
 # VENOM MD BOT
 
-**A Baileys v7 WhatsApp multi-device bot by TAPRUSH EMP (Micheal)**
+### 🐍 Power. Speed. Control. VENOM in every command.
+
+**A powerful, feature-rich WhatsApp multi-device bot engineered for speed,
+stability, security, and style — created by TAPRUSH EMP (Micheal).**
 
 [![GitHub](https://img.shields.io/badge/GitHub-MykelGoal-181717?style=for-the-badge&logo=github)](https://github.com/MykelGoal)
 [![WhatsApp](https://img.shields.io/badge/WhatsApp-Contact-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://wa.me/2348021016309)
 [![Tutorial](https://img.shields.io/badge/YouTube-Tutorial-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://youtu.be/ct4k9tfL1Fg)
+
+[![Baileys](https://img.shields.io/badge/Baileys-v7-25D366?style=flat-square)](https://github.com/WhiskeySockets/Baileys)
+[![Commands](https://img.shields.io/badge/Commands-549-7C3AED?style=flat-square)](#-premium-features)
+[![Node.js](https://img.shields.io/badge/Node.js-22%2B-339933?style=flat-square&logo=node.js&logoColor=white)](https://nodejs.org)
+[![License](https://img.shields.io/badge/License-MIT-blue?style=flat-square)](LICENSE)
 
 </div>
 
@@ -16,22 +24,40 @@
 > be restricted or banned. Use a secondary number, obey WhatsApp's terms, and
 > never share your session files, generated session credential, MongoDB URL, or API keys.
 
-## What this version includes
+## 🐍 What is VENOM MD?
 
-VENOM MD BOT now uses the actively maintained Atlas-MD plugin architecture as
-its working base, rebranded and hardened for VENOM. It includes:
+**VENOM MD BOT** is a modern WhatsApp automation platform built for people who
+want serious power without sacrificing reliability. It combines a massive
+command library, intelligent automation, advanced group tools, media features,
+and secure multi-device connectivity in one fast, stylish bot.
 
-- Baileys v7 multi-device connection
-- integration with VENOM's existing external session site
-- local WhatsApp auth files with MongoDB session backup
-- commands for groups, moderation, downloads, search, stickers, media,
-  conversion, AI, reactions, and utilities
-- reconnect watchdog, anti-delete cache, status page, and deployment files
-- a simple `Plugins/` architecture for adding VENOM commands
+Built on Baileys v7 and strengthened for long-running deployments, VENOM is
+designed to reconnect automatically, protect sessions, survive restarts, and
+stay easy to extend. Whether you manage communities, download media, create
+stickers, use AI, or automate everyday WhatsApp tasks, VENOM puts everything
+within one command.
 
-Remote chat-installed JavaScript plugins and the upstream real-time `eval`
-command are intentionally disabled. Add reviewed command files directly to the
-repository instead.
+## ✨ Premium Features
+
+- **549 Commands** — a huge catalogue covering AI, media, search, fun, tools,
+  education, sports, utilities, and more
+- **Advanced Group Control** — moderation, anti-link, anti-delete, welcome,
+  admin tools, roles, warnings, and automation
+- **AI-Powered Tools** — intelligent chat and creative commands with support
+  for multiple providers
+- **Media Powerhouse** — download, convert, edit, compress, sticker, audio,
+  video, and image workflows
+- **Secure Multi-Device Sessions** — Baileys v7 authentication with local and
+  MongoAuth persistence
+- **Built to Stay Online** — reconnect watchdogs, bounded caches, graceful
+  shutdown, and recovery after redeployment
+- **Plugin Architecture** — add reviewed commands without rebuilding the core
+- **Deploy Anywhere** — ready for Docker, Render, Railway, Koyeb, Heroku,
+  Replit, VPS, and panel hosting
+
+> Remote chat-installed JavaScript and real-time `eval` are intentionally
+> disabled. VENOM accepts reviewed plugin files instead, keeping deployments
+> safer without limiting customization.
 
 ## Requirements
 

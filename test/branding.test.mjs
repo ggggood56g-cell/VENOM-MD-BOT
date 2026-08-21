@@ -8,6 +8,8 @@ test("canonical VENOM identity is immutable and complete", () => {
   assert.deepEqual(
     {
       botName: BRAND.botName,
+      tagline: BRAND.tagline,
+      description: BRAND.description,
       creator: BRAND.creator,
       creatorNumber: BRAND.creatorNumber,
       githubUser: BRAND.githubUser,
@@ -18,6 +20,9 @@ test("canonical VENOM identity is immutable and complete", () => {
     },
     {
       botName: "VENOM MD BOT",
+      tagline: "Power. Speed. Control. VENOM in every command.",
+      description:
+        "A powerful, feature-rich WhatsApp multi-device bot engineered for speed, stability, security, and style.",
       creator: "TAPRUSH EMP (Micheal)",
       creatorNumber: "2348021016309",
       githubUser: "MykelGoal",

@@ -1,7 +1,7 @@
 {
   "name": "venom-md-bot",
   "version": "4.1.0-venom.1",
-  "description": "VENOM MD BOT — a plugin-based WhatsApp multi-device bot built on Baileys v7.",
+  "description": "VENOM MD BOT — a powerful, feature-rich WhatsApp multi-device bot engineered for speed, stability, security, and style.",
   "type": "module",
   "main": "index.js",
   "engines": {
