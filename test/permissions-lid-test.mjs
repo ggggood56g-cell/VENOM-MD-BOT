@@ -50,11 +50,25 @@ const noLidSock = makeSock(false)
 const noLidMessage = await serialize(noLidSock, raw)
 await resolvePermissions(noLidSock, noLidMessage)
 
+// A warm group cache must avoid another WhatsApp metadata request.
+let metadataCalls = 0
+const cachedSock = {
+  ...makeSock(true),
+  groupMetadata: async () => {
+    metadataCalls++
+    return metadata
+  }
+}
+const cachedMessage = await serialize(cachedSock, raw)
+const groupCache = new Map([[GROUP, metadata]])
+await resolvePermissions(cachedSock, cachedMessage, [], groupCache)
+
 const checks = [
   ['sender phone number comes from participantAlt', m.senderNumber === '2348111111111'],
   ['LID-addressed command sender is recognised as admin', m.isAdmin === true],
   ['bot LID is recognised as the same admin account', m.isBotAdmin === true],
-  ['metadata phoneNumber works when bot LID is unavailable', noLidMessage.isBotAdmin === true]
+  ['metadata phoneNumber works when bot LID is unavailable', noLidMessage.isBotAdmin === true],
+  ['warm group metadata cache avoids a network call', metadataCalls === 0 && cachedMessage.isBotAdmin]
 ]
 
 let failed = 0

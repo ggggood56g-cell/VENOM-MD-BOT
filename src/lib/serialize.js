@@ -189,7 +189,7 @@ export async function serialize(sock, raw, store) {
 }
 
 /** Owner / sudo / admin permission resolution for a serialized message. */
-export async function resolvePermissions(sock, m, sudoList = []) {
+export async function resolvePermissions(sock, m, sudoList = [], groupCache = null) {
   const owners = [...config.ownerNumbers, m.botNumber]
   m.isOwner = owners.includes(m.senderNumber) || m.fromMe
   m.isSudo = m.isOwner || sudoList.includes(m.senderNumber)
@@ -202,7 +202,11 @@ export async function resolvePermissions(sock, m, sudoList = []) {
 
   if (m.isGroup) {
     try {
-      m.groupMetadata = await sock.groupMetadata(m.chat)
+      // Connection events keep this cache current after promotions, joins and
+      // removals. Reusing it avoids a WhatsApp metadata round-trip before
+      // every single group command.
+      m.groupMetadata = groupCache?.get?.(m.chat) || await sock.groupMetadata(m.chat)
+      if (groupCache?.set && m.groupMetadata) groupCache.set(m.chat, m.groupMetadata)
       m.groupName = m.groupMetadata.subject
       m.participants = m.groupMetadata.participants || []
 

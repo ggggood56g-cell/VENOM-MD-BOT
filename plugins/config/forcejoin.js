@@ -134,7 +134,7 @@ let groupInfoAt = 0
 let members = null
 let membersAt = 0
 const INFO_TTL = 5 * 60_000
-const MEMBERS_TTL = 45_000
+const MEMBERS_TTL = 5 * 60_000
 
 const resetCaches = () => {
   groupInfo = null
@@ -333,11 +333,20 @@ export default {
    */
   async onGroupUpdate({ sock, event }) {
     try {
-      if (!getVar('FORCE_READD')) return
-      if (event.action !== 'remove') return
-
       const group = await resolveGroup(sock, getVar)
       if (event.id !== group.jid) return
+
+      // Keep the longer member cache exact from WhatsApp's own events. A
+      // leaver must be gated immediately, even when automatic re-add is off.
+      if (members) {
+        for (const participant of event.participants) {
+          const n = num(typeof participant === 'string' ? participant : participant.id)
+          if (event.action === 'remove') members.delete(n)
+          if (event.action === 'add') members.add(n)
+        }
+      }
+
+      if (!getVar('FORCE_READD') || event.action !== 'remove') return
 
       for (const participant of event.participants) {
         const user = typeof participant === 'string' ? participant : participant.id
@@ -349,6 +358,7 @@ export default {
 
         const outcome = await tryAdd(sock, group.jid, user)
         if (outcome === 'added') {
+          if (members) members.add(n)
           if (Date.now() - (welcomeDms.get(n) || 0) > WELCOME_DM_COOLDOWN) {
             welcomeDms.set(n, Date.now())
             await sock

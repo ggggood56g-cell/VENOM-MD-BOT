@@ -11,6 +11,7 @@ import { resolveRole, canRunOwnerCommand, atLeast, cooldownFor, invalidateRoles,
 const cooldowns = new Map() // `${cmd}:${jid}` -> expiry ms
 let sudoCache = { at: 0, list: [] }
 let bannedCache = { at: 0, list: [] }
+const ACCESS_CACHE_TTL = 5 * 60_000
 
 /*
  * WhatsApp reports our cleanup deletions through messages.update too. Keep a
@@ -81,14 +82,14 @@ function socketForCommand(sock, m) {
 }
 
 async function getSudo() {
-  if (Date.now() - sudoCache.at < 30_000) return sudoCache.list
+  if (Date.now() - sudoCache.at < ACCESS_CACHE_TTL) return sudoCache.list
   const rows = await DB.sudo.all()
   sudoCache = { at: Date.now(), list: rows.map((r) => r.number) }
   return sudoCache.list
 }
 
 async function getBanned() {
-  if (Date.now() - bannedCache.at < 30_000) return bannedCache.list
+  if (Date.now() - bannedCache.at < ACCESS_CACHE_TTL) return bannedCache.list
   const rows = await DB.banned.all()
   bannedCache = { at: Date.now(), list: rows.map((r) => r.id) }
   return bannedCache.list
@@ -127,6 +128,13 @@ export async function handleMessage(sock, raw, ctx = {}) {
     const m = await serialize(sock, raw)
     if (!m) return
 
+    // Identify built-in commands before passive middleware runs. Hooks such
+    // as AFK/custom-command/auto-react can then avoid unnecessary database
+    // reads for a known command like .ping.
+    const earlyParsed = m.body ? parse(m.body) : null
+    m.isCommand = Boolean(earlyParsed?.command && findCommand(earlyParsed.command))
+    m.commandName = m.isCommand ? earlyParsed.command : ''
+
     // status broadcasts never run commands, but plugins may act on them
     if (m.isStatus) {
       for (const mw of middlewares) {
@@ -137,12 +145,17 @@ export async function handleMessage(sock, raw, ctx = {}) {
       return
     }
 
-    await resolvePermissions(sock, m, await getSudo())
-    // m.role / m.roleLevel / m.isStaff - the staff ladder (src/lib/roles.js)
+    const sudo = await getSudo()
+    // Metadata and the ban list are independent network/database reads. Do
+    // them together instead of making every command pay both delays in series.
+    const [, banned] = await Promise.all([
+      resolvePermissions(sock, m, sudo, ctx.groupCache),
+      getBanned()
+    ])
+    // m.role / m.roleLevel / m.isStaff - depends on isOwner/isSudo above.
     await resolveRole(m)
 
     // hard bans (users and groups)
-    const banned = await getBanned()
     if (!m.isOwner && (banned.includes(m.sender) || banned.includes(m.chat))) return
 
     if (getVar('AUTO_READ')) await sock.readMessages([m.key]).catch(() => {})
@@ -184,7 +197,7 @@ export async function handleMessage(sock, raw, ctx = {}) {
 
     /* a refusal is still an answer - react so the user sees it registered */
     const deny = async (why) => {
-      if (getVar('CMD_REACT')) await m.react('🚫').catch(() => {})
+      if (getVar('CMD_REACT')) m.react('🚫').catch(() => {})
       return m.reply(why)
     }
     if (plugin.owner && !m.isSudo && !canRunOwnerCommand(m.role, plugin.name)) {
@@ -238,7 +251,9 @@ export async function handleMessage(sock, raw, ctx = {}) {
      */
     const wantReact = getVar('CMD_REACT')
     if (wantReact) {
-      await m.react(getVar('CMD_REACT_EMOJI') || '⚡').catch(() => {})
+      // A reaction is cosmetic; waiting for WhatsApp to acknowledge it before
+      // running the command made even .ping feel slow on distant hosts.
+      m.react(getVar('CMD_REACT_EMOJI') || '⚡').catch(() => {})
       m.reacted = false // the trigger emoji does not count as the plugin reacting
     }
 
@@ -265,7 +280,7 @@ export async function handleMessage(sock, raw, ctx = {}) {
     } finally {
       // only close the loop if the plugin did not react on its own
       if (wantReact && !m.reacted) {
-        await m.react(failed ? '❌' : '✅').catch(() => {})
+        m.react(failed ? '❌' : '✅').catch(() => {})
       }
     }
   } catch (e) {

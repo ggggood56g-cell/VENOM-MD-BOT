@@ -1,6 +1,21 @@
 import DB from '../../src/lib/database.js'
 import { runtime } from '../../src/lib/utils.js'
 
+async function clearReturnedUser(sock, m) {
+  const mine = await DB.afk.findOne({ id: m.sender })
+  if (!mine) return false
+  await DB.afk.delete({ id: m.sender })
+  await sock.sendMessage(
+    m.chat,
+    {
+      text: `👋 Welcome back @${m.senderNumber}!\n⏱️ You were away for *${runtime(Date.now() - mine.since)}*`,
+      mentions: [m.sender]
+    },
+    { quoted: m.raw }
+  )
+  return true
+}
+
 /**
  * AFK system: mark yourself away, and the bot answers on your behalf
  * when someone tags you. Returning to chat clears it automatically.
@@ -20,19 +35,13 @@ export default {
     if (m.fromMe || !m.body) return false
 
     /* 1. did an AFK user just come back? */
-    const mine = await DB.afk.findOne({ id: m.sender })
-    if (mine && !m.body.toLowerCase().startsWith('.afk')) {
-      await DB.afk.delete({ id: m.sender })
-      await sock.sendMessage(
-        m.chat,
-        {
-          text: `👋 Welcome back @${m.senderNumber}!\n⏱️ You were away for *${runtime(Date.now() - mine.since)}*`,
-          mentions: [m.sender]
-        },
-        { quoted: m.raw }
-      )
-      // don't stop - let their message still run as a command
+    if (m.isCommand) {
+      // Preserve the "any message clears AFK" behaviour, but do not make the
+      // command wait on two database operations and a welcome-back send.
+      if (m.commandName !== 'afk') void clearReturnedUser(sock, m).catch(() => {})
+      return false
     }
+    await clearReturnedUser(sock, m)
 
     /* 2. did they mention someone who is AFK? */
     const targets = [...(m.mentions || [])]

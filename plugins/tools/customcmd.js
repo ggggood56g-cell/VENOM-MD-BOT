@@ -2,8 +2,9 @@ import DB from '../../src/lib/database.js'
 
 /**
  * User-defined commands: .setcmd shortcut | full response
- * Stored in the DB and resolved before the normal command table, so users
- * can build their own shortcuts without touching any files.
+ * Stored in the DB and resolved for names that are not built in, so users
+ * can add shortcuts without touching files or accidentally replacing core
+ * commands such as .ping and .menu.
  */
 
 const cache = { at: 0, rows: [] }
@@ -87,7 +88,9 @@ export default [
 
     /** resolve custom commands before the built-in table */
     async before({ m }) {
-      if (m.fromMe || !m.body) return false
+      // Built-ins always win. Besides preventing accidental shadowing, this
+      // removes a MongoDB read from every ordinary command.
+      if (m.fromMe || !m.body || m.isCommand) return false
       const match = m.body.trim().match(/^[.\/!#$,](\S+)/)
       if (!match) return false
 
