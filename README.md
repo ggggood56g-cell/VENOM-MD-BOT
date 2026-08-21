@@ -1,152 +1,139 @@
-<div align="center">
-  <img src="Assets/Venom.jpg" alt="VENOM MD BOT logo" width="320">
+<!-- VENOM MD BOT — created by TAPRUSH EMP (Micheal) -->
 
-# VENOM MD BOT
+<div align="center">
+
+<img src="Assets/Venom.jpg" alt="VENOM MD BOT" width="320" style="border-radius:16px;" />
+
+<br/>
+
+[![Typing SVG](https://readme-typing-svg.herokuapp.com?font=Orbitron&weight=900&size=23&duration=3000&pause=800&color=39FF14&center=true&vCenter=true&width=700&lines=VENOM+MD+BOT;BUILT+BY+TAPRUSH+EMP;549+COMMANDS.+ONE+POWERFUL+BOT.;FORK%2C+PAIR+%26+DEPLOY+IN+MINUTES)](https://git.io/typing-svg)
+
+<br/>
+
+[![GitHub](https://img.shields.io/badge/MykelGoal-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/MykelGoal)
+[![YouTube](https://img.shields.io/badge/Tutorial-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://youtu.be/ct4k9tfL1Fg)
+[![WhatsApp](https://img.shields.io/badge/Contact_Me-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://wa.me/2348021016309)
+
+<br/>
+
+[![Followers](https://img.shields.io/github/followers/MykelGoal?style=flat-square&color=39ff14&label=Followers)](https://github.com/MykelGoal?tab=followers)
+[![Stars](https://img.shields.io/github/stars/MykelGoal/VENOM-MD-BOT?style=flat-square&color=39ff14&label=Stars)](https://github.com/MykelGoal/VENOM-MD-BOT/stargazers)
+[![Forks](https://img.shields.io/github/forks/MykelGoal/VENOM-MD-BOT?style=flat-square&color=39ff14&label=Forks)](https://github.com/MykelGoal/VENOM-MD-BOT/forks)
+[![Watchers](https://img.shields.io/github/watchers/MykelGoal/VENOM-MD-BOT?style=flat-square&color=39ff14&label=Watchers)](https://github.com/MykelGoal/VENOM-MD-BOT/watchers)
+[![Repo Size](https://img.shields.io/github/repo-size/MykelGoal/VENOM-MD-BOT?style=flat-square&color=39ff14)](https://github.com/MykelGoal/VENOM-MD-BOT)
+[![Commands](https://img.shields.io/badge/Commands-549-7C3AED?style=flat-square)](#-features)
+![Views](https://komarev.com/ghpvc/?username=MykelGoal&label=Views&style=flat-square&color=39ff14)
 
 ### 🐍 Power. Speed. Control. VENOM in every command.
 
-**A powerful, feature-rich WhatsApp multi-device bot engineered for speed,
-stability, security, and style — created by TAPRUSH EMP (Micheal).**
-
-[![GitHub](https://img.shields.io/badge/GitHub-MykelGoal-181717?style=for-the-badge&logo=github)](https://github.com/MykelGoal)
-[![WhatsApp](https://img.shields.io/badge/WhatsApp-Contact-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://wa.me/2348021016309)
-[![Tutorial](https://img.shields.io/badge/YouTube-Tutorial-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://youtu.be/ct4k9tfL1Fg)
-
-[![Baileys](https://img.shields.io/badge/Baileys-v7-25D366?style=flat-square)](https://github.com/WhiskeySockets/Baileys)
-[![Commands](https://img.shields.io/badge/Commands-549-7C3AED?style=flat-square)](#-premium-features)
-[![Node.js](https://img.shields.io/badge/Node.js-22%2B-339933?style=flat-square&logo=node.js&logoColor=white)](https://nodejs.org)
-[![License](https://img.shields.io/badge/License-MIT-blue?style=flat-square)](LICENSE)
-
 </div>
 
-> [!IMPORTANT]
-> This project is not affiliated with WhatsApp or Meta. Automated accounts can
-> be restricted or banned. Use a secondary number, obey WhatsApp's terms, and
-> never share your session files, generated session credential, MongoDB URL, or API keys.
+---
 
 ## 🐍 What is VENOM MD?
 
-**VENOM MD BOT** is a modern WhatsApp automation platform built for people who
-want serious power without sacrificing reliability. It combines a massive
-command library, intelligent automation, advanced group tools, media features,
-and secure multi-device connectivity in one fast, stylish bot.
+**VENOM MD BOT** is a powerful WhatsApp multi-device bot engineered for speed,
+stability, security, and style. It brings **549 commands**, intelligent
+automation, advanced group control, AI tools, media features, and reliable
+Baileys v7 connectivity together in one bot — created and maintained by
+**TAPRUSH EMP (Micheal)**.
 
-Built on Baileys v7 and strengthened for long-running deployments, VENOM is
-designed to reconnect automatically, protect sessions, survive restarts, and
-stay easy to extend. Whether you manage communities, download media, create
-stickers, use AI, or automate everyday WhatsApp tasks, VENOM puts everything
-within one command.
+---
 
-## ✨ Premium Features
+## 🚀 Get Started in 3 Steps
 
-- **549 Commands** — a huge catalogue covering AI, media, search, fun, tools,
-  education, sports, utilities, and more
-- **Advanced Group Control** — moderation, anti-link, anti-delete, welcome,
-  admin tools, roles, warnings, and automation
-- **AI-Powered Tools** — intelligent chat and creative commands with support
-  for multiple providers
-- **Media Powerhouse** — download, convert, edit, compress, sticker, audio,
-  video, and image workflows
-- **Secure Multi-Device Sessions** — Baileys v7 authentication with local and
+### 1️⃣ Fork VENOM
+
+<div align="center">
+
+[![Fork VENOM](https://img.shields.io/badge/FORK_VENOM_MD-181717?style=for-the-badge&logo=github&logoColor=white&labelColor=39ff14)](https://github.com/MykelGoal/VENOM-MD-BOT/fork)
+
+</div>
+
+### 2️⃣ Get Your Session ID
+
+<div align="center">
+
+[![Get Session ID](https://img.shields.io/badge/GET_SESSION_ID-PAIR_VENOM_MD-7C3AED?style=for-the-badge&logo=whatsapp&logoColor=white)](https://session-site-2odn.onrender.com)
+
+**[Open the official VENOM pairing site](https://session-site-2odn.onrender.com)**
+
+</div>
+
+> [!CAUTION]
+> Your session ID controls your linked WhatsApp account. Never share it, post it,
+> commit it, or expose it in screenshots and logs. VENOM has no built-in pairing
+> page; the official external site above is the only pairing service for this bot.
+
+### 3️⃣ Deploy VENOM
+
+<div align="center">
+
+| Platform | One-Click Deploy |
+|:---:|:---:|
+| **Render** | [![Deploy to Render](https://img.shields.io/badge/DEPLOY-RENDER-00C7B7?style=for-the-badge&logo=render&logoColor=white)](https://render.com/deploy?repo=https%3A%2F%2Fgithub.com%2FMykelGoal%2FVENOM-MD-BOT) |
+| **Koyeb** | [![Deploy to Koyeb](https://img.shields.io/badge/DEPLOY-KOYEB-121212?style=for-the-badge&logo=koyeb&logoColor=white)](https://app.koyeb.com/deploy?type=git&builder=dockerfile&repository=github.com/MykelGoal/VENOM-MD-BOT&branch=main&name=venom-md-bot&service_type=web&ports=10000%3Bhttp%3B%2F&env%5BPORT%5D=10000&env%5BSESSION_NAMESPACE%5D=venom) |
+| **Heroku** | [![Deploy to Heroku](https://img.shields.io/badge/DEPLOY-HEROKU-430098?style=for-the-badge&logo=heroku&logoColor=white)](https://heroku.com/deploy?template=https://github.com/MykelGoal/VENOM-MD-BOT) |
+| **Railway** | [![Deploy to Railway](https://img.shields.io/badge/DEPLOY-RAILWAY-0B0D0E?style=for-the-badge&logo=railway&logoColor=white)](https://railway.app/new/template?template=https://github.com/MykelGoal/VENOM-MD-BOT) |
+| **Panel / VPS** | [![Download ZIP](https://img.shields.io/badge/DOWNLOAD-ZIP-7C3AED?style=for-the-badge&logo=files&logoColor=white)](https://github.com/MykelGoal/VENOM-MD-BOT/archive/refs/heads/main.zip) |
+
+</div>
+
+Add these private environment variables before starting the deployment:
+
+| Variable | What to enter |
+|---|---|
+| `SESSION_ID` | Private value from the official VENOM pairing site |
+| `MONGODB` | Your private MongoDB connection URL |
+| `MODS` | Your WhatsApp owner number, digits only |
+| `SESSION_NAMESPACE` | A short name such as `venom` |
+
+Render reads the included [`render.yaml`](render.yaml). Koyeb builds the included
+[`Dockerfile`](Dockerfile). On either platform, confirm that port `10000` is
+exposed and add the private variables above before deployment.
+
+---
+
+## ✨ Features
+
+- **549 commands** across 24 categories
+- **Group control** — moderation, anti-link, anti-delete, welcomes, warnings,
+  roles, and admin tools
+- **AI tools** — intelligent chat and creative commands with multiple provider
+  support
+- **Media powerhouse** — download, convert, edit, compress, sticker, audio,
+  video, and image tools
+- **Secure sessions** — validated Baileys v7 credentials with local and
   MongoAuth persistence
-- **Built to Stay Online** — reconnect watchdogs, bounded caches, graceful
-  shutdown, and recovery after redeployment
-- **Plugin Architecture** — add reviewed commands without rebuilding the core
-- **Deploy Anywhere** — ready for Docker, Render, Railway, Koyeb, Heroku,
-  Replit, VPS, and panel hosting
+- **Built to stay online** — reconnect watchdogs, graceful recovery, and
+  bounded caches
+- **Plugin architecture** — add reviewed commands without rebuilding the core
+- **Multi-platform deployment** — Render, Koyeb, Heroku, Railway, Docker, VPS,
+  and hosting panels
 
-> Remote chat-installed JavaScript and real-time `eval` are intentionally
-> disabled. VENOM accepts reviewed plugin files instead, keeping deployments
-> safer without limiting customization.
+---
 
-## Requirements
+## 🛠️ Manual Deployment
 
-- Node.js **22 or newer**
-- npm
-- a private MongoDB database (local MongoDB is suitable for development)
-- a WhatsApp number, preferably a secondary account
-
-FFmpeg is supplied by `ffmpeg-static`; some image commands also benefit from a
-system ImageMagick installation.
-
-## Install locally
+**Requirements:** Node.js 22+, npm, a private MongoDB database, and a secondary
+WhatsApp number.
 
 ```bash
+# Clone and enter the project
 git clone https://github.com/MykelGoal/VENOM-MD-BOT.git
 cd VENOM-MD-BOT
+
+# Configure VENOM
 cp .env.example .env
+# Add your SESSION_ID, MONGODB, and MODS to .env
+
+# Install, verify, and start
 npm ci
 npm test
 npm start
 ```
 
-Edit `.env` before starting:
-
-```dotenv
-PREFIX=.
-MODS=2348021016309
-MONGODB=mongodb://127.0.0.1:27017/venom
-SESSION_NAMESPACE=venom
-SESSION_ID=paste-private-value-from-the-existing-session-site
-PACKNAME=VENOM MD BOT
-AUTHOR=by: TAPRUSH EMP (Micheal)
-PORT=10000
-```
-
-`MODS` controls administrative access for a deployment. It does not replace
-the permanent public creator credit.
-
-## Link WhatsApp
-
-VENOM does **not** include a second QR or pairing website. Use the existing
-VENOM session service created for this project:
-
-**https://session-site-2odn.onrender.com**
-
-1. Open that service and link the WhatsApp account there.
-2. Copy the private session value it sends you into the deployment's
-   `SESSION_ID` environment variable.
-3. Set `SESSION_NAMESPACE` to a short storage name such as `venom`.
-4. Start VENOM. The credential is strictly validated, imported once, removed
-   from the process environment, and then persisted through MongoAuth.
-
-The generated value controls the linked WhatsApp account. Never paste it in a
-chat, commit it, include it in logs, or share it. A future update will upgrade
-this **same external site** to issue short, one-time tokens; no replacement
-pairing page will be added to this repository.
-
-Auth files are stored under `System/session/<SESSION_NAMESPACE>/` and ignored
-by Git. Never publish that directory.
-
-## Configuration
-
-| Variable | Required | Default | Purpose |
-|---|---:|---|---|
-| `MONGODB` | Production | local VENOM URL | Settings, moderation data, and session backup |
-| `SESSION_NAMESPACE` | No | `venom` | Safe local/MongoAuth storage name |
-| `SESSION_ID` | First link | blank | Private credential from VENOM's existing external session site |
-| `MODS` | No | creator number | Comma-separated deployment owners |
-| `PREFIX` | No | `.` | Command prefix |
-| `PACKNAME` | No | `VENOM MD BOT` | Sticker pack name |
-| `AUTHOR` | No | creator credit | Sticker author |
-| `GEMINI_API` | No | blank | Gemini keys, comma-separated |
-| `OPENAI_API` | No | blank | OpenAI keys, comma-separated |
-| `CLAUDE_API` | No | blank | Anthropic keys, comma-separated |
-| `TENOR_API_KEY` | No | blank | Tenor keys, comma-separated |
-| `OPENWEATHER_API_KEY` | No | blank | OpenWeather key for weather search |
-| `PIXABAY_API_KEY` | No | blank | Pixabay key for logo backgrounds |
-| `TIKTOK_API_KEY` | No | blank | TikTok provider keys, comma-separated |
-| `TIKTOK_API_BASE_URL` | No | bundled provider URL | Compatible trusted TikTok API endpoint |
-| `MEDIA_MAX_MB` | No | `64` | Maximum inbound/downloaded media size |
-| `FFMPEG_PATH` | No | auto-detected | Optional FFmpeg executable path |
-| `PORT` | No | `10000` | Web server port |
-| `TRUST_PROXY` | No | `false` | Set `true` only behind one trusted reverse proxy |
-
-See [`.env.example`](.env.example) for maintenance settings.
-
-## Deploy
-
-### Docker
+You can also run VENOM with Docker:
 
 ```bash
 docker build -t venom-md-bot .
@@ -154,23 +141,40 @@ docker run --rm -p 10000:10000 --env-file .env \
   -v venom-session:/app/System/session venom-md-bot
 ```
 
-### Render, Railway, Koyeb, or another Node host
+---
 
-1. Fork this repository.
-2. Create a web service from your fork.
-3. Use `npm ci` as the build command and `npm start` as the start command.
-4. Add the variables from `.env.example`, especially `MONGODB`,
-   `SESSION_NAMESPACE`, the private `SESSION_ID` from the existing VENOM
-   session site, and `MODS`.
-5. Expose port `10000` or let the host provide `PORT`.
-6. Use persistent storage for `System/session` where available; otherwise the
-   MongoDB backup restores the session after restarts.
+<details>
+<summary><b>⚙️ Environment Configuration</b></summary>
 
-[Deploy to Heroku](https://heroku.com/deploy?template=https://github.com/MykelGoal/VENOM-MD-BOT)
+| Variable | Required | Default | Purpose |
+|---|---:|---|---|
+| `MONGODB` | Production | local VENOM URL | Data and private session backup storage |
+| `SESSION_ID` | First link | blank | Private credential from the official pairing site |
+| `SESSION_NAMESPACE` | No | `venom` | Safe local and MongoAuth storage name |
+| `MODS` | No | creator number | Comma-separated deployment owner numbers |
+| `PREFIX` | No | `.` | Command prefix |
+| `PACKNAME` | No | `VENOM MD BOT` | Sticker pack name |
+| `AUTHOR` | No | creator credit | Sticker author |
+| `GEMINI_API` | No | blank | Gemini keys, comma-separated |
+| `OPENAI_API` | No | blank | OpenAI keys, comma-separated |
+| `CLAUDE_API` | No | blank | Anthropic keys, comma-separated |
+| `TENOR_API_KEY` | No | blank | Tenor keys, comma-separated |
+| `OPENWEATHER_API_KEY` | No | blank | OpenWeather key |
+| `PIXABAY_API_KEY` | No | blank | Pixabay key |
+| `TIKTOK_API_KEY` | No | blank | TikTok provider keys, comma-separated |
+| `MEDIA_MAX_MB` | No | `64` | Maximum inbound or downloaded media size |
+| `FFMPEG_PATH` | No | auto-detected | Optional FFmpeg executable path |
+| `PORT` | No | `10000` | Health server port |
+| `TRUST_PROXY` | No | `false` | Enable only behind one trusted reverse proxy |
 
-## Add a command
+See [`.env.example`](.env.example) for every maintenance setting.
 
-Create a reviewed JavaScript file in `Plugins/`. A minimal command looks like:
+</details>
+
+<details>
+<summary><b>🧩 Add a Reviewed Command</b></summary>
+
+Create a JavaScript file in `Plugins/`:
 
 ```js
 export default {
@@ -186,21 +190,38 @@ export default {
 };
 ```
 
-Run `npm test` before deploying. Restart the bot after adding or changing a
-plugin.
+Run `npm test` and restart VENOM after changing a plugin. Remote chat-installed
+JavaScript and real-time `eval` are intentionally disabled for safety.
 
-## Public project information
+</details>
 
-- **Bot:** VENOM MD BOT
-- **Creator:** TAPRUSH EMP (Micheal)
-- **GitHub:** [MykelGoal](https://github.com/MykelGoal)
-- **WhatsApp:** [2348021016309](https://wa.me/2348021016309)
-- **YouTube tutorial:** [Watch here](https://youtu.be/ct4k9tfL1Fg)
+---
 
-## License and upstream credit
+## 👨‍💻 Developer
 
-This repository is MIT licensed. VENOM MD BOT is based on
-[FantoX/Atlas-MD](https://github.com/FantoX/Atlas-MD) at commit
-`3b87370dc6fd14bb953524bb9e47880cf235e4c0`. The original FantoX copyright and
-MIT notice are retained in [`LICENSE`](LICENSE); details are in
-[`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md).
+| Role | Credit |
+|---|---|
+| **Creator & Maintainer** | [TAPRUSH EMP (Micheal)](https://github.com/MykelGoal) |
+| **WhatsApp** | [2348021016309](https://wa.me/2348021016309) |
+| **YouTube Tutorial** | [Watch here](https://youtu.be/ct4k9tfL1Fg) |
+| **Core Library** | [WhiskeySockets/Baileys](https://github.com/WhiskeySockets/Baileys) |
+
+---
+
+## ⚖️ Notice & License
+
+> VENOM MD BOT is not affiliated with WhatsApp or Meta. Use a secondary number,
+> obey WhatsApp's terms, and do not misuse this software. Automated accounts can
+> be restricted or banned.
+
+This project is MIT licensed and retains the required Atlas-MD upstream credit.
+See [`LICENSE`](LICENSE) and [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md)
+for complete attribution.
+
+<div align="center">
+
+### 《 POWERED BY TAPRUSH EMP (MICHEAL) 》
+
+**VENOM MD BOT — Power. Speed. Control.**
+
+</div>
