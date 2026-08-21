@@ -196,8 +196,16 @@ const runtime = {
   startPromise: null,
   syncPromise: null,
   credsSavePromise: null,
+  // A missing production secret cannot be fixed by reconnecting. Keep the
+  // health server available so the status endpoint can explain the problem,
+  // but do not flood deployment logs with an endless retry loop.
+  retryDisabled: false,
   shuttingDown: false,
 };
+
+const MONGO_CONFIGURATION_ERROR = "VENOM_MONGO_CONFIGURATION";
+const MONGO_CONFIGURATION_MESSAGE =
+  "MongoDB is not configured. Set MONGODB (or MONGO_URI) to a private MongoDB connection URL in the deployment environment, then redeploy. Render cannot use 127.0.0.1:27017 as a database.";
 
 const app = express();
 app.disable("x-powered-by");
@@ -281,7 +289,7 @@ const reconnectDelay = () => {
 };
 
 const scheduleReconnect = (reason, { clearAuth = false, immediate = false } = {}) => {
-  if (runtime.shuttingDown || runtime.reconnectTimer) return;
+  if (runtime.shuttingDown || runtime.reconnectTimer || runtime.retryDisabled) return;
 
   runtime.reconnectAttempt += 1;
   runtime.status = "reconnecting";
@@ -312,6 +320,11 @@ const scheduleReconnect = (reason, { clearAuth = false, immediate = false } = {}
 
 const ensureMongo = async () => {
   if (mongoose.connection.readyState === 1) return;
+  if (!global.mongodb) {
+    const error = new Error(MONGO_CONFIGURATION_MESSAGE);
+    error.code = MONGO_CONFIGURATION_ERROR;
+    throw error;
+  }
   runtime.status = "database";
   await mongoose.connect(global.mongodb, {
     serverSelectionTimeoutMS: 10_000,
@@ -620,16 +633,23 @@ const connectVenom = async (trigger) => {
 };
 
 async function startVenom(trigger = "initial") {
-  if (runtime.shuttingDown) return null;
+  if (runtime.shuttingDown || runtime.retryDisabled) return null;
   if (runtime.startPromise) return runtime.startPromise;
   if (runtime.socket && runtime.status === "open") return runtime.socket;
 
+  runtime.retryDisabled = false;
   runtime.startPromise = connectVenom(trigger)
     .catch((error) => {
       runtime.status = "error";
       runtime.error = error.message;
-      console.error(`[ VENOM ] Startup failed: ${error.stack || error.message}`);
-      scheduleReconnect(`startup failed: ${error.message}`);
+      const isConfigurationError = error?.code === MONGO_CONFIGURATION_ERROR;
+      runtime.retryDisabled = isConfigurationError;
+      console.error(
+        `[ VENOM ] ${isConfigurationError ? "Startup paused" : "Startup failed"}: ${error.stack || error.message}`,
+      );
+      if (!isConfigurationError) {
+        scheduleReconnect(`startup failed: ${error.message}`);
+      }
       return null;
     })
     .finally(() => {
@@ -655,7 +675,14 @@ const runPeriodicSync = async ({ force = false } = {}) => {
 
 const watchdogTimer = setInterval(() => {
   messageCache.prune();
-  if (runtime.shuttingDown || runtime.reconnectTimer || runtime.startPromise) return;
+  if (
+    runtime.shuttingDown ||
+    runtime.retryDisabled ||
+    runtime.reconnectTimer ||
+    runtime.startPromise
+  ) {
+    return;
+  }
   if (!runtime.socket) {
     scheduleReconnect("watchdog found no active socket");
     return;
@@ -693,6 +720,11 @@ app.get(
   (_request, response) => {
     response.json({
       status: runtime.status,
+      database: mongoose.connection.readyState === 1
+        ? "connected"
+        : global.mongoConfigured
+          ? "configured"
+          : "not-configured",
       websocketOpen: socketIsOpen(),
       reconnectAttempt: runtime.reconnectAttempt,
       startedAt: new Date(runtime.startedAt).toISOString(),

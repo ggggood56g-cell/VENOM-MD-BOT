@@ -84,13 +84,20 @@ Add these private environment variables before starting the deployment:
 | Variable | What to enter |
 |---|---|
 | `SESSION_ID` | Private value from the official VENOM pairing site |
-| `MONGODB` | Your private MongoDB connection URL |
+| `MONGODB` or `MONGO_URI` | Your private MongoDB connection URL (required on production hosts) |
 | `MODS` | Your WhatsApp owner number, digits only |
 | `SESSION_NAMESPACE` | A short name such as `venom` |
 
 Render reads the included [`render.yaml`](render.yaml). Koyeb builds the included
 [`Dockerfile`](Dockerfile). On either platform, confirm that port `10000` is
 exposed and add the private variables above before deployment.
+
+> [!IMPORTANT]
+> A hosted container is not a MongoDB server. If the logs contain
+> `connect ECONNREFUSED 127.0.0.1:27017`, add `MONGODB` (or `MONGO_URI`) in the
+> service's private environment settings using a MongoDB Atlas or other hosted
+> connection URL, then redeploy. Do not use `mongodb://127.0.0.1:27017/venom`
+> on Render.
 
 ---
 
@@ -148,7 +155,7 @@ docker run --rm -p 10000:10000 --env-file .env \
 
 | Variable | Required | Default | Purpose |
 |---|---:|---|---|
-| `MONGODB` | Production | local VENOM URL | Data and private session backup storage |
+| `MONGODB` or `MONGO_URI` | Production | local VENOM URL (development only) | Data and private session backup storage |
 | `SESSION_ID` | First link | blank | Private credential from the official pairing site |
 | `SESSION_NAMESPACE` | No | `venom` | Safe local and MongoAuth storage name |
 | `MODS` | No | creator number | Comma-separated deployment owner numbers |
