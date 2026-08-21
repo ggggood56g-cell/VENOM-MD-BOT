@@ -17,11 +17,10 @@ const execFileAsync = promisify(execFile)
  *
  * Findings from live testing against YouTube / TikTok / Instagram:
  *
- *  YouTube  - yt-dlp works, BUT the pre-muxed "format 18" stream returns
- *             HTTP 403 from datacenter IPs, and most player clients refuse
- *             to serve formats at all. The `android_vr` client + separate
- *             DASH video/audio streams merged with ffmpeg is the combination
- *             that actually downloads. That is what we use.
+ *  YouTube  - yt-dlp works, but YouTube rotates player restrictions often.
+ *             The old android_vr workaround was blocked in August 2026;
+ *             current yt-dlp + visionOS/TV clients are tried instead. Public
+ *             download APIs remain a fallback for bot-checked server IPs.
  *  TikTok   - two independent working paths: the tikwm JSON API (fast, gives
  *             a no-watermark URL) and yt-dlp as a fallback.
  *  Instagram- genuinely hard. Meta now requires an authenticated session for
@@ -61,17 +60,21 @@ export function queueYoutube(task) {
   return result
 }
 
-/** The player clients that actually serve formats from server IPs.
- *  Tested live: android_vr succeeds where web/ios/tv/mweb return
- *  "Requested format is not available". YouTube also throttles repeated
- *  requests from one IP with intermittent 403s on the media CDN, so we
- *  rotate clients and retry rather than failing on the first refusal. */
-const YT_CLIENTS = ['android_vr', 'android', 'web_safari', 'tv']
+/**
+ * Player clients that currently serve formats from server IPs.
+ *
+ * Do not put android_vr first again: YouTube began requiring a GVS PO token
+ * for it in August 2026 and, from 17 August, even its format 18 returns 403.
+ * yt-dlp 2026.08.19 added the visionOS route that fixes that rollout. TV and
+ * the two web clients remain useful fallbacks for videos visionOS cannot
+ * serve (notably some made-for-kids uploads).
+ */
+export const YT_CLIENTS = ['visionos', 'tv', 'web_safari', 'web_embedded']
 const YT_CLIENT = `youtube:player_client=${YT_CLIENTS[0]}`
 
-/** Is this a transient YouTube CDN refusal worth retrying? */
+/** Is this a transient/client-specific refusal worth retrying? */
 const isTransient = (msg) =>
-  /403|Forbidden|fragment|unable to download video data|Requested format|timed out|Connection reset/i.test(String(msg))
+  /403|Forbidden|fragment|unable to download video data|Requested format|timed out|Connection reset|invalid client|unknown client|unsupported client|bot check|not a bot|Sign in to confirm|rate.?limit/i.test(String(msg))
 
 /**
  * Run an operation across the client list until one succeeds.
@@ -273,10 +276,7 @@ export function ytdlpDownload(url, { format, audio = false, maxMb = 64, extraArg
 
 /* ----------------------------- YouTube ----------------------------- */
 
-/**
- * YouTube needs the android_vr client; pre-muxed streams 403 from servers,
- * so we always request separate DASH streams and let ffmpeg merge them.
- */
+/** Probe YouTube through the current client rotation. */
 export async function youtubeInfo(url) {
   const info = await queueYoutube(() => withClientRetry((clientArg) => probe(url, clientArg)))
   return {
@@ -790,35 +790,68 @@ export async function youtubeSearchSmart(query, limit = 5) {
 }
 
 /**
- * Metadata without yt-dlp: search by video id and take the first hit.
- * Less detail than a real probe, but enough for the info card, and it works
- * when yt-dlp cannot even reach YouTube.
+ * Metadata without yt-dlp. YouTube's official oEmbed endpoint gives the exact
+ * title/author without an API key and is much more reliable than searching a
+ * video id on a random front-end. Search remains a secondary fallback for
+ * duration/views. Never let a failed metadata request turn the title into the
+ * literal "YouTube video" and then search SoundCloud for that phrase.
  */
 export async function youtubeInfoSmart(url) {
   if (dlSource() !== 'api' && hasYtdlp()) {
     try {
       return await youtubeInfo(url)
     } catch {
-      /* fall through to the keyless route */
+      /* fall through to the keyless routes */
     }
   }
   const id = String(url).match(/(?:v=|youtu\.be\/|shorts\/|embed\/|live\/)([A-Za-z0-9_-]{11})/)?.[1]
-  if (id) {
-    try {
-      const [hit] = await apiSearch(id, 1)
-      if (hit) return { ...hit, thumbnail: `https://i.ytimg.com/vi/${id}/hqdefault.jpg`, url }
-    } catch {}
-    return {
-      id,
-      title: 'YouTube video',
-      author: '',
-      duration: 0,
-      views: 0,
-      thumbnail: `https://i.ytimg.com/vi/${id}/hqdefault.jpg`,
-      url
+  if (!id) throw new Error('That is not a YouTube link.')
+
+  const thumbnail = `https://i.ytimg.com/vi/${id}/hqdefault.jpg`
+  let basic = null
+  try {
+    const { data } = await axios.get('https://www.youtube.com/oembed', {
+      params: { url: `https://www.youtube.com/watch?v=${id}`, format: 'json' },
+      timeout: 15_000,
+      headers: { 'User-Agent': 'Mozilla/5.0', Accept: 'application/json' }
+    })
+    if (data?.title) {
+      basic = {
+        id,
+        title: data.title,
+        author: data.author_name || '',
+        duration: 0,
+        views: 0,
+        thumbnail: data.thumbnail_url || thumbnail,
+        url
+      }
     }
+  } catch {}
+
+  try {
+    const [hit] = await apiSearch(id, 1)
+    if (hit) {
+      return {
+        ...hit,
+        // oEmbed is authoritative for identity; front-end id searches have
+        // occasionally returned an unrelated first result.
+        title: basic?.title || hit.title,
+        author: basic?.author || hit.author,
+        thumbnail,
+        url
+      }
+    }
+  } catch {}
+
+  return basic || {
+    id,
+    title: '',
+    author: '',
+    duration: 0,
+    views: 0,
+    thumbnail,
+    url
   }
-  throw new Error('That is not a YouTube link.')
 }
 
 /** Pretty duration: 213 -> 3:33 */
