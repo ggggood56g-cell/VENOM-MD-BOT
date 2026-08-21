@@ -43,7 +43,7 @@ async function spotifyMeta(url, id) {
 }
 
 const notInstalled = (m) =>
-  m.reply('⚠️ yt-dlp is not installed.\n\nRun *npm run setup* in the bot folder, then try again.')
+  m.reply('⚠️ yt-dlp is not installed.\n\nInstall it on the host or set YT_DLP_PATH, then try again.')
 
 export default [
   {

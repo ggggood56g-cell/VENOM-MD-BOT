@@ -31,7 +31,7 @@ async function hostImage(buffer) {
   const form = new FormData()
   form.append('reqtype', 'fileupload')
   form.append('fileToUpload', buffer, { filename: 'image.jpg' })
-  const axios = (await import('axios')).default
+  const { publicHttp: axios } = await import('../../src/lib/network.js')
   const { data } = await axios.post('https://catbox.moe/user/api.php', form, {
     headers: form.getHeaders(),
     timeout: 60_000

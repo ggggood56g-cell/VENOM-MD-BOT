@@ -103,7 +103,7 @@ export const invalidateCaches = () => {
 
 /* --------------------------- prefix parse --------------------------- */
 
-function parse(body) {
+export function parseLegacyCommand(body) {
   const list = prefixes()
   for (const p of list) {
     if (p === '') {
@@ -120,6 +120,13 @@ function parse(body) {
   return null
 }
 
+export function legacyCommandFor(body) {
+  const parsed = body ? parseLegacyCommand(body) : null
+  if (!parsed?.command) return null
+  const plugin = findCommand(parsed.command)
+  return plugin ? { ...parsed, plugin } : null
+}
+
 /* ----------------------------- handler ----------------------------- */
 
 export async function handleMessage(sock, raw, ctx = {}) {
@@ -131,12 +138,21 @@ export async function handleMessage(sock, raw, ctx = {}) {
     // Identify built-in commands before passive middleware runs. Hooks such
     // as AFK/custom-command/auto-react can then avoid unnecessary database
     // reads for a known command like .ping.
-    const earlyParsed = m.body ? parse(m.body) : null
-    m.isCommand = Boolean(earlyParsed?.command && findCommand(earlyParsed.command))
-    m.commandName = m.isCommand ? earlyParsed.command : ''
+    const earlyParsed = m.body ? parseLegacyCommand(m.body) : null
+    const localCommand = Boolean(
+      earlyParsed?.command && findCommand(earlyParsed.command),
+    )
+    // Atlas-only commands are dispatched by the root router after legacy
+    // middleware. Marking them here keeps passive hooks from treating a
+    // command trigger as ordinary chat.
+    m.isCommand = localCommand || Boolean(ctx.externalCommand)
+    m.commandName = m.isCommand
+      ? earlyParsed?.command || String(ctx.externalCommand || "")
+      : ''
 
     // status broadcasts never run commands, but plugins may act on them
     if (m.isStatus) {
+      if (ctx.routing) ctx.routing.blocked = true
       for (const mw of middlewares) {
         if (typeof mw.onStatus === 'function') {
           await mw.onStatus({ sock, m }).catch((e) => log.error('onStatus failed:', e.message))
@@ -155,8 +171,11 @@ export async function handleMessage(sock, raw, ctx = {}) {
     // m.role / m.roleLevel / m.isStaff - depends on isOwner/isSudo above.
     await resolveRole(m)
 
-    // hard bans (users and groups)
-    if (!m.isOwner && (banned.includes(m.sender) || banned.includes(m.chat))) return
+    // hard bans (users and groups) also block Atlas-only fallback commands.
+    if (!m.isOwner && (banned.includes(m.sender) || banned.includes(m.chat))) {
+      if (ctx.routing) ctx.routing.blocked = true
+      return
+    }
 
     if (getVar('AUTO_READ')) await sock.readMessages([m.key]).catch(() => {})
     if (getVar('ALWAYS_ONLINE')) sock.sendPresenceUpdate('available').catch(() => {})
@@ -168,7 +187,10 @@ export async function handleMessage(sock, raw, ctx = {}) {
       if (typeof mw.before !== 'function') continue
       try {
         const stop = await mw.before({ sock, m, config, DB, getVar, commands, categories: null })
-        if (stop === true) return
+        if (stop === true) {
+          if (ctx.routing) ctx.routing.blocked = true
+          return
+        }
       } catch (e) {
         log.error(`Middleware ${mw.name || mw.file} failed:`, e.message)
       }
@@ -176,7 +198,7 @@ export async function handleMessage(sock, raw, ctx = {}) {
 
     if (!m.body) return
 
-    const parsed = parse(m.body)
+    const parsed = parseLegacyCommand(m.body)
     if (!parsed) return
     const { prefix, command, args } = parsed
     if (!command) return
@@ -284,6 +306,9 @@ export async function handleMessage(sock, raw, ctx = {}) {
       }
     }
   } catch (e) {
+    // Fail closed: Atlas fallback must not bypass a legacy permission/storage
+    // failure that prevented this message from being checked completely.
+    if (ctx.routing) ctx.routing.blocked = true
     // full detail to the console for the operator
     log.error('Handler error:', e?.stack || e?.message || e)
 

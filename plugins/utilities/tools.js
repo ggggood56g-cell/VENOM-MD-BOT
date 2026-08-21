@@ -1,6 +1,61 @@
 import { getJson, getBuffer, race } from '../../src/lib/api.js'
 import { comma } from '../../src/lib/utils.js'
 
+function calculate(input) {
+  const source = String(input || '').replace(/\^/g, '**')
+  if (source.length > 200) throw new Error('expression too long')
+  const tokens = source.match(/\d+(?:\.\d+)?|\.\d+|\*\*|[()+\-*/%]/g) || []
+  if (tokens.join('') !== source.replace(/\s+/g, '')) throw new Error('invalid token')
+  let index = 0
+
+  const primary = () => {
+    if (tokens[index] === '(') {
+      index++
+      const value = expression()
+      if (tokens[index++] !== ')') throw new Error('missing parenthesis')
+      return value
+    }
+    const token = tokens[index++]
+    if (!token || !/^(?:\d+(?:\.\d+)?|\.\d+)$/.test(token)) throw new Error('number expected')
+    return Number(token)
+  }
+  const unary = () => {
+    if (tokens[index] === '+') { index++; return unary() }
+    if (tokens[index] === '-') { index++; return -unary() }
+    return primary()
+  }
+  const power = () => {
+    const left = unary()
+    if (tokens[index] === '**') {
+      index++
+      return left ** power()
+    }
+    return left
+  }
+  const term = () => {
+    let value = power()
+    while (['*', '/', '%'].includes(tokens[index])) {
+      const operator = tokens[index++]
+      const right = power()
+      value = operator === '*' ? value * right : operator === '/' ? value / right : value % right
+    }
+    return value
+  }
+  const expression = () => {
+    let value = term()
+    while (['+', '-'].includes(tokens[index])) {
+      const operator = tokens[index++]
+      const right = term()
+      value = operator === '+' ? value + right : value - right
+    }
+    return value
+  }
+
+  const result = expression()
+  if (index !== tokens.length || !Number.isFinite(result)) throw new Error('invalid result')
+  return result
+}
+
 export default [
   {
     name: 'weather',
@@ -145,22 +200,16 @@ export default [
     usage: '.calc 5 * (3 + 2)',
     async run({ m, text }) {
       if (!text) return m.reply('📝 Usage: .calc 5 * (3 + 2)')
-      // whitelist characters, then evaluate in an isolated Function
       const expr = text
         .replace(/x/gi, '*')
         .replace(/÷/g, '/')
         .replace(/,/g, '')
         .trim()
-      if (!/^[0-9+\-*/().%\s^]+$/.test(expr)) {
-        return m.reply('❌ Only numbers and + - * / ( ) % ^ are allowed.')
-      }
       try {
-        const js = expr.replace(/\^/g, '**')
-        const result = Function(`"use strict";return (${js})`)()
-        if (!Number.isFinite(result)) return m.reply('❌ That does not produce a finite number.')
+        const result = calculate(expr)
         await m.reply(`🧮 *Calculator*\n\n📥 ${expr}\n📤 *${comma(Number(result.toFixed(8)))}*`)
       } catch {
-        await m.reply('❌ Invalid expression.')
+        await m.reply('❌ Invalid expression. Use only numbers and + - * / ( ) % ^.')
       }
     }
   },

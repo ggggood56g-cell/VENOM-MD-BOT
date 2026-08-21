@@ -1,4 +1,4 @@
-import axios from 'axios'
+import { publicHttp as axios } from './network.js'
 import { URLSearchParams } from 'url'
 
 /**

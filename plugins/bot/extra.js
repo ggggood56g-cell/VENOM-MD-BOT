@@ -1,5 +1,3 @@
-import { execFile } from 'child_process'
-import { promisify } from 'util'
 import os from 'os'
 import fs from 'fs'
 import path from 'path'
@@ -8,8 +6,6 @@ import { ROOT } from '../../src/config.js'
 import { uptime, formatBytes, toJid } from '../../src/lib/utils.js'
 import { pluginCount } from '../../src/lib/pluginLoader.js'
 import { isMongo } from '../../src/lib/database.js'
-
-const execFileAsync = promisify(execFile)
 
 export default [
   {
@@ -42,18 +38,9 @@ export default [
     usage: '.update',
     owner: true,
     async run({ m }) {
-      if (!fs.existsSync(path.join(ROOT, '.git'))) {
-        return m.reply('❌ This is not a git checkout, so there is nothing to pull.\n\n_Clone the repo with git to enable updates._')
-      }
-      await m.reply('⏳ Pulling the latest changes...')
-      try {
-        const { stdout } = await execFileAsync('git', ['pull'], { cwd: ROOT, timeout: 60_000 })
-        const clean = stdout.trim().slice(0, 1200)
-        if (/Already up to date/i.test(clean)) return m.reply('✅ Already up to date.')
-        await m.reply(`✅ Updated:\n\n\`\`\`${clean}\`\`\`\n\n♻️ Run *.restart* to load the new code.`)
-      } catch (e) {
-        await m.reply(`❌ Update failed:\n\`\`\`${String(e.message).slice(0, 500)}\`\`\``)
-      }
+      await m.reply(
+        '🔒 Chat-triggered source updates are disabled. Review changes in GitHub and deploy them through your private hosting workflow.'
+      )
     }
   },
   {

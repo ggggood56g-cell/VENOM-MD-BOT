@@ -1,4 +1,4 @@
-import axios from 'axios'
+import { publicHttp as axios } from './network.js'
 import config from '../config.js'
 import DB from './database.js'
 import { builtinKey } from '../builtin-keys.js'
@@ -7,7 +7,7 @@ import { builtinKey } from '../builtin-keys.js'
  * Multi-provider AI engine.
  *
  * Every provider below has a genuine free tier. Add whichever keys you have
- * to .env (or set them from WhatsApp with .setkey) and the bot automatically
+ * to the private deployment environment and the bot automatically
  * uses the best one available, falling back down the chain if a provider is
  * down, rate-limited or out of credit.
  *
@@ -101,37 +101,34 @@ export const PROVIDERS = {
 }
 
 /* ------------------------------------------------------------------ *
- * Key resolution
- *   1. .env / panel environment  (a deployer's own key always wins)
- *   2. .setkey, stored in the database
- *   3. keys shipped in src/builtin-keys.js, so a fresh clone just works
+ * Key resolution — private deployment environment only.
  * ------------------------------------------------------------------ */
 
-const runtimeKeys = new Map()
-
-/** Load any keys stored in the database (set with .setkey). */
+/** Kept as an async compatibility hook for startup callers. */
 export async function loadKeys() {
-  try {
-    const rows = await DB.vars.all()
-    for (const row of rows) {
-      if (row.key?.endsWith('_API_KEY') && row.value) runtimeKeys.set(row.key, row.value)
-    }
-  } catch {}
+  return []
 }
 
 export function getKey(name) {
-  const p = PROVIDERS[name]
-  if (!p) return ''
-  return (process.env[p.env] || runtimeKeys.get(p.env) || builtinKey(p.env) || '').trim()
+  const provider = PROVIDERS[name]
+  if (!provider) return ''
+  const compatible =
+    name === 'gemini'
+      ? config.keys.gemini
+      : name === 'openai'
+        ? config.keys.openai
+        : name === 'groq'
+          ? config.keys.groq
+          : ''
+  return (process.env[provider.env] || compatible || builtinKey(provider.env) || '').trim()
 }
 
-export async function setKey(envName, value) {
-  runtimeKeys.set(envName, value)
-  await DB.vars.set({ key: envName }, { value })
+export async function setKey() {
+  throw new Error('Configure AI keys in the private deployment environment')
 }
 
+/** Remove obsolete database-stored keys without changing environment keys. */
 export async function clearKey(envName) {
-  runtimeKeys.delete(envName)
   await DB.vars.delete({ key: envName })
 }
 

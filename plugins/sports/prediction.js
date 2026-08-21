@@ -9,7 +9,7 @@
  * The engine lives in src/lib/football.js - standings, form and goal stats
  * feed a Poisson scoreline model, ranked by confidence. No key needed.
  */
-import { getBestPicks, resolveFootKey, setFootKey, prettyDay, kickoffTime } from '../../src/lib/football.js'
+import { getBestPicks, resolveFootKey, prettyDay, kickoffTime } from '../../src/lib/football.js'
 
 const MEDALS = ['🥇', '🥈', '🥉']
 const medal = (i) => MEDALS[i] || `${i + 1}️⃣`
@@ -83,23 +83,17 @@ export default [
     desc: 'Optional API-Football key - adds real bookmaker odds to predictions',
     usage: '.predkey <api-sports key> | .predkey off',
     owner: true,
-    async run({ m, args }) {
-      const val = args.join(' ').trim()
-      if (!val) {
-        const key = await resolveFootKey()
-        return m.reply(
-          `⚽ *PREDICTION SOURCE*\n\n` +
-            `Current: ${key ? 'API-Football (key set - bookmaker odds blended in)' : 'TheSportsDB - keyless, works out of the box'}\n\n` +
-            `Want bookmaker odds in the model? Get a free key (100 req/day):\nhttps://dashboard.api-football.com\n\n` +
-            `Set: *.predkey <key>*\nRemove: *.predkey off*`
-        )
+    async run({ sock, m, args }) {
+      if (args.length > 0 && args[0].toLowerCase() !== 'off') {
+        await sock.sendMessage(m.chat, { delete: m.key }).catch(() => {})
       }
-      if (val.toLowerCase() === 'off') {
-        await setFootKey('')
-        return m.reply('🗑️ API-Football key removed - back to the keyless source.')
-      }
-      await setFootKey(val)
-      await m.reply('🔑 API-Football key saved. Future predictions blend real bookmaker odds into the model.')
+      const key = await resolveFootKey()
+      await m.send(
+        `⚽ *PREDICTION SOURCE*\n\n` +
+          `Current: ${key ? 'API-Football (private environment key active)' : 'TheSportsDB - keyless, works out of the box'}\n\n` +
+          `🔒 Keys cannot be changed through WhatsApp. Set or remove *FOOTBALL_API_KEY* in your private deployment environment, then restart VENOM.\n\n` +
+          `Provider: https://dashboard.api-football.com`
+      )
     }
   }
 ]

@@ -1,5 +1,5 @@
 import sharp from 'sharp'
-import { removeBackground, rbgAvailable, setRbgKey, resolveRbgKey, RBG_PROVIDERS } from '../../src/lib/removebg.js'
+import { removeBackground, resolveRbgKey, RBG_PROVIDERS } from '../../src/lib/removebg.js'
 
 /**
  * Background remover - the standard cutout command every big bot has.
@@ -9,8 +9,7 @@ import { removeBackground, rbgAvailable, setRbgKey, resolveRbgKey, RBG_PROVIDERS
  *   .removebg #1a4d2e    any hex colour works too
  *
  * The engine (src/lib/removebg.js) fails over across remove.bg, Photoroom
- * and Slazzer; keys come from .env, .rbgkey or src/builtin-keys.js, so the
- * public key shipped with the code works for every deployer.
+ * and Slazzer. Credentials come only from the private deployment environment.
  */
 
 const NAMED_COLOURS = {
@@ -78,42 +77,24 @@ export default [
     usage: '.rbgkey removebg <key> | .rbgkey photoroom <key> | .rbgkey off',
     owner: true,
 
-    async run({ sock, m, args, prefix }) {
+    async run({ sock, m, args }) {
       const provider = (args[0] || '').toLowerCase()
+      if (args.length > 1) {
+        await sock.sendMessage(m.chat, { delete: m.key }).catch(() => {})
+      }
 
-      if (!provider) {
-        const lines = []
-        for (const [name, p] of Object.entries(RBG_PROVIDERS)) {
-          const has = !!(await resolveRbgKey(p.env))
-          lines.push(`${has ? '🟢' : '⚪'} *${p.label}* — ${has ? 'key set' : 'no key'} (${p.signup.replace('https://', '')})`)
-        }
-        return m.reply(
-          `✂️ *BACKGROUND REMOVER KEYS*\n\n${lines.join('\n')}\n\n` +
-            `Set: *${prefix}rbgkey removebg <key>*\nClear all: *${prefix}rbgkey off*\n\n` +
-            `_A key set here or in src/builtin-keys.js works for every deployer._`
+      const lines = []
+      for (const [, value] of Object.entries(RBG_PROVIDERS)) {
+        const active = !!(await resolveRbgKey(value.env))
+        lines.push(
+          `${active ? '🟢' : '⚪'} *${value.label}* — ${active ? 'environment key active' : `set ${value.env}`}\n  ${value.signup}`
         )
       }
-
-      if (provider === 'off') {
-        for (const name of Object.keys(RBG_PROVIDERS)) await setRbgKey(name, '')
-        return m.reply('🗑️ All background-removal keys cleared (built-in keys in the code still apply).')
+      if (provider && provider !== 'off' && !RBG_PROVIDERS[provider]) {
+        return m.send(`❌ Unknown provider "${provider}".\n\nValid: ${Object.keys(RBG_PROVIDERS).join(', ')}`)
       }
-
-      if (!RBG_PROVIDERS[provider]) {
-        return m.reply(`❌ Unknown provider "${provider}".\n\nValid: ${Object.keys(RBG_PROVIDERS).join(', ')}`)
-      }
-
-      const value = args.slice(1).join(' ').trim()
-      if (!value) return m.reply(`📝 Usage: *${prefix}rbgkey ${provider} <api key>*\n\nGet one: ${RBG_PROVIDERS[provider].signup}`)
-
-      // wipe the secret from the chat as fast as possible
-      await sock.sendMessage(m.chat, { delete: m.key }).catch(() => {})
-
-      await setRbgKey(provider, value)
-      const active = await rbgAvailable()
-      await m.reply(
-        `🔑 *${RBG_PROVIDERS[provider].label}* key saved.\n` +
-          `Active chain: ${active.map((n) => RBG_PROVIDERS[n].label).join(' → ') || '(none - check the key)'}`
+      await m.send(
+        `🔒 Background-removal keys cannot be submitted or removed through WhatsApp. Configure them in your private deployment environment and restart VENOM.\n\n${lines.join('\n\n')}`
       )
     }
   }

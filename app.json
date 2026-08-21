@@ -1,0 +1,50 @@
+{
+  "name": "VENOM MD BOT",
+  "description": "VENOM MD BOT by TAPRUSH EMP (Micheal), powered by Baileys v7.",
+  "keywords": ["whatsapp", "whatsapp-bot", "baileys", "venom-md"],
+  "website": "https://github.com/MykelGoal/VENOM-MD-BOT#readme",
+  "repository": "https://github.com/MykelGoal/VENOM-MD-BOT.git",
+  "logo": "https://raw.githubusercontent.com/MykelGoal/VENOM-MD-BOT/main/Assets/Venom.jpg",
+  "success_url": "/",
+  "env": {
+    "PREFIX": {
+      "description": "Command prefix.",
+      "value": ".",
+      "required": false
+    },
+    "SESSION_NAMESPACE": {
+      "description": "Safe local/Mongo name for this WhatsApp session.",
+      "value": "venom",
+      "required": false
+    },
+    "SESSION_ID": {
+      "description": "Private credential from the existing external VENOM session site. Leave blank when MongoAuth already has a linked session.",
+      "required": false
+    },
+    "MODS": {
+      "description": "Deployment owner numbers, digits only and comma-separated.",
+      "value": "2348021016309",
+      "required": false
+    },
+    "PACKNAME": {
+      "description": "Sticker pack name.",
+      "value": "VENOM MD BOT",
+      "required": false
+    },
+    "AUTHOR": {
+      "description": "Sticker author.",
+      "value": "by: TAPRUSH EMP (Micheal)",
+      "required": false
+    },
+    "MONGODB": {
+      "description": "Your private MongoDB connection URL."
+    },
+    "GEMINI_API": {
+      "description": "Optional Gemini API key(s), comma-separated.",
+      "required": false
+    }
+  },
+  "buildpacks": [
+    { "url": "heroku/nodejs" }
+  ]
+}

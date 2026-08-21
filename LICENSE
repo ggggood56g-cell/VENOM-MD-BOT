@@ -1,6 +1,7 @@
 MIT License
 
-Copyright (c) 2026 TAPRUSH EMP (Micheal)
+Copyright (c) 2023 - FantoX
+Copyright (c) 2026 TAPRUSH EMP (Micheal), VENOM MD BOT modifications
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -19,16 +20,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
----
-
-DISCLAIMER
-
-This project uses Baileys, an unofficial WhatsApp Web API. It is not
-affiliated with, endorsed by, or in any way officially connected to WhatsApp
-or Meta Platforms, Inc.
-
-Using automation on WhatsApp may violate their Terms of Service. Accounts
-used for bulk or unsolicited messaging are routinely banned. Use a spare
-number, respect the people in your chats, and accept that you do so at your
-own risk. The author accepts no liability for banned accounts or misuse.

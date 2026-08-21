@@ -3,7 +3,7 @@ import { promisify } from 'util'
 import fs from 'fs'
 import path from 'path'
 import crypto from 'crypto'
-import axios from 'axios'
+import { assertPublicHttpUrl, publicHttp as axios } from './network.js'
 import ffmpegPath from 'ffmpeg-static'
 import config, { ROOT } from '../config.js'
 import log from './logger.js'
@@ -30,7 +30,21 @@ const execFileAsync = promisify(execFile)
  *             how to fix it (cookies) instead of pretending it broke.
  */
 
-export const YTDLP = path.join(ROOT, 'bin', 'yt-dlp')
+function executable(name, configured, localPath) {
+  const candidates = [configured, localPath]
+  for (const dir of String(process.env.PATH || '').split(path.delimiter)) {
+    if (dir) candidates.push(path.join(dir, name))
+  }
+  return candidates
+    .map((candidate) => String(candidate || '').trim())
+    .find((candidate) => candidate && fs.existsSync(candidate)) || ''
+}
+
+export const YTDLP = executable(
+  'yt-dlp',
+  process.env.YT_DLP_PATH,
+  path.join(ROOT, 'bin', 'yt-dlp')
+)
 export const COOKIE_FILE = path.join(ROOT, 'cookies.txt')
 
 /**
@@ -134,9 +148,23 @@ export const isUrl = (s) => /^https?:\/\/\S+$/i.test(String(s || '').trim())
 
 /* ---------------------------- yt-dlp core ---------------------------- */
 
+export async function assertDownloaderTarget(value) {
+  const target = String(value || '').trim()
+  if (!target || target.length > 2048) throw new Error('A valid public download URL is required')
+  // These are yt-dlp's search expressions, built internally with bounded
+  // result counts. Every user-supplied HTTP target is DNS-checked instead.
+  if (/^(?:yt|sc)search\d{1,2}:/i.test(target)) {
+    if (target.length > 500) throw new Error('The download search is too long')
+    return target
+  }
+  await assertPublicHttpUrl(target)
+  return target
+}
+
 /** Run yt-dlp and return parsed JSON metadata. */
 export async function probe(url, extraArgs = []) {
-  if (!hasYtdlp()) throw new Error('yt-dlp is not installed. Run: npm run setup')
+  if (!hasYtdlp()) throw new Error('yt-dlp is not installed. Install it on the host or set YT_DLP_PATH.')
+  await assertDownloaderTarget(url)
   const args = [
     '--no-warnings', '--dump-single-json', '--no-playlist',
     '--socket-timeout', '20', ...extraArgs
@@ -203,9 +231,10 @@ export function explainYtError(raw) {
  *  - audio:  extract audio to mp3
  *  - maxMb:  reject anything bigger (WhatsApp caps around 64MB for docs)
  */
-export function ytdlpDownload(url, { format, audio = false, maxMb = 64, extraArgs = [], onInfo } = {}) {
+export async function ytdlpDownload(url, { format, audio = false, maxMb = 64, extraArgs = [], onInfo } = {}) {
+  if (!hasYtdlp()) throw new Error('yt-dlp is not installed. Install it on the host or set YT_DLP_PATH.')
+  await assertDownloaderTarget(url)
   return new Promise((resolve, reject) => {
-    if (!hasYtdlp()) return reject(new Error('yt-dlp is not installed. Run: npm run setup'))
 
     const outTemplate = tmpFile('%(ext)s').replace('.%(ext)s', '') + '.%(ext)s'
     const base = outTemplate.replace('.%(ext)s', '')

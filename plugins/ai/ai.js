@@ -250,13 +250,13 @@ export default [
           return (
             `${on ? '✅' : '⬜'} *${p.label}*\n` +
             `   ${p.free}\n` +
-            (on ? `   _key active_\n` : `   🔗 ${p.signup}\n   ↳ \`${prefix}setkey ${name} <your-key>\`\n`)
+            (on ? `   _environment key active_\n` : `   🔗 ${p.signup}\n   ↳ Environment variable: \`${p.env}\`\n`)
           )
         })
       await m.reply(
         `🔑 *AI PROVIDERS*\n\n` +
           lines.join('\n') +
-          `\n_Keys are stored in the database, never shown in chat, and the message you send them in is deleted automatically._\n\n` +
+          `\n_Add keys only through your private deployment environment, then restart VENOM. Chat-delivered credentials are disabled._\n\n` +
           `Recommended free picks: *Groq* (fast, generous) and *Gemini* (very capable).`
       )
     }
@@ -268,42 +268,22 @@ export default [
     desc: 'Add an AI provider key',
     usage: '.setkey groq gsk_xxx',
     owner: true,
-    async run({ sock, m, args, prefix }) {
+    async run({ sock, m, args }) {
       const name = (args[0] || '').toLowerCase()
-      const value = args.slice(1).join(' ').trim()
-
-      if (!name || !value) {
-        return m.reply(
-          `🔑 Usage: *${prefix}setkey <provider> <key>*\n\n` +
-            `Providers: ${Object.keys(PROVIDERS).join(', ')}\n\n` +
-            `Example: *${prefix}setkey groq gsk_abc123...*\n\n` +
-            `_Send this in a private chat with me. I delete the message immediately after saving._`
-        )
+      if (args.length > 1) {
+        await sock.sendMessage(m.chat, { delete: m.key }).catch(() => {})
       }
-      if (!PROVIDERS[name]) {
-        return m.reply(`❌ Unknown provider "${name}".\n\nValid: ${Object.keys(PROVIDERS).join(', ')}`)
+      if (name && !PROVIDERS[name]) {
+        return m.send(`❌ Unknown provider "${name}".\n\nValid: ${Object.keys(PROVIDERS).join(', ')}`)
       }
-
-      // wipe the message containing the secret as fast as possible
-      await sock.sendMessage(m.chat, { delete: m.key }).catch(() => {})
-
-      await setKey(PROVIDERS[name].env, value)
-
-      // prove the key works before claiming success
-      await m.send(`🔑 Saved *${PROVIDERS[name].label}* key. Testing it...`)
-      try {
-        const res = await chat('Reply with exactly: OK', { provider: name, noFallback: true, maxTokens: 20 })
-        await m.send(
-          `✅ *${PROVIDERS[name].label}* is working.\n\n` +
-            `Model: ${res.model}\nTest reply: ${res.text.slice(0, 60)}\n\n` +
-            `_Your original message with the key has been deleted._`
-        )
-      } catch (e) {
-        await m.send(
-          `⚠️ Key saved but the test failed:\n${e.message.slice(0, 300)}\n\n` +
-            `Check the key is correct and has credit. Remove it with *${prefix}delkey ${name}*.`
-        )
-      }
+      const details = name
+        ? `${PROVIDERS[name].label}: set *${PROVIDERS[name].env}*`
+        : Object.entries(PROVIDERS)
+            .map(([provider, value]) => `• ${provider}: *${value.env}*`)
+            .join('\n')
+      await m.send(
+        `🔒 AI keys cannot be submitted through WhatsApp. Add the key to your private deployment environment and restart VENOM.\n\n${details}`
+      )
     }
   },
   {

@@ -19,7 +19,7 @@ import { getBuffer } from '../../src/lib/api.js'
  */
 
 const notInstalled = (m) =>
-  m.reply('⚠️ yt-dlp is not installed.\n\nRun *npm run setup* in the bot folder, then try again.')
+  m.reply('⚠️ yt-dlp is not installed.\n\nInstall it on the host or set YT_DLP_PATH, then try again.')
 
 const safeFile = (s) => `${String(s).replace(/[^\w\s-]/g, '').slice(0, 60) || 'song'}.mp3`
 

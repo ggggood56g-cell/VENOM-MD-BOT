@@ -271,14 +271,14 @@ export default [
 
       await m.reply(
         `╭━━━〔 *DOWNLOAD ROUTES* 〕━━━╮\n${body}\n` +
-          `┃\n┃ ${hasYtdlp() ? '✅' : '❌'} *yt-dlp* — ${hasYtdlp() ? 'installed' : 'missing (npm run setup)'}\n` +
+          `┃\n┃ ${hasYtdlp() ? '✅' : '❌'} *yt-dlp* — ${hasYtdlp() ? 'installed' : 'missing (install on host)'}\n` +
           `╰━━━━━━━━━━━━━━━━━━╯\n\n` +
           `📡 Mode: *${getVar('DL_SOURCE')}* · Preferred: *${getVar('DL_PROVIDER')}*\n\n` +
           (ok.length
             ? `*${ok.length}/${results.length} services are alive* — .play and .video should work.\n\n` +
               `Pin the fastest one: *${prefix}setvar DL_PROVIDER ${ok[0]?.name}*`
             : `⚠️ *Every service failed.* Either this host blocks outbound requests, or all the free APIs are down at once (it happens).\n\n` +
-              `Try: *${prefix}setvar DL_SOURCE ytdlp* and *npm run setup*.`)
+              `Install yt-dlp on the host, then try: *${prefix}setvar DL_SOURCE ytdlp*.`)
       )
       await m.react('✅')
     }
