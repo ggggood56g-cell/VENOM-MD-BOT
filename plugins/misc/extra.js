@@ -238,7 +238,7 @@ export default [
         if (mb > 190) throw new Error(`file is ${mb.toFixed(1)}MB, over the 190MB host limit`)
 
         const FormData = (await import('form-data')).default
-        const axios = (await import('axios')).default
+        const { publicHttp: axios } = await import('../../src/lib/network.js')
         const { extOf } = await import('../../src/lib/media.js')
         const ext = await extOf(buffer, 'bin')
 

@@ -30,7 +30,7 @@ const docCommand = ({ name, alias, audio, desc }) => ({
   usage: `.${name} <song or link>`,
   cooldown: 30,
   async run({ m, text, args }) {
-    if (!hasYtdlp()) return m.reply('⚠️ yt-dlp is not installed. Run *npm run setup*.')
+    if (!hasYtdlp()) return m.reply('⚠️ yt-dlp is not installed. Install it on the host or set YT_DLP_PATH.')
     if (!text) return m.reply(`📄 Give me a name or link:\n*.${name} alan walker faded*`)
 
     const qualities = [144, 240, 360, 480, 720]

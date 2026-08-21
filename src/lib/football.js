@@ -6,8 +6,8 @@
  *   .pred premier league filter by league name
  *
  * Sources (auto failover):
- *   1. API-Football  (https://dashboard.api-football.com) when a key is set
- *      via .predkey / FOOTBALL_API_KEY - adds real bookmaker odds to the model.
+ *   1. API-Football  (https://dashboard.api-football.com) when
+ *      FOOTBALL_API_KEY is set privately - adds bookmaker odds to the model.
  *   2. TheSportsDB    keyless test key - works out of the box, no setup.
  *
  * Model: expected goals from each team's attack/defence stats (goals for &
@@ -20,8 +20,6 @@
 import { collection } from './database.js'
 import { http } from './api.js'
 import { sleep } from './utils.js'
-import { builtinKey } from '../builtin-keys.js'
-
 /** Bot timezone - same convention as the school module. */
 export const TZ = process.env.TZ || 'Africa/Lagos'
 
@@ -44,29 +42,13 @@ const MAX_TABLES_KEYED = 14
 
 /* ------------------------------ keys ------------------------------ */
 
-/** env > database (.predkey) > built-in key, like the AI providers. */
+/** Resolve the optional provider key from the private environment only. */
 export async function resolveFootKey() {
-  if (String(process.env.FOOTBALL_API_KEY || '').trim()) return process.env.FOOTBALL_API_KEY.trim()
-  try {
-    const row = await cache.findOne({ id: '__footkey__' })
-    if (row?.key) return String(row.key).trim()
-  } catch {
-    /* no key stored */
-  }
-  // Test isolation: never hand suites the live shipped key
-  if (process.env.VENOM_TEST_ISOLATE === '1') return ''
-  return builtinKey('FOOTBALL_API_KEY')
+  return String(process.env.FOOTBALL_API_KEY || '').trim()
 }
 
-/** '' clears the key and drops back to the keyless source. */
-export async function setFootKey(value) {
-  const key = String(value || '').trim()
-  if (!key) {
-    await cache.delete({ id: '__footkey__' })
-    return ''
-  }
-  await cache.set({ id: '__footkey__' }, { key, at: Date.now() })
-  return key
+export async function setFootKey() {
+  throw new Error('Configure FOOTBALL_API_KEY in the private deployment environment')
 }
 
 /* --------------------------- date helpers --------------------------- */

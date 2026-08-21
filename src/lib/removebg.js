@@ -9,15 +9,10 @@
  *   2. Photoroom   https://www.photoroom.com/api  great edges, cheap credits
  *   3. Slazzer     https://www.slazzer.com/api    remove.bg-compatible
  *
- * Key precedence - same convention as the AI providers and .predkey:
- *   1. .env / panel environment   (a deployer's own key always wins)
- *   2. .rbgkey from WhatsApp      (stored in the database)
- *   3. src/builtin-keys.js        (the public key that ships with the code)
+ * Keys are read only from the private deployment environment.
  */
 import FormData from 'form-data'
 import { http } from './api.js'
-import DB from './database.js'
-import { builtinKey } from '../builtin-keys.js'
 
 export const RBG_PROVIDERS = {
   removebg: {
@@ -48,17 +43,9 @@ export const MAX_INPUT_BYTES = 9 * 1024 * 1024
 
 /* ------------------------------ keys ------------------------------ */
 
-/** Resolve one provider key: env > database (.rbgkey) > built-in. */
+/** Resolve one provider key from the private deployment environment. */
 export async function resolveRbgKey(envName) {
-  const env = String(process.env[envName] || '').trim()
-  if (env) return env
-  try {
-    const row = await DB.vars.findOne({ key: envName })
-    if (row?.value) return String(row.value).trim()
-  } catch {
-    /* db unreachable - built-in still works */
-  }
-  return builtinKey(envName)
+  return String(process.env[envName] || '').trim()
 }
 
 /** Every provider that currently has a usable key, chain order. */
@@ -70,15 +57,9 @@ export async function rbgAvailable() {
   return out
 }
 
-export async function setRbgKey(provider, value) {
-  const p = RBG_PROVIDERS[provider]
-  if (!p) throw new Error(`Unknown provider: ${provider}`)
-  const v = String(value || '').trim()
-  if (!v) {
-    await DB.vars.delete({ key: p.env })
-    return
-  }
-  await DB.vars.set({ key: p.env }, { value: v })
+export async function setRbgKey(provider) {
+  if (!RBG_PROVIDERS[provider]) throw new Error(`Unknown provider: ${provider}`)
+  throw new Error('Configure provider keys in the private deployment environment')
 }
 
 /* ----------------------------- engine ----------------------------- */

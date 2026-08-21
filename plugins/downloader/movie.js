@@ -88,7 +88,7 @@ async function sendDirect(m, found, query) {
 /** A page URL yt-dlp has to download for us (YouTube and 1800+ others). */
 async function sendViaYtdlp(m, url, label) {
   if (!hasYtdlp()) {
-    throw new Error('yt-dlp is not installed.\n\nRun *npm run setup* in the bot folder, then try again.')
+    throw new Error('yt-dlp is not installed.\n\nInstall it on the host or set YT_DLP_PATH, then try again.')
   }
   const { buffer } = await ytdlpDownload(url, {
     format: 'best[height<=480][ext=mp4]/best[ext=mp4]/best',

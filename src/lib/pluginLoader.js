@@ -53,7 +53,11 @@ function walk(dir) {
   if (!fs.existsSync(dir)) return out
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
     const full = path.join(dir, entry.name)
-    if (entry.isDirectory()) out.push(...walk(full))
+    if (entry.isSymbolicLink()) {
+      const issue = `Skipped symbolic link ${path.relative(config.pluginDir, full)}`
+      log.warn(issue)
+      loadIssues.push(issue)
+    } else if (entry.isDirectory()) out.push(...walk(full))
     else if (entry.name.endsWith('.js')) out.push(full)
   }
   return out
@@ -123,7 +127,9 @@ export async function loadPlugins() {
         loadedCount++
       }
     } catch (e) {
-      log.error(`Failed to load ${path.relative(config.pluginDir, file)}:`, e.message)
+      const issue = `Failed to load ${path.relative(config.pluginDir, file)}: ${e.message}`
+      loadIssues.push(issue)
+      log.error(issue)
     }
   }
 

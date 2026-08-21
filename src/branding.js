@@ -1,23 +1,47 @@
-/**
- * Permanent public credit for the original VENOM MD creator.
- *
- * Deployment owners still come from OWNER_NUMBER and keep all administrative
- * permissions, but public creator/contact commands must not be replaced when
- * somebody forks or deploys the bot.
- */
-export const CREATOR = Object.freeze({
-  name: 'TAPRUSH EMP (Micheal)',
-  number: '2348021016309',
-  jid: '2348021016309@s.whatsapp.net',
-  github: 'https://github.com/MykelGoal'
-})
+import BRAND from "../System/Branding.js";
 
-export function creatorPromo(prefix = '.') {
+export const CREATOR = Object.freeze({
+  name: BRAND.creator,
+  number: BRAND.creatorNumber,
+  jid: BRAND.creatorJid,
+  github: BRAND.githubUrl,
+  whatsapp: BRAND.whatsappUrl,
+  youtube: BRAND.youtubeTutorial,
+});
+
+export const branding = Object.freeze({
+  botName: BRAND.botName,
+  shortName: BRAND.shortName,
+  creator: BRAND.creator,
+  ownerName: BRAND.creator,
+  ownerNumber: BRAND.creatorNumber,
+  github: BRAND.githubUrl,
+  repo: BRAND.repository,
+  whatsapp: BRAND.whatsappUrl,
+  supportGroup: BRAND.supportGroup,
+  youtube: BRAND.youtubeTutorial,
+  logo: BRAND.logoPath,
+});
+
+export function creatorPromo(prefix = ".") {
   return (
     `💡 *New here?* Use *${prefix}menu <category>* or *${prefix}menu <command>* to learn what a command does.\n` +
-    `🤖 *Want your own VENOM MD bot?* Contact the original creator with *${prefix}owner*.\n` +
-    `📞 https://wa.me/${CREATOR.number}`
-  )
+    `🤖 *Want your own ${BRAND.shortName} bot?* Contact the original creator with *${prefix}owner*.\n` +
+    `📞 ${BRAND.whatsappUrl}`
+  );
 }
 
-export default CREATOR
+export function contextInfo(extra = {}) {
+  return {
+    externalAdReply: {
+      title: BRAND.botName,
+      body: `Created by ${BRAND.creator}`,
+      sourceUrl: BRAND.repository,
+      mediaType: 1,
+      renderLargerThumbnail: false,
+    },
+    ...extra,
+  };
+}
+
+export default CREATOR;

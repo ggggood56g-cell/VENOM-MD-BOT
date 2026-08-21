@@ -25,10 +25,11 @@ export const SCHEMA = {
   CMD_REACT: { type: 'bool', get: () => config.cmdReact },
   CMD_REACT_EMOJI: { type: 'string', get: () => config.cmdReactEmoji },
   AUTO_DELETE_COMMANDS: { type: 'bool', get: () => config.autoDeleteCommands },
-  BOT_NAME: { type: 'string', get: () => config.botName },
-  OWNER_NAME: { type: 'string', get: () => config.ownerName },
+  // Public VENOM identity is canonical and cannot be rewritten from chat.
+  BOT_NAME: { type: 'string', immutable: true, get: () => config.botName },
+  OWNER_NAME: { type: 'string', immutable: true, get: () => config.ownerName },
   USER_TAG: { type: 'string', get: () => config.userTag },
-  MENU_IMAGE: { type: 'string', get: () => config.menuImage },
+  MENU_IMAGE: { type: 'string', immutable: true, get: () => config.menuImage },
 
   /* status / presence automation */
   READ_STATUS: { type: 'bool', get: () => false },
@@ -81,7 +82,11 @@ const coerce = (type, raw) => {
 /** Load every stored var into memory. Call once at boot. */
 export async function loadVars() {
   const rows = await DB.vars.all()
-  for (const row of rows) cache.set(row.key, row.value)
+  for (const row of rows) {
+    const definition = SCHEMA[row.key]
+    if (definition?.immutable) continue
+    cache.set(row.key, row.value)
+  }
   return cache
 }
 
@@ -97,6 +102,7 @@ export async function setVar(key, raw) {
   const k = key.toUpperCase()
   const def = SCHEMA[k]
   if (!def) throw new Error(`Unknown var: ${k}`)
+  if (def.immutable) throw new Error(`${k} is part of VENOM's canonical public identity`)
   if (def.type === 'enum' && !def.values.includes(String(raw).toLowerCase())) {
     throw new Error(`${k} must be one of: ${def.values.join(', ')}`)
   }
@@ -117,8 +123,12 @@ export async function delVar(key) {
 export function allVars() {
   return Object.keys(SCHEMA).map((k) => ({
     key: k,
-    value: cache.has(k) ? cache.get(k) : SCHEMA[k].get(),
-    source: cache.has(k) ? 'db' : 'env'
+    value: SCHEMA[k].immutable
+      ? SCHEMA[k].get()
+      : cache.has(k)
+        ? cache.get(k)
+        : SCHEMA[k].get(),
+    source: SCHEMA[k].immutable ? 'canonical' : cache.has(k) ? 'db' : 'env'
   }))
 }
 

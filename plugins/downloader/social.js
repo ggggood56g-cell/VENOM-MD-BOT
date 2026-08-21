@@ -159,7 +159,7 @@ export default [
     usage: '.autodl <link>  |  .autodl <link> audio',
     cooldown: 20,
     async run({ m, text, args }) {
-      if (!hasYtdlp()) return m.reply('⚠️ yt-dlp is not installed. Run *npm run setup*.')
+      if (!hasYtdlp()) return m.reply('⚠️ yt-dlp is not installed. Install it on the host or set YT_DLP_PATH.')
       const url = args.find(isUrl) || (isUrl(m.quoted?.text) ? m.quoted.text : null)
       if (!url) return m.reply('🔗 Send any media link:\n*.autodl <link>*\n\nAdd *audio* to get audio only.')
 

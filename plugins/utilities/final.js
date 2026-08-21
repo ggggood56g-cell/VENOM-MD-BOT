@@ -131,7 +131,7 @@ export default [
         if (mb > 190) throw new Error(`file is ${mb.toFixed(1)}MB, too large`)
 
         const FormData = (await import('form-data')).default
-        const axios = (await import('axios')).default
+        const { publicHttp: axios } = await import('../../src/lib/network.js')
         const { extOf } = await import('../../src/lib/media.js')
         const ext = await extOf(buffer, 'bin')
 
@@ -210,7 +210,7 @@ export default [
         const mp3 = await toMp3(buffer, await extOf(buffer, 'ogg'))
 
         const FormData = (await import('form-data')).default
-        const axios = (await import('axios')).default
+        const { publicHttp: axios } = await import('../../src/lib/network.js')
         const form = new FormData()
         form.append('file', mp3, { filename: 'audio.mp3', contentType: 'audio/mpeg' })
         form.append('model', 'whisper-1')
