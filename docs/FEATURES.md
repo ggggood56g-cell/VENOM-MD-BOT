@@ -14,7 +14,7 @@ A 549-command menu is unreadable, so people learn six commands and never find th
 SCHOOL_GROUP: 'https://chat.whatsapp.com/YourClassGroupLink',
 ```
 
-**This bot ships with `SCHOOL_GROUP: 'support'`** — class is held in the force-join group from `SUPPORT_GROUP_LINK`, which is where the members already are. Change `SUPPORT_GROUP_LINK` and the classroom follows it; put a link or jid in `SCHOOL_GROUP` to teach somewhere else entirely.
+**This bot ships with `SCHOOL_GROUP: 'support'`** — class is held in the force-join group from `SUPPORT_GROUP_LINK`, which is where the members already are. Change `SUPPORT_GROUP_LINK` in `src/builtin-keys.js` (or override it in `.env`) and the classroom follows it; put a link or jid in `SCHOOL_GROUP` to teach somewhere else entirely.
 
 Left blank, **no class runs anywhere** until the owner sends `.school on` in the group they want. It never guesses — the force-join group is usually not where you want to teach.
 

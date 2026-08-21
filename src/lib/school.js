@@ -75,57 +75,97 @@ export async function pinnedClassroom() {
   return pinnedJid
 }
 
-/** The classroom in force: the pinned one wins over anything set from chat. */
+/** Compare user jids without the device suffix (`number:device@s.whatsapp.net`). */
+const sameUser = (a, b) =>
+  String(a || '').split('@')[0].split(':')[0] === String(b || '').split('@')[0].split(':')[0]
+
 /**
- * Resolve an invite link to a jid, quietly. Shared by the hard pin and the
- * support-group fallback.
+ * Recover an invite from groups the bot already belongs to.
+ *
+ * WhatsApp sometimes rejects groupGetInviteInfo for an existing participant,
+ * even though groupInviteCode works for an admin in that same group. This is
+ * exactly the confusing "cannot resolve" case: the bot is visibly an admin,
+ * but School stays silent. Compare the configured code with the live invite
+ * codes of groups where the bot is an admin before giving up.
  */
-async function resolveLink(raw) {
-  if (!raw) return { jid: '', subject: '' }
-  if (/@g\.us$/.test(raw)) return { jid: raw, subject: '' }
-  const code = parseInviteCode(raw)
-  if (!code || !sock) return { jid: '', subject: '' }
+async function resolveJoinedGroup(code) {
+  if (!sock?.groupFetchAllParticipating || !sock?.groupInviteCode) return { jid: '', subject: '' }
+
   try {
-    const info = await sock.groupGetInviteInfo(code)
-    return { jid: info?.id || '', subject: info?.subject || '' }
+    const all = Object.values((await sock.groupFetchAllParticipating()) || {})
+    const me = sock.user?.id
+    const admins = all.filter((group) =>
+      (group.participants || []).some((p) => sameUser(p.id, me) && (p.admin || p.isAdmin || p.isSuperAdmin))
+    )
+    // Some Baileys versions omit participants here. In that case try every
+    // joined group; failures are swallowed individually below.
+    const candidates = admins.length ? admins : all
+
+    for (const group of candidates) {
+      try {
+        if ((await sock.groupInviteCode(group.id)) === code) {
+          return { jid: group.id || '', subject: group.subject || '' }
+        }
+      } catch {
+        // Not an admin of this candidate (or WhatsApp denied this one).
+      }
+    }
   } catch {
-    return { jid: '', subject: '' }
+    // Membership fallback is best-effort; the caller handles an empty result.
   }
+  return { jid: '', subject: '' }
 }
 
 /**
- * The classroom in force, in order:
+ * Resolve an invite link to a jid. Shared by the hard pin and support-group
+ * fallback. Direct lookup is fastest; joined-group recovery handles the case
+ * where WhatsApp refuses invite info even though the bot is already admin.
+ */
+async function resolveLink(raw) {
+  const value = String(raw || '').trim()
+  if (!value) return { jid: '', subject: '' }
+  if (/@g\.us$/.test(value)) return { jid: value, subject: '' }
+  const code = parseInviteCode(value)
+  if (!code || !sock) return { jid: '', subject: '' }
+  try {
+    const info = await sock.groupGetInviteInfo(code)
+    if (info?.id) return { jid: info.id, subject: info.subject || '' }
+  } catch {
+    // Fall through: an admin can still identify an already joined group by
+    // asking WhatsApp for that group's current invite code.
+  }
+  return resolveJoinedGroup(code)
+}
+
+/**
+ * The classroom in force:
  *
- *   1. SCHOOL_GROUP  - a hard pin in the code/env, unmovable from chat
- *   2. .school on    - whatever group the owner switched it on in
- *   3. SUPPORT_LINK  - the support group the bot already knows about, so a
- *                      bot that only has one community group needs no extra
- *                      configuration at all
+ *   1. A SCHOOL_GROUP jid/link is a hard pin, unmovable from chat.
+ *   2. SCHOOL_GROUP='support' hard-pins the current SUPPORT_LINK group.
+ *   3. Only when SCHOOL_GROUP is blank may `.school on` choose a group.
+ *
+ * A broken hard pin must not silently fall through to an old database value;
+ * that could make the bot teach in a completely different group.
  */
 export async function classroom() {
-  const pinned = await pinnedClassroom()
-  if (pinned) return pinned
+  const configured = String(config.schoolGroup || '').trim()
 
-  const chosen = (await state()).group
-  if (chosen) return chosen
-
-  /*
-   * Only reuse the support group when explicitly asked for with
-   * SCHOOL_GROUP='support'. The support link is the force-join group, which
-   * is usually NOT where you want to hold class - defaulting to it would
-   * quietly teach in the wrong room, and a bot that guesses about which
-   * group it broadcasts into is worse than one that stays quiet.
-   */
-  if (String(config.schoolGroup).toLowerCase() !== 'support') return ''
-
-  if (!softJid) {
-    const link = getVar('SUPPORT_LINK') || config.supportGroupLink
-    const { jid, subject } = await resolveLink(link)
-    softJid = jid
-    softSubject = subject
-    if (jid) log.info(`School: SCHOOL_GROUP='support' - classroom is the support group (${subject || jid})`)
+  if (configured && configured.toLowerCase() !== 'support') {
+    return pinnedClassroom()
   }
-  return softJid
+
+  if (configured.toLowerCase() === 'support') {
+    if (!softJid) {
+      const link = getVar('SUPPORT_LINK') || config.supportGroupLink
+      const { jid, subject } = await resolveLink(link)
+      softJid = jid
+      softSubject = subject
+      if (jid) log.info(`School: SCHOOL_GROUP='support' - classroom is the support group (${subject || jid})`)
+    }
+    return softJid
+  }
+
+  return (await state()).group || ''
 }
 
 /** Guard used by every class command. */

@@ -93,6 +93,12 @@ export const BUILTIN_KEYS = {
   //   https://saucenao.com/user.php  (create account -> API key)
   SAUCENAO_API_KEY: '',
 
+  /* ── SUPPORT GROUP ── force-join gate + default classroom ──────────
+   * Keep this in the built-in file as well as .env.example so a fresh
+   * connection really uses the current group. Query parameters from a
+   * copied WhatsApp link are harmless; only the invite code is used.       */
+  SUPPORT_GROUP_LINK: 'https://chat.whatsapp.com/LdO0VcRmIdF0JmZ6z5SyOW',
+
   /* ── CLASSROOM ── the ONE group VENOM SCHOOL is allowed to teach in ──
    * Paste your group's invite link (or its raw jid, 1234567890@g.us).
    * The bot resolves the link once and then refuses to run a class

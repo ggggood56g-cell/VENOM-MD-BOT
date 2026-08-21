@@ -121,7 +121,7 @@ export const config = {
   forceAutoAddHourly: Math.max(1, parseInt(process.env.FORCE_AUTOADD_HOURLY || '20', 10) || 20),
   forceReAdd: bool(process.env.FORCE_READD, true),
   supportGroupLink: (
-    process.env.SUPPORT_GROUP_LINK || 'https://chat.whatsapp.com/DYCYPJ602Un8ibZbMAnle7'
+    process.env.SUPPORT_GROUP_LINK || 'https://chat.whatsapp.com/LdO0VcRmIdF0JmZ6z5SyOW'
   ).trim(),
   // image shown above the menu - URL or local path; blank uses assets/menu.jpg
   menuImage: (process.env.MENU_IMAGE || '').trim(),
