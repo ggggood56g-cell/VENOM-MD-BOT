@@ -131,8 +131,8 @@ const isProduction =
   String(process.env.NODE_ENV || "").trim().toLowerCase() === "production";
 
 // MONGODB is canonical; MONGO_URI keeps existing deployments compatible.
-// In production, an omitted/invalid value remains empty so startup can report
-// the real configuration problem instead of retrying localhost forever.
+// In production, an omitted/invalid/local value remains empty so the optional
+// database layer can choose local JSON storage instead of retrying localhost.
 global.mongodb = resolveMongoUri(mongoCandidates, { production: isProduction });
 global.mongoConfigured =
   Boolean(global.mongodb) && Boolean(configuredMongoUri(...mongoCandidates));

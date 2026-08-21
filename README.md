@@ -84,20 +84,20 @@ Add these private environment variables before starting the deployment:
 | Variable | What to enter |
 |---|---|
 | `SESSION_ID` | Private value from the official VENOM pairing site |
-| `MONGODB` or `MONGO_URI` | Your private MongoDB connection URL (required on production hosts) |
 | `MODS` | Your WhatsApp owner number, digits only |
 | `SESSION_NAMESPACE` | A short name such as `venom` |
+| `MONGODB` or `MONGO_URI` | Optional hosted MongoDB URL for persistent storage |
 
 Render reads the included [`render.yaml`](render.yaml). Koyeb builds the included
 [`Dockerfile`](Dockerfile). On either platform, confirm that port `10000` is
 exposed and add the private variables above before deployment.
 
-> [!IMPORTANT]
-> A hosted container is not a MongoDB server. If the logs contain
-> `connect ECONNREFUSED 127.0.0.1:27017`, add `MONGODB` (or `MONGO_URI`) in the
-> service's private environment settings using a MongoDB Atlas or other hosted
-> connection URL, then redeploy. Do not use `mongodb://127.0.0.1:27017/venom`
-> on Render.
+> [!NOTE]
+> MongoDB is optional. Without a MongoDB URL, VENOM uses local JSON storage and
+> local session files, so the bot can start immediately. Hosted files may be
+> lost when the service is redeployed; add MongoDB later if you need durable
+> settings or session backup. Never use `mongodb://127.0.0.1:27017/venom` as a
+> hosted database URL.
 
 ---
 
@@ -122,8 +122,9 @@ exposed and add the private variables above before deployment.
 
 ## 🛠️ Manual Deployment
 
-**Requirements:** Node.js 22+, npm, a private MongoDB database, and a secondary
-WhatsApp number.
+**Requirements:** Node.js 22+, npm, and a secondary WhatsApp number.
+MongoDB is optional; configure it only when you want durable data and remote
+session backup.
 
 ```bash
 # Clone and enter the project
@@ -132,7 +133,7 @@ cd VENOM-MD-BOT
 
 # Configure VENOM
 cp .env.example .env
-# Add your SESSION_ID, MONGODB, and MODS to .env
+# Add your SESSION_ID and MODS to .env; MONGODB is optional
 
 # Install, verify, and start
 npm ci
@@ -155,7 +156,7 @@ docker run --rm -p 10000:10000 --env-file .env \
 
 | Variable | Required | Default | Purpose |
 |---|---:|---|---|
-| `MONGODB` or `MONGO_URI` | Production | local VENOM URL (development only) | Data and private session backup storage |
+| `MONGODB` or `MONGO_URI` | No | local VENOM URL (development only) | Optional persistent data and private session backup storage |
 | `SESSION_ID` | First link | blank | Private credential from the official pairing site |
 | `SESSION_NAMESPACE` | No | `venom` | Safe local and MongoAuth storage name |
 | `MODS` | No | creator number | Comma-separated deployment owner numbers |
