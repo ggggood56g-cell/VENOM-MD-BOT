@@ -4,7 +4,7 @@
 
 # ⚡ VENOM MD BOT
 
-**A fast and powerful WhatsApp multi-device bot.**
+**A fast, powerful WhatsApp multi-device bot — up and running in about 10 minutes.**
 
 [![Node.js](https://img.shields.io/badge/Node.js-20%2B-22c55e?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org)
 [![WhatsApp](https://img.shields.io/badge/WhatsApp-Multi--Device-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://github.com/WhiskeySockets/Baileys)
@@ -49,6 +49,9 @@
 </tr>
 </table>
 
+[![Join Telegram](https://img.shields.io/badge/Join%20Us-Telegram-229ED9?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/+PYae7FAKkbEwM2E0)
+[![Join WhatsApp](https://img.shields.io/badge/Join%20Us-WhatsApp%20Group-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://chat.whatsapp.com/CWpMOawc88e9DWGwfjW5Ia)
+
 [**GET SESSION ID**](https://session-site-2odn.onrender.com) · [**FORK REPOSITORY**](https://github.com/MykelGoal/VENOM-MD-BOT/fork)
 
 </div>
@@ -57,13 +60,13 @@
 
 ## 🐍 About
 
-VENOM MD BOT is a WhatsApp bot built with Baileys. It includes **631 commands** for group management, media, AI, games, downloads and useful everyday tools.
+VENOM MD BOT is a WhatsApp bot built with Baileys. It works out of the box with **no API keys**, and includes **631 commands** for group management, media, AI, games, downloads and useful everyday tools.
 
 ### Main features
 
+- **AI commands with 8 optional providers** (Gemini, OpenAI, Groq, DeepSeek, Mistral, OpenRouter, Cerebras, Cohere)
 - Group administration, welcome messages and anti-link protection
 - Stickers, media conversion and download tools
-- AI commands with multiple optional providers
 - Games, economy, search and utility commands
 - Local storage with optional MongoDB backup
 - Support for Render, Railway, Koyeb, Heroku, Docker and VPS
@@ -88,6 +91,8 @@ VENOM MD BOT is a WhatsApp bot built with Baileys. It includes **631 commands** 
 ---
 
 ## 🚀 Quick Deploy
+
+**Three steps, about ten minutes:** ① [Fork the repo](https://github.com/MykelGoal/VENOM-MD-BOT/fork) → ② [Get your Session ID](https://session-site-2odn.onrender.com) → ③ deploy with one click below.
 
 | Platform | Deploy |
 |---|---|
@@ -124,6 +129,14 @@ Optionally set a `PING_URL` environment variable to any URL the bot should ping 
 
 Requires **Node.js 20.18+**. FFmpeg is recommended for media commands.
 
+**VPS (Ubuntu/Debian) one-liner** — installs Node.js and FFmpeg if missing, clones the repo and prepares `.env`:
+
+```bash
+bash <(curl -fsSL https://raw.githubusercontent.com/MykelGoal/VENOM-MD-BOT/main/scripts/install.sh)
+```
+
+Or step by step:
+
 ```bash
 git clone https://github.com/MykelGoal/VENOM-MD-BOT.git
 cd VENOM-MD-BOT
@@ -154,6 +167,7 @@ Use this bot only with accounts and groups you are authorized to manage. Do not 
 - **Developer:** [TAPRUSH EMP (Micheal)](https://github.com/MykelGoal)
 - **Core library:** [Baileys](https://github.com/WhiskeySockets/Baileys)
 - **YouTube:** [VENOM MD Tech](https://www.youtube.com/@venommdbot?sub_confirmation=1)
+- **Community:** [Telegram](https://t.me/+PYae7FAKkbEwM2E0) · [WhatsApp Group](https://chat.whatsapp.com/CWpMOawc88e9DWGwfjW5Ia)
 - **License:** [MIT](LICENSE)
 
 <div align="center">
