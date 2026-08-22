@@ -16,8 +16,10 @@ services:
         value: VENOM MD BOT
       - key: OWNER_NAME
         value: TAPRUSH EMP (Micheal)
+      # Ask every fork/deployer for their own WhatsApp owner number.
+      # `sync: false` makes Render show this field on the deploy form.
       - key: OWNER_NUMBER
-        value: 2348021016309
+        sync: false
       - key: PREFIX
         value: .
       - key: COMMAND_MODE
