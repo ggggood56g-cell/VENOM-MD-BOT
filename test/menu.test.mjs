@@ -44,7 +44,7 @@ test("v2 menu reports real branding, user and plugin count", async () => {
   assert.match(replies[0], /Creator: TAPRUSH EMP \(Micheal\)/);
   assert.match(replies[0], /Number: 2348021016309/);
   assert.match(replies[0], /User: Test User/);
-  assert.match(replies[0], /Plugins: 539/);
+  assert.match(replies[0], /Plugins: 631/);
   assert.match(replies[0], /Version: v2\.0\.0/);
   assert.match(replies[0], /𝙰𝙸/);
 });

@@ -121,10 +121,19 @@ export default [
       if (!Number.isFinite(amount) || amount <= 0 || !/^[A-Z]{3}$/.test(from || "") || !/^[A-Z]{3}$/.test(to || "")) {
         throw new Error(`Use: ${context.prefix}currency 100 USD NGN`);
       }
-      const payload = await fetchJson(`https://api.frankfurter.app/latest?amount=${amount}&from=${from}&to=${to}`, {
-        allowedHosts: ["api.frankfurter.app"], maximumBytes: 256 * 1024,
+      // open.er-api.com is free, key-less and supports 160+ currencies incl. NGN
+      // (frankfurter.app only covers ECB currencies and has no Naira rates).
+      const payload = await fetchJson(`https://open.er-api.com/v6/latest/${from}`, {
+        allowedHosts: ["open.er-api.com"], maximumBytes: 256 * 1024,
       });
-      await context.reply(`💱 ${amount.toLocaleString()} ${from} = *${Number(payload.rates?.[to]).toLocaleString()} ${to}*\nRate date: ${payload.date}`);
+      const rate = payload?.rates?.[to];
+      if (payload?.result !== "success" || !rate) {
+        throw new Error(`No exchange rate for ${from} → ${to}. Check the currency codes.`);
+      }
+      const converted = amount * rate;
+      await context.reply(
+        `💱 ${amount.toLocaleString()} ${from} = *${converted.toLocaleString(undefined, { maximumFractionDigits: 2 })} ${to}*\nRate: 1 ${from} = ${rate.toLocaleString(undefined, { maximumFractionDigits: 6 })} ${to}\nUpdated: ${payload.time_last_update_utc || "recently"}`,
+      );
     },
   },
   {

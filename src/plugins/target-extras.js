@@ -7,6 +7,7 @@ import sharp from "sharp";
 import { downloadMedia, mediaMessage, unwrapMessage } from "../message.js";
 import { fetchBuffer, fetchJson } from "../services/http.js";
 import { ffmpegConvert } from "../services/media.js";
+import { synthesizeSpeech } from "../services/tts.js";
 import { renderTextStyle } from "../services/textmaker.js";
 import { downloadYouTube, searchYouTube } from "../services/youtube.js";
 import { sleep } from "../utils.js";
@@ -213,8 +214,8 @@ export default [
     usage: "aitts <text>",
     async execute(context) {
       if (!context.query || context.query.length > 200) throw new Error("Enter 1–200 characters.");
-      const url = `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=en&q=${encodeURIComponent(context.query)}`;
-      await context.send({ audio: { url }, mimetype: "audio/mpeg", ptt: true });
+      const audio = await synthesizeSpeech(context.query, "en");
+      await context.send({ audio, mimetype: "audio/mpeg", ptt: true });
     },
   },
   {
@@ -230,6 +231,7 @@ export default [
   },
   {
     name: "dbclean",
+    ownerStrict: true,
     category: "bot",
     description: "Remove expired local runtime records (owner only).",
     ownerOnly: true,

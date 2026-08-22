@@ -24,6 +24,11 @@ async function wikimediaImage(context, title) {
   await context.send({ image: buffer, caption: `🖼️ ${selected.title.replace(/^File:/, "")}\nSource: Wikimedia Commons` });
 }
 
+function flagEmoji(iso2) {
+  if (!/^[A-Za-z]{2}$/.test(iso2 || "")) return "🌍";
+  return String.fromCodePoint(...[...iso2.toUpperCase()].map((character) => 127397 + character.charCodeAt(0)));
+}
+
 export default [
   {
     name: "country",
@@ -32,20 +37,37 @@ export default [
     usage: "country Nigeria",
     async execute(context) {
       const query = requiredQuery(context, "country Nigeria");
-      const payload = await fetchJson(`https://restcountries.com/v3.1/name/${encodeURIComponent(query)}?fullText=false`, {
-        allowedHosts: ["restcountries.com"],
-        maximumBytes: 1024 * 1024,
+      const search = query.toLowerCase();
+      // World Bank data is free and key-less (restcountries now requires an API key).
+      const catalog = await fetchJson("https://api.worldbank.org/v2/country?format=json&per_page=320", {
+        allowedHosts: ["api.worldbank.org"],
+        maximumBytes: 512 * 1024,
       });
-      const item = payload[0];
-      if (!item) throw new Error("Country not found.");
+      const entries = Array.isArray(catalog?.[1]) ? catalog[1] : [];
+      const country = entries.find((item) => item.name?.toLowerCase() === search)
+        || entries.find((item) => item.id?.toLowerCase() === search || item.iso2Code?.toLowerCase() === search)
+        || entries.find((item) => item.name?.toLowerCase().includes(search));
+      if (!country) throw new Error("Country not found.");
+
+      let population = "Population: N/A";
+      try {
+        const stats = await fetchJson(
+          `https://api.worldbank.org/v2/country/${country.id}/indicator/SP.POP.TOTL?format=json&mrnev=1`,
+          { allowedHosts: ["api.worldbank.org"], maximumBytes: 128 * 1024 },
+        );
+        const row = Array.isArray(stats?.[1]) ? stats[1][0] : null;
+        if (row?.value != null) population = `Population: ~${Number(row.value).toLocaleString()} (${row.date})`;
+      } catch {
+        // Population is a bonus; the rest of the facts still work without it.
+      }
+
       await context.reply([
-        `${item.flag || "🌍"} *${item.name?.common}*`,
-        `Official: ${item.name?.official}`,
-        `Capital: ${item.capital?.join(", ") || "N/A"}`,
-        `Region: ${item.region}${item.subregion ? ` / ${item.subregion}` : ""}`,
-        `Population: ${Number(item.population || 0).toLocaleString()}`,
-        `Currencies: ${Object.values(item.currencies || {}).map((currency) => currency.name).join(", ") || "N/A"}`,
-        `Languages: ${Object.values(item.languages || {}).join(", ") || "N/A"}`,
+        `${flagEmoji(country.iso2Code)} *${country.name}*`,
+        `Capital: ${country.capitalCity || "N/A"}`,
+        `Region: ${country.region?.value?.trim() || "N/A"}`,
+        `Income level: ${country.incomeLevel?.value || "N/A"}`,
+        population,
+        `Code: ${country.id} / ${country.iso2Code || "N/A"}`,
       ].join("\n"));
     },
   },
@@ -89,19 +111,22 @@ export default [
   {
     name: "book",
     category: "search",
-    description: "Search Google Books.",
+    description: "Search for books.",
     usage: "book Things Fall Apart",
     async execute(context) {
       const query = requiredQuery(context, "book Things Fall Apart");
-      const payload = await fetchJson(`https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(query)}&maxResults=5`, {
-        allowedHosts: ["www.googleapis.com"],
-        maximumBytes: 2 * 1024 * 1024,
+      // Open Library is free and key-less (Google Books anonymous quota is exhausted).
+      const payload = await fetchJson(`https://openlibrary.org/search.json?q=${encodeURIComponent(query)}&limit=5`, {
+        allowedHosts: ["openlibrary.org"],
+        maximumBytes: 512 * 1024,
       });
-      const rows = (payload.items || []).map((item, index) => {
-        const info = item.volumeInfo || {};
-        return `${index + 1}. *${info.title || "Untitled"}*\n${(info.authors || ["Unknown author"]).join(", ")} • ${info.publishedDate || "Unknown date"}\n${info.infoLink || ""}`;
+      const rows = (payload.docs || []).map((item, index) => {
+        const author = (item.author_name || ["Unknown author"])[0];
+        const published = item.first_publish_year ? `First published ${item.first_publish_year}` : "Unknown year";
+        const editions = item.edition_count ? ` • ${item.edition_count} editions` : "";
+        return `${index + 1}. *${item.title || "Untitled"}*\n${author} • ${published}${editions}\nhttps://openlibrary.org${item.key}`;
       });
-      await context.reply(`📚 *Book results*\n\n${rows.join("\n\n") || "No books found."}`);
+      await context.reply(`📚 *Book results* (${payload.numFound ?? rows.length} found)\n\n${rows.join("\n\n") || "No books found."}`);
     },
   },
   {
@@ -110,14 +135,30 @@ export default [
     description: "Find lyrics using artist and song title.",
     usage: "lyrics Wizkid | Essence",
     async execute(context) {
+      if (!context.query) throw new Error(`Use: ${context.prefix}lyrics artist | song title`);
       const [artist, title] = context.query.split("|").map((value) => value.trim());
-      if (!artist || !title) throw new Error(`Use: ${context.prefix}lyrics artist | song title`);
-      const payload = await fetchJson(`https://api.lyrics.ovh/v1/${encodeURIComponent(artist)}/${encodeURIComponent(title)}`, {
-        allowedHosts: ["api.lyrics.ovh"],
+      const parameters = new URLSearchParams();
+      if (artist && title) {
+        parameters.set("artist_name", artist);
+        parameters.set("track_name", title);
+      } else if (!artist && !title) {
+        parameters.set("q", context.query);
+      } else {
+        throw new Error(`Use: ${context.prefix}lyrics artist | song title`);
+      }
+      // LRCLIB is a free, key-less lyrics API (lyrics.ovh shut down in 2025).
+      const results = await fetchJson(`https://lrclib.net/api/search?${parameters.toString()}`, {
+        allowedHosts: ["lrclib.net"],
         maximumBytes: 512 * 1024,
       });
-      if (!payload.lyrics) throw new Error("Lyrics were not found.");
-      await context.reply(`🎵 *${artist} — ${title}*\n\n${String(payload.lyrics).slice(0, 5_500)}`);
+      if (!Array.isArray(results) || !results.length) throw new Error("Lyrics were not found.");
+      const hit = results.find((item) => item.plainLyrics) || results[0];
+      const lyrics = String(hit.plainLyrics || "")
+        || String(hit.syncedLyrics || "").replace(/\[[^\]]*\]/g, "").trim();
+      if (!lyrics.trim()) throw new Error("Lyrics were not found.");
+      await context.reply(
+        `🎵 *${hit.artistName || artist || "Unknown"} — ${hit.trackName || title || context.query}*\n\n${lyrics.slice(0, 5_500)}`,
+      );
     },
   },
   {

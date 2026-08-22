@@ -14,17 +14,24 @@ async function request(url, {
   timeout = 15_000,
   headers = {},
   redirects = 2,
+  method = "GET",
+  body,
+  contentType,
 } = {}) {
   const target = new URL(url);
   if (target.protocol !== "https:" || !hostAllowed(target.hostname, allowedHosts || [])) {
     throw new Error("Remote service URL is not trusted.");
   }
+  const requestHeaders = {
+    accept: "application/json, image/*;q=0.9, */*;q=0.5",
+    "user-agent": "VENOM-MD-BOT/2.0",
+    ...headers,
+  };
+  if (body && contentType) requestHeaders["content-type"] = contentType;
   const response = await fetch(target, {
-    headers: {
-      accept: "application/json, image/*;q=0.9, */*;q=0.5",
-      "user-agent": "VENOM-MD-BOT/2.0",
-      ...headers,
-    },
+    method,
+    body,
+    headers: requestHeaders,
     redirect: "manual",
     signal: AbortSignal.timeout(timeout),
   });
@@ -39,6 +46,9 @@ async function request(url, {
       timeout,
       headers,
       redirects: redirects - 1,
+      method: location === response.url ? "GET" : method,
+      body,
+      contentType,
     });
   }
   if (!response.ok) throw new Error(`Remote service failed (${response.status}).`);
@@ -76,4 +86,31 @@ export async function fetchJson(url, options) {
 
 export async function fetchBuffer(url, options) {
   return request(url, options);
+}
+
+/** POST a form-encoded body to a trusted host and return the raw response. */
+export async function postForm(url, { form = {}, ...options }) {
+  return request(url, {
+    ...options,
+    method: "POST",
+    body: new URLSearchParams(form).toString(),
+    contentType: "application/x-www-form-urlencoded",
+  });
+}
+
+/** POST a JSON body to a trusted host and return the parsed response. */
+export async function postJson(url, { json = {}, ...options }) {
+  const payload = JSON.stringify(json);
+  const { buffer } = await request(url, {
+    ...options,
+    method: "POST",
+    body: payload,
+    contentType: "application/json",
+    headers: { accept: "application/json", ...(options.headers || {}) },
+  });
+  try {
+    return JSON.parse(buffer.toString("utf8"));
+  } catch {
+    throw new Error("Remote service returned invalid JSON.");
+  }
 }

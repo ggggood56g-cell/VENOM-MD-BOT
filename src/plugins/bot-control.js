@@ -48,6 +48,7 @@ export default [
   },
   {
     name: "shutdown",
+    ownerStrict: true,
     category: "process",
     description: "Gracefully stop the bot process (owner only).",
     ownerOnly: true,
@@ -131,6 +132,7 @@ export default [
   },
   {
     name: "update",
+    ownerStrict: true,
     category: "bot",
     description: "Show safe update instructions without downloading remote code.",
     ownerOnly: true,

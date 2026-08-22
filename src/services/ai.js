@@ -78,6 +78,26 @@ export default class AiService {
     return this.configuredProviders().length > 0;
   }
 
+  supportedProviders() {
+    return ["gemini", "openai", "deepseek", "groq", "mistral", "openrouter", "cerebras", "cohere"];
+  }
+
+  /** Attach or remove an API key at runtime (owner `.setkey` command). */
+  setKey(provider, key) {
+    const name = String(provider || "").toLowerCase();
+    if (!this.supportedProviders().includes(name)) {
+      throw new Error(`Unsupported provider: ${name}. Use one of ${this.supportedProviders().join(", ")}.`);
+    }
+    if (!key) {
+      delete this.keys[name];
+      if (name === "gemini") this.gemini = null;
+      return false;
+    }
+    this.keys[name] = String(key).trim();
+    if (name === "gemini") this.gemini = new GoogleGenAI({ apiKey: this.keys[name] });
+    return true;
+  }
+
   preferredProvider() {
     return this.configuredProviders()[0] || "";
   }
@@ -111,6 +131,59 @@ export default class AiService {
     const answer = String(response.text || "").trim();
     if (!answer) throw new Error("Gemini returned an empty response.");
     return answer.slice(0, 6_000);
+  }
+
+  /** Transcribe a voice note with Gemini (the only provider with audio input). */
+  async transcribeAudio(buffer, mimetype) {
+    if (!this.keys.gemini) {
+      throw new Error("Voice transcription needs a Gemini key. Set one with .setkey gemini <key>.");
+    }
+    const response = await this.gemini.models.generateContent({
+      model: "gemini-2.5-flash",
+      contents: [
+        {
+          role: "user",
+          parts: [
+            {
+              inlineData: {
+                mimeType: mimetype || "audio/ogg",
+                data: Buffer.from(buffer).toString("base64"),
+              },
+            },
+            { text: "Transcribe this audio. Reply with the transcript only, no commentary." },
+          ],
+        },
+      ],
+    });
+    const transcript = String(response.text || "").trim();
+    if (!transcript) throw new Error("No speech was detected in the audio.");
+    return transcript.slice(0, 4_000);
+  }
+
+  /** Identify music in a clip with Gemini (free-tier key works). */
+  async identifyAudio(buffer) {
+    if (!this.keys.gemini) {
+      throw new Error("Song recognition needs a Gemini key. Set one with .setkey gemini <key>.");
+    }
+    const response = await this.gemini.models.generateContent({
+      model: "gemini-2.5-flash",
+      contents: [
+        {
+          role: "user",
+          parts: [
+            {
+              inlineData: { mimeType: "audio/ogg", data: Buffer.from(buffer).toString("base64") },
+            },
+            {
+              text: "Identify the song in this audio if you can. Reply with the title, artist and your confidence. If you cannot identify it, say so honestly.",
+            },
+          ],
+        },
+      ],
+    });
+    const answer = String(response.text || "").trim();
+    if (!answer) throw new Error("No result. Try a longer or clearer clip.");
+    return answer.slice(0, 1_000);
   }
 
   async askOpenAiCompatible(provider, prompt, system) {

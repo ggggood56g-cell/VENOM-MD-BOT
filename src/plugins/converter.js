@@ -209,4 +209,24 @@ export default [
       await context.send({ video, mimetype: "video/mp4", caption: `${name} • VENOM MD` });
     },
   })),
+  {
+    name: "capcut",
+    category: "converter",
+    description: "Apply a quick CapCut-style polish to a short video.",
+    usage: "capcut (reply to video)",
+    async execute(context) {
+      const input = await source(context, ["videoMessage"]);
+      await context.reply("✨ Applying capcut polish...");
+      const video = await ffmpegConvert(
+        input.buffer,
+        ["-vf", "eq=contrast=1.08:brightness=0.04:saturation=1.15,unsharp=5:5:0.8", "-c:v", "libx264", "-pix_fmt", "yuv420p", "-an"],
+        {
+          inputExtension: input.extension,
+          outputExtension: "mp4",
+          maximumBytes: context.config.maxMediaBytes,
+        },
+      );
+      await context.send({ video, mimetype: "video/mp4", caption: "✨ capcut polish • VENOM MD" });
+    },
+  },
 ];

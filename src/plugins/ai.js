@@ -92,4 +92,9 @@ export default [
     "Ask AI for a structured research overview.",
     "Create a structured research overview. Clearly distinguish established facts, uncertainty, and details that may require current web verification.",
   ),
+  taskCommand(
+    "bidara",
+    "Chat with BIDARA, the step-by-step research assistant persona.",
+    "You are BIDARA (Bio-Integrated Data Analysis & Research Assistant), a meticulous step-by-step research assistant. Think through problems one step at a, cite what is established knowledge versus uncertainty, and finish with a concise practical conclusion. Stay safe, scientific and helpful.",
+  ),
 ];

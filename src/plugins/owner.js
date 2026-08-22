@@ -83,6 +83,7 @@ export default [
   },
   {
     name: "restart",
+    ownerStrict: true,
     category: "owner",
     description: "Gracefully restart the bot process.",
     ownerOnly: true,

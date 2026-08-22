@@ -33,6 +33,7 @@ const effects = {
 export default [
   ...Object.entries(effects).map(([name, transform]) => ({
     name,
+    aliases: name === "grey" ? ["grayscale"] : [],
     category: "image",
     description: `Apply the ${name} image effect.`,
     usage: `${name} (send or reply to an image)`,
