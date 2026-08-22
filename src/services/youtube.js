@@ -1,6 +1,50 @@
 import ytdl from "@distube/ytdl-core";
 
+// Avoid an unrelated update-check request on every first download. Dependency
+// updates are handled through package-lock.json and npm audit instead.
+process.env.YTDL_NO_UPDATE ||= "1";
+
 const YOUTUBE_SEARCH = "https://www.youtube.com/results?search_query=";
+const RETRYABLE_NETWORK_CODES = new Set([
+  "ECONNRESET",
+  "ECONNREFUSED",
+  "ETIMEDOUT",
+  "EAI_AGAIN",
+  "ENETUNREACH",
+  "UND_ERR_CONNECT_TIMEOUT",
+]);
+
+function networkCode(error) {
+  let current = error;
+  for (let depth = 0; current && depth < 6; depth += 1) {
+    if (RETRYABLE_NETWORK_CODES.has(current.code)) return current.code;
+    current = current.cause;
+  }
+  return "";
+}
+
+async function retryNetwork(operation, attempts = 2) {
+  let lastError;
+  for (let attempt = 1; attempt <= attempts; attempt += 1) {
+    try {
+      return await operation();
+    } catch (error) {
+      lastError = error;
+      if (!networkCode(error) || attempt === attempts) throw error;
+      await new Promise((resolve) => setTimeout(resolve, 500 * attempt));
+    }
+  }
+  throw lastError;
+}
+
+export function friendlyYouTubeError(error) {
+  const code = networkCode(error);
+  if (!code) return error;
+  return new Error(
+    `YouTube is unreachable from this deployment host (${code}). Try again shortly or check outbound HTTPS access.`,
+    { cause: error },
+  );
+}
 
 async function responseText(response, maximumBytes = 4 * 1024 * 1024) {
   if (!response.ok) throw new Error(`YouTube search failed (${response.status}).`);
@@ -99,15 +143,21 @@ async function streamToBuffer(stream, maximumBytes) {
 export async function searchYouTube(query, limit = 5) {
   const search = String(query || "").trim().slice(0, 200);
   if (!search) return [];
-  const response = await fetch(`${YOUTUBE_SEARCH}${encodeURIComponent(search)}`, {
-    headers: {
-      "accept-language": "en-US,en;q=0.9",
-      "user-agent": "Mozilla/5.0 (compatible; VENOM-MD-BOT/1.0)",
-    },
-    redirect: "error",
-    signal: AbortSignal.timeout(15_000),
-  });
-  return parseYouTubeResults(await responseText(response), limit);
+  try {
+    const response = await retryNetwork(() =>
+      fetch(`${YOUTUBE_SEARCH}${encodeURIComponent(search)}`, {
+        headers: {
+          "accept-language": "en-US,en;q=0.9",
+          "user-agent": "Mozilla/5.0 (compatible; VENOM-MD-BOT/2.0)",
+        },
+        redirect: "error",
+        signal: AbortSignal.timeout(15_000),
+      }),
+    );
+    return parseYouTubeResults(await responseText(response), limit);
+  } catch (error) {
+    throw friendlyYouTubeError(error);
+  }
 }
 
 async function resolveUrl(input) {
@@ -118,19 +168,25 @@ async function resolveUrl(input) {
 }
 
 export async function downloadYouTube(input, type, maximumBytes) {
-  const url = await resolveUrl(String(input || "").trim());
-  const info = await ytdl.getInfo(url);
-  const options =
-    type === "audio"
-      ? { filter: "audioonly", quality: "highestaudio" }
-      : { filter: (format) => format.hasAudio && format.hasVideo, quality: "lowest" };
-  const format = ytdl.chooseFormat(info.formats, options);
-  if (!format?.url) throw new Error(`No compatible YouTube ${type} format was found.`);
-  const buffer = await streamToBuffer(ytdl.downloadFromInfo(info, { format }), maximumBytes);
-  return {
-    buffer,
-    title: String(info.videoDetails.title || "youtube").slice(0, 100),
-    url,
-    mimetype: String(format.mimeType || (type === "audio" ? "audio/mp4" : "video/mp4")).split(";")[0],
-  };
+  try {
+    const url = await resolveUrl(String(input || "").trim());
+    const info = await retryNetwork(() => ytdl.getInfo(url));
+    const options =
+      type === "audio"
+        ? { filter: "audioonly", quality: "highestaudio" }
+        : { filter: (format) => format.hasAudio && format.hasVideo, quality: "lowest" };
+    const format = ytdl.chooseFormat(info.formats, options);
+    if (!format?.url) throw new Error(`No compatible YouTube ${type} format was found.`);
+    const buffer = await retryNetwork(
+      () => streamToBuffer(ytdl.downloadFromInfo(info, { format }), maximumBytes),
+    );
+    return {
+      buffer,
+      title: String(info.videoDetails.title || "youtube").slice(0, 100),
+      url,
+      mimetype: String(format.mimeType || (type === "audio" ? "audio/mp4" : "video/mp4")).split(";")[0],
+    };
+  } catch (error) {
+    throw friendlyYouTubeError(error);
+  }
 }

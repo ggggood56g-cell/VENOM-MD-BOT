@@ -1,7 +1,10 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { parseYouTubeResults } from "../src/services/youtube.js";
+import {
+  friendlyYouTubeError,
+  parseYouTubeResults,
+} from "../src/services/youtube.js";
 
 test("YouTube parser extracts bounded original result fields", () => {
   const renderer = {
@@ -36,4 +39,14 @@ test("YouTube parser ignores malformed IDs and deduplicates videos", () => {
     5,
   );
   assert.equal(results.length, 1);
+});
+
+test("YouTube network failures become actionable deployment errors", () => {
+  const cause = Object.assign(new Error("socket reset"), { code: "ECONNRESET" });
+  const wrapped = friendlyYouTubeError(new TypeError("fetch failed", { cause }));
+  assert.match(wrapped.message, /YouTube is unreachable from this deployment host/);
+  assert.match(wrapped.message, /ECONNRESET/);
+
+  const ordinary = new Error("No compatible format");
+  assert.equal(friendlyYouTubeError(ordinary), ordinary);
 });
