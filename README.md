@@ -23,7 +23,7 @@ VENOM MD BOT is an original WhatsApp multi-device bot foundation built for depen
 
 | ⚡ Performance | 🛡️ Safety | 🧩 Extensible | 🌍 Deployable |
 |---|---|---|---|
-| Lean event routing and bounded media | Owner/admin permissions and secret redaction | Modular command files by category | Docker, Render, Railway, Koyeb, Heroku, Fly.io and VPS |
+| Lean event routing and bounded media | Owner/admin permissions and secret redaction | Secure recursive plugin auto-discovery | Docker, Render, Railway, Koyeb, Heroku, Fly.io and VPS |
 | Controlled reconnect backoff | Anti-link modes and media limits | Persistent group configuration | Health and status endpoints |
 | Local-first startup | No pairing endpoint inside the bot | Eight optional AI providers | Optional MongoDB backup |
 
@@ -203,6 +203,27 @@ Deployment files included:
 
 For hosts with temporary filesystems, configure `DATABASE_URL` so current session files and group settings survive redeployments. The original `SESSION_ID` remains a first-link fallback.
 
+## 🧩 Professional plugin auto-registry
+
+There is no central list of plugin imports to maintain. At startup, `plugin-loader.js` recursively discovers every local `.js`/`.mjs` module under `src/plugins/`, validates its manifest, rejects symlinks and duplicate names, and loads files in deterministic order.
+
+Adding a command only requires a new local file:
+
+```js
+// src/plugins/example.js
+export default {
+  name: "example",
+  aliases: ["demo"],
+  category: "utility",
+  description: "Example auto-discovered command.",
+  async execute(context) {
+    await context.reply("Automatically registered.");
+  },
+};
+```
+
+No edit to `src/plugins/index.js`, `bot.js`, or a command registry is needed. Invalid plugins fail startup with the exact source filename instead of silently breaking commands.
+
 ## 🧱 Clean architecture
 
 ```text
@@ -211,15 +232,16 @@ For hosts with temporary filesystems, configure `DATABASE_URL` so current sessio
 │   ├── auth-store.js        # session import, local auth and MongoDB backup
 │   ├── bot.js               # Baileys connection and event lifecycle
 │   ├── config.js            # validated environment configuration
+│   ├── plugin-loader.js     # recursive local discovery and manifest validation
 │   ├── router.js            # permissions, command routing and moderation
-│   ├── state-store.js       # persistent mode/group settings/warnings
-│   ├── plugins/             # original command modules by category
-│   └── services/            # AI, media, calculator and YouTube helpers
+│   ├── state-store.js       # persistent settings, filters, economy and reminders
+│   ├── plugins/             # automatically discovered command modules
+│   └── services/            # AI, media, HTTP, text and YouTube helpers
 ├── test/                    # validation and regression tests
 └── Dockerfile               # reproducible deployment
 ```
 
-No remote code loader is used. The code that runs is the code visible in this repository.
+No remote code loader is used. Discovery is restricted to visible local source files inside `src/plugins/`.
 
 ## 🛡️ Responsible use
 

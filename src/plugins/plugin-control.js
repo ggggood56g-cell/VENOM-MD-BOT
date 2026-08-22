@@ -8,7 +8,8 @@ export default [
       for (const command of context.registry.routableList()) {
         categories[command.category] = (categories[command.category] || 0) + 1;
       }
-      await context.reply(`🧩 *VENOM PLUGINS*\nPlugin objects: ${context.registry.list().length}\nRoutable commands: ${context.registry.routableCount()}\n\n${Object.entries(categories).map(([name, count]) => `• ${name}: ${count}`).join("\n")}`);
+      const sources = new Set(context.registry.list().map((command) => command.sourceFile));
+      await context.reply(`🧩 *VENOM PLUGINS*\nAuto-discovered files: ${sources.size}\nPlugin objects: ${context.registry.list().length}\nRoutable commands: ${context.registry.routableCount()}\n\n${Object.entries(categories).map(([name, count]) => `• ${name}: ${count}`).join("\n")}`);
     },
   },
   {
@@ -20,7 +21,7 @@ export default [
       const name = context.args[0]?.toLowerCase();
       const command = context.registry.find(name);
       if (command) {
-        await context.reply(`🧩 *${name}*\nCanonical: ${command.name}\nCategory: ${command.category}\n${command.description}`);
+        await context.reply(`🧩 *${name}*\nCanonical: ${command.name}\nCategory: ${command.category}\nSource: ${command.sourceFile}\n${command.description}`);
         return;
       }
       const custom = context.store.customCommand(name);
