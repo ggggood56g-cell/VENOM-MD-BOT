@@ -12,7 +12,7 @@
 
 <!-- ===== LIVE STATS ===== -->
 <a href="https://www.youtube.com/@venommdbot?sub_confirmation=1" target="_blank">
-  <img src="https://img.shields.io/youtube/channel/subscribers/UC9vkZyWIRN2iX66uupikjfw?style=for-the-badge&label=YouTube%20Subscribers&labelColor=ff0000&color=ff0000&logo=youtube&logoColor=white" alt="YouTube subscribers"/>
+  <img src="https://img.shields.io/badge/dynamic/json?url=https://api.socialcounts.org/youtube-live-subscriber-count/UC9vkZyWIRN2iX66uupikjfw&query=counters.estimation.subscriberCount&style=for-the-badge&label=YouTube%20Subscribers&labelColor=ff0000&color=ff0000&logo=youtube&logoColor=white" alt="YouTube subscribers"/>
 </a>
 <a href="https://github.com/MykelGoal/VENOM-MD-BOT/stargazers">
   <img src="https://img.shields.io/github/stars/MykelGoal/VENOM-MD-BOT?style=for-the-badge&label=Stars&labelColor=1f2937&color=facc15&logo=github&logoColor=white" alt="GitHub stars"/>
@@ -103,6 +103,8 @@ For **Render Quick Deploy**, enter both values when Render asks for environment 
 
 The Render blueprint deliberately marks `OWNER_NUMBER` as a deploy-time secret, so each person who forks the repository can provide their own number instead of using the repository owner's number. If Render does not show the field, add `OWNER_NUMBER` manually under **Environment Variables** before deploying.
 
+> **Every platform:** always set `OWNER_NUMBER` to your own WhatsApp number. Some deploy templates pre-fill it with the repository owner's number by default.
+
 ---
 
 ## ⏰ Run 24/7 with UptimeRobot (free)
@@ -156,13 +158,6 @@ Use this bot only with accounts and groups you are authorized to manage. Do not 
 
 <div align="center">
 
-<a href="https://www.youtube.com/@venommdbot?sub_confirmation=1" target="_blank">
-  <img src="https://img.shields.io/badge/Subscribe-VENOM%20MD%20Tech-ff0000?style=for-the-badge&logo=youtube&logoColor=white" alt="Subscribe on YouTube"/>
-</a>
-<a href="https://github.com/MykelGoal/VENOM-MD-BOT/stargazers">
-  <img src="https://img.shields.io/badge/Star%20%E2%AD%90-Support%20the%20repo-facc15?style=for-the-badge&logo=github&logoColor=1f2937" alt="Star the repo"/>
-</a>
-
-**VENOM MD BOT — Built by TAPRUSH EMP**
+**VENOM MD BOT** — Built by [TAPRUSH EMP](https://github.com/MykelGoal) · 📺 [VENOM MD Tech](https://www.youtube.com/@venommdbot?sub_confirmation=1) · ⭐ [Support the repo](https://github.com/MykelGoal/VENOM-MD-BOT)
 
 </div>

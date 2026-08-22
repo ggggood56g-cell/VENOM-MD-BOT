@@ -16,8 +16,7 @@
       "required": false
     },
     "OWNER_NUMBER": {
-      "description": "Owner WhatsApp number with country code, digits only.",
-      "value": "2348021016309",
+      "description": "Owner WhatsApp number with country code, digits only. Use your own number.",
       "required": true
     },
     "OWNER_NAME": {
