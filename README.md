@@ -10,6 +10,45 @@
 [![WhatsApp](https://img.shields.io/badge/WhatsApp-Multi--Device-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://github.com/WhiskeySockets/Baileys)
 [![License](https://img.shields.io/badge/License-MIT-8b5cf6?style=for-the-badge)](LICENSE)
 
+<!-- ===== LIVE STATS ===== -->
+<a href="https://www.youtube.com/@venommdbot?sub_confirmation=1" target="_blank">
+  <img src="https://img.shields.io/youtube/channel/subscribers/UC9vkZyWIRN2iX66uupikjfw?style=for-the-badge&label=YouTube%20Subscribers&labelColor=ff0000&color=ff0000&logo=youtube&logoColor=white" alt="YouTube subscribers"/>
+</a>
+<a href="https://github.com/MykelGoal/VENOM-MD-BOT/stargazers">
+  <img src="https://img.shields.io/github/stars/MykelGoal/VENOM-MD-BOT?style=for-the-badge&label=Stars&labelColor=1f2937&color=facc15&logo=github&logoColor=white" alt="GitHub stars"/>
+</a>
+<a href="https://github.com/MykelGoal/VENOM-MD-BOT/network/members">
+  <img src="https://img.shields.io/github/forks/MykelGoal/VENOM-MD-BOT?style=for-the-badge&label=Forks&labelColor=1f2937&color=60a5fa&logo=github&logoColor=white" alt="GitHub forks"/>
+</a>
+
+<!-- ===== CALL TO ACTION ===== -->
+<table>
+<tr>
+<td align="center" width="280">
+
+**📺 Love the tutorials?**
+
+<a href="https://www.youtube.com/@venommdbot?sub_confirmation=1" target="_blank">
+  <img src="https://custom-icon-badges.demolab.com/badge/-SUBSCRIBE-ff0000?style=for-the-badge&logo=video&logoColor=white&labelColor=cc0000" alt="Subscribe on YouTube" height="38"/>
+</a>
+
+<sub>Watch on <b>VENOM MD Tech</b></sub>
+
+</td>
+<td align="center" width="280">
+
+**⭐ Enjoy the bot?**
+
+<a href="https://github.com/MykelGoal/VENOM-MD-BOT">
+  <img src="https://custom-icon-badges.demolab.com/badge/-STAR%20THE%20REPO-facc15?style=for-the-badge&logo=star&logoColor=1f2937&labelColor=eab308" alt="Star the repo" height="38"/>
+</a>
+
+<sub>Starring helps others find VENOM MD</sub>
+
+</td>
+</tr>
+</table>
+
 [**GET SESSION ID**](https://session-site-2odn.onrender.com) · [**FORK REPOSITORY**](https://github.com/MykelGoal/VENOM-MD-BOT/fork)
 
 </div>
@@ -79,8 +118,6 @@ Optionally set a `PING_URL` environment variable to any URL the bot should ping 
 
 ---
 
----
-
 ## 🛠️ Manual Installation
 
 Requires **Node.js 20.18+**. FFmpeg is recommended for media commands.
@@ -114,9 +151,17 @@ Use this bot only with accounts and groups you are authorized to manage. Do not 
 
 - **Developer:** [TAPRUSH EMP (Micheal)](https://github.com/MykelGoal)
 - **Core library:** [Baileys](https://github.com/WhiskeySockets/Baileys)
+- **YouTube:** [VENOM MD Tech](https://www.youtube.com/@venommdbot?sub_confirmation=1)
 - **License:** [MIT](LICENSE)
 
 <div align="center">
+
+<a href="https://www.youtube.com/@venommdbot?sub_confirmation=1" target="_blank">
+  <img src="https://img.shields.io/badge/Subscribe-VENOM%20MD%20Tech-ff0000?style=for-the-badge&logo=youtube&logoColor=white" alt="Subscribe on YouTube"/>
+</a>
+<a href="https://github.com/MykelGoal/VENOM-MD-BOT/stargazers">
+  <img src="https://img.shields.io/badge/Star%20%E2%AD%90-Support%20the%20repo-facc15?style=for-the-badge&logo=github&logoColor=1f2937" alt="Star the repo"/>
+</a>
 
 **VENOM MD BOT — Built by TAPRUSH EMP**
 
