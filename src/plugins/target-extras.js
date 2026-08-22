@@ -231,6 +231,7 @@ export default [
   },
   {
     name: "dbclean",
+    ownerStrict: true,
     category: "bot",
     description: "Remove expired local runtime records (owner only).",
     ownerOnly: true,

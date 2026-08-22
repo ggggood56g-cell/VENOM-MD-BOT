@@ -57,9 +57,11 @@ test("reveal payloads preserve captions and voice note flags", () => {
 });
 
 test("vv and vvpr reject replies without a view once message", async () => {
+  const store = { feature: () => true };
   for (const name of ["vv", "vvpr"]) {
     await assert.rejects(
       command(name).execute({
+        store,
         details: { quoted: null },
         send: async () => {},
         reply: async () => {},
@@ -68,6 +70,7 @@ test("vv and vvpr reject replies without a view once message", async () => {
     );
     await assert.rejects(
       command(name).execute({
+        store,
         details: { quoted: { message: { imageMessage: { caption: "plain" } } } },
         send: async () => {},
         reply: async () => {},
@@ -75,4 +78,17 @@ test("vv and vvpr reject replies without a view once message", async () => {
       /not a view once/,
     );
   }
+});
+
+test("view once commands respect the vvCmd feature toggle", async () => {
+  const store = { feature: () => false };
+  await assert.rejects(
+    command("vv").execute({
+      store,
+      details: { quoted: { message: {} } },
+      send: async () => {},
+      reply: async () => {},
+    }),
+    /disabled/,
+  );
 });

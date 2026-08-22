@@ -18,7 +18,7 @@
 
 ## 🐍 About
 
-VENOM MD BOT is a WhatsApp bot built with Baileys. It includes **543 commands** for group management, media, AI, games, downloads and useful everyday tools.
+VENOM MD BOT is a WhatsApp bot built with Baileys. It includes **631 commands** for group management, media, AI, games, downloads and useful everyday tools.
 
 ### Main features
 
@@ -63,6 +63,21 @@ For **Render Quick Deploy**, enter both values when Render asks for environment 
 - `OWNER_NUMBER`: your WhatsApp number with country code, digits only (for example, `2348021016309` — do not include `+`).
 
 The Render blueprint deliberately marks `OWNER_NUMBER` as a deploy-time secret, so each person who forks the repository can provide their own number instead of using the repository owner's number. If Render does not show the field, add `OWNER_NUMBER` manually under **Environment Variables** before deploying.
+
+---
+
+## ⏰ Run 24/7 with UptimeRobot (free)
+
+Free hosting platforms sleep idle apps. VENOM MD keeps itself awake by pinging its own `/health` endpoint every 4 minutes, and you can add extra protection with a free [UptimeRobot](https://uptimerobot.com) monitor:
+
+1. Deploy the bot and copy your public URL (for example `https://your-app.onrender.com`).
+2. Create a free UptimeRobot account → **Add New Monitor**.
+3. Type: **HTTP(s)** — URL: `https://your-app.onrender.com/health` — interval: **5 minutes**.
+4. Save. UptimeRobot now pings the bot forever, so it never sleeps.
+
+Optionally set a `PING_URL` environment variable to any URL the bot should ping itself (an UptimeRobot monitor or your app URL) for double cover.
+
+---
 
 ---
 

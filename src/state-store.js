@@ -2,6 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 
 import { logger, safeError } from "./logger.js";
+import { jidNumber } from "./utils.js";
 
 const DEFAULT_GROUP = Object.freeze({
   antiLink: "off",
@@ -28,7 +29,8 @@ const DEFAULT_FEATURES = Object.freeze({
   antiEdit: false,
   likeStatus: false,
   saveStatus: false,
-  vvCmd: false,
+  vvCmd: true,
+  forceJoin: false,
 });
 
 const DEFAULT_ECONOMY = Object.freeze({
@@ -121,6 +123,11 @@ export default class StateStore {
       customCommands: {},
       afk: {},
       reminders: [],
+      vars: {},
+      mods: [],
+      roles: {},
+      school: {},
+      referrals: {},
     };
     this.writeQueue = Promise.resolve();
   }
@@ -292,6 +299,130 @@ export default class StateStore {
   async clearWarning(groupJid, userJid) {
     if (this.state.warnings[groupJid]) delete this.state.warnings[groupJid][String(userJid)];
     await this.save();
+  }
+
+  /** Runtime variables (AI keys, mongo URI, log chats, status emoji…). */
+  runtimeVar(name) {
+    return this.state.vars?.[String(name)];
+  }
+
+  async setRuntimeVar(name, value) {
+    this.state.vars ||= {};
+    this.state.vars[String(name)] = String(value).slice(0, 2_000);
+    await this.save();
+  }
+
+  async deleteRuntimeVar(name) {
+    delete this.state.vars?.[String(name)];
+    await this.save();
+  }
+
+  /** Trusted moderators: elevated access below the owner. */
+  mods() {
+    return [...(this.state.mods || [])];
+  }
+
+  isMod(jid) {
+    const key = String(jid);
+    return this.mods().some((mod) => mod === key || jidNumber(mod) === jidNumber(key));
+  }
+
+  async setMod(jid, enabled) {
+    const key = String(jid);
+    const list = new Set(this.state.mods || []);
+    if (enabled) list.add(key);
+    else for (const existing of [...list]) {
+      if (existing === key || jidNumber(existing) === jidNumber(key)) list.delete(existing);
+    }
+    this.state.mods = [...list].slice(0, 50);
+    await this.save();
+    return this.isMod(key);
+  }
+
+  /** Lightweight custom roles for members. */
+  role(jid) {
+    return this.state.roles?.[String(jid)] || "member";
+  }
+
+  async setRole(jid, role) {
+    this.state.roles ||= {};
+    const clean = String(role || "").replace(/[^\w -]/g, "").trim().slice(0, 24);
+    if (!clean) throw new Error("Enter a role name.");
+    this.state.roles[String(jid)] = clean;
+    await this.save();
+    return clean;
+  }
+
+  async deleteRole(jid) {
+    delete this.state.roles?.[String(jid)];
+    await this.save();
+  }
+
+  roles() {
+    return { ...(this.state.roles || {}) };
+  }
+
+  /** Referral / affiliate programme state. */
+  referral(jid) {
+    const key = String(jid);
+    const entry = this.state.referrals?.[key];
+    if (!entry) return { code: jidNumber(key) || key, referredBy: "", invites: 0, earned: 0 };
+    return {
+      code: entry.code || jidNumber(key) || key,
+      referredBy: entry.referredBy || "",
+      invites: Number(entry.invites) || 0,
+      earned: Number(entry.earned) || 0,
+    };
+  }
+
+  async setReferral(jid, patch) {
+    const key = String(jid);
+    this.state.referrals ||= {};
+    this.state.referrals[key] = { ...this.referral(key), ...patch };
+    await this.save();
+    return this.referral(key);
+  }
+
+  referralBoard() {
+    return Object.entries(this.state.referrals || {})
+      .map(([jid, entry]) => ({ jid, ...entry }))
+      .filter((entry) => Number(entry.invites) > 0)
+      .sort((first, second) => (second.invites || 0) - (first.invites || 0));
+  }
+
+  /** Simple school-mode state (class times, lessons, attendance, grades). */
+  school() {
+    const school = this.state.school || {};
+    return {
+      enabled: school.enabled === true,
+      mode: ["off", "class", "exam"].includes(school.mode) ? school.mode : "off",
+      locked: school.locked === true,
+      timezone: String(school.timezone || "Africa/Lagos").slice(0, 60),
+      startsAt: String(school.startsAt || "08:00").slice(0, 5),
+      endsAt: String(school.endsAt || "15:00").slice(0, 5),
+      syllabus: String(school.syllabus || "").slice(0, 2_000),
+      lessons: (Array.isArray(school.lessons) ? school.lessons : [])
+        .slice(0, 40)
+        .map((lesson) => String(lesson).slice(0, 160)),
+      questions: (Array.isArray(school.questions) ? school.questions : [])
+        .slice(0, 100)
+        .map((question) => ({
+          from: String(question.from || "").slice(0, 60),
+          text: String(question.text || "").slice(0, 400),
+          answered: Boolean(question.answered),
+        })),
+      attendance: school.attendance || {},
+      grades: school.grades || {},
+    };
+  }
+
+  async setSchool(patch) {
+    const merged = { ...this.school(), ...patch };
+    merged.attendance = merged.attendance || {};
+    merged.grades = merged.grades || {};
+    this.state.school = merged;
+    await this.save();
+    return this.school();
   }
 
   economy(jid) {

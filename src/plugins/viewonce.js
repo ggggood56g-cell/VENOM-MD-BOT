@@ -74,6 +74,9 @@ export function buildRevealMessage({ type, value = {}, buffer, mimetype }) {
 }
 
 async function revealTarget(context) {
+  if (!context.store.feature("vvCmd")) {
+    throw new Error("View once commands are disabled. Ask the owner to enable them with vvCmd on.");
+  }
   const target = context.details.quoted;
   if (!target) throw new Error("Reply to a view once photo, video, voice note or sticker.");
   if (!isViewOnce(target.message)) throw new Error("That message is not a view once message.");

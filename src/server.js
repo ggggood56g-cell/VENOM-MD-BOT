@@ -31,5 +31,20 @@ export function createServer(config, bot) {
     response.status(404).json({ error: "Not found" });
   });
 
-  return app.listen(config.port, "0.0.0.0");
+  const server = app.listen(config.port, "0.0.0.0");
+
+  // 24/7 keep-alive: pings our own /health endpoint every 4 minutes so free
+  // hosts (Render, Koyeb, Railway…) never idle the app to sleep. Point
+  // PING_URL at any public URL (or an UptimeRobot monitor) for extra cover.
+  const selfPing = () => {
+    const target = process.env.PING_URL
+      || (process.env.RENDER_EXTERNAL_URL ? `${process.env.RENDER_EXTERNAL_URL}/health` : "")
+      || `http://127.0.0.1:${config.port}/health`;
+    fetch(target, { signal: AbortSignal.timeout(10_000) }).catch(() => {});
+  };
+  const pingTimer = setInterval(selfPing, 4 * 60_000);
+  pingTimer.unref?.();
+  setTimeout(selfPing, 30_000).unref?.();
+
+  return server;
 }

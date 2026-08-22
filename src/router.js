@@ -142,6 +142,16 @@ export default class CommandRouter {
     }
 
     const prefix = this.store.prefix;
+    if (!details.text.startsWith(prefix) && this.store.feature("forceJoin")) {
+      const invite = details.text.match(/chat\.whatsapp\.com\/([A-Za-z0-9_-]{10,})/);
+      if (invite) {
+        await socket.groupAcceptInvite(invite[1]).then(
+          () => socket.sendMessage(details.chat, { text: "🚪 Force-join: joined the shared group." }).catch(() => {}),
+          () => {},
+        );
+        return true;
+      }
+    }
     if (!details.text.startsWith(prefix)) {
       const response = this.store.filterResponse(details.text, details.chat, details.isGroup);
       if (response) {
@@ -169,6 +179,7 @@ export default class CommandRouter {
 
     const isAdmin = Boolean(senderParticipant?.admin) || isOwner;
     const botAdmin = Boolean(botParticipant?.admin);
+    const isMod = isOwner || this.store.isMod(details.sender);
     const context = {
       socket,
       message: details.raw,
@@ -187,6 +198,7 @@ export default class CommandRouter {
       ai: this.ai,
       metadata,
       isOwner,
+      isMod,
       isAdmin,
       botAdmin,
       reply: (text, options = {}) =>
@@ -211,7 +223,7 @@ export default class CommandRouter {
       },
     };
 
-    if (command.ownerOnly && !isOwner) {
+    if (command.ownerOnly && !(isOwner || (!command.ownerStrict && isMod))) {
       await context.reply("⛔ This command is only available to the bot owner.");
       return true;
     }

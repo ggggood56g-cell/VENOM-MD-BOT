@@ -48,6 +48,11 @@ export default class VenomBot {
     this.status = "initializing";
     this.error = null;
     this.messageCount = 0;
+    this.deletedLog = new Map();
+    this.editLog = new Map();
+    this.recentLog = new Map();
+    this.presenceLog = new Map();
+    this.statusLog = new Map();
     this.reminderTimer = setInterval(() => void this.deliverReminders(), 15_000);
     this.reminderTimer.unref?.();
     this.router = new CommandRouter({
@@ -125,6 +130,17 @@ export default class VenomBot {
       void this.onMessages(socket, generation, update);
     });
 
+    socket.ev.on("messages.update", (updates) => {
+      void this.onMessageUpdates(socket, generation, updates);
+    });
+
+    socket.ev.on("presence.update", (update) => {
+      if (!this.isCurrent(socket, generation) || !update?.id) return;
+      const chat = this.presenceLog.get(update.id) || {};
+      Object.assign(chat, update.presences || {});
+      this.presenceLog.set(update.id, chat);
+    });
+
     socket.ev.on("group-participants.update", (update) => {
       void this.onGroupParticipants(socket, generation, update);
     });
@@ -187,6 +203,17 @@ export default class VenomBot {
     this.scheduleReconnect(reason, code === DisconnectReason.restartRequired ? 500 : null);
   }
 
+  rememberMessage(details) {
+    const chat = this.recentLog.get(details.chat) || [];
+    chat.push({ raw: details.raw, details });
+    if (chat.length > 80) chat.splice(0, chat.length - 80);
+    this.recentLog.set(details.chat, chat);
+  }
+
+  findRecent(chat, id) {
+    return (this.recentLog.get(chat) || []).find((entry) => entry.raw.key?.id === id) || null;
+  }
+
   async onMessages(socket, generation, update) {
     if (!this.isCurrent(socket, generation) || update.type !== "notify") return;
     for (const raw of update.messages || []) {
@@ -194,20 +221,75 @@ export default class VenomBot {
       this.messageCount += 1;
       const details = messageDetails(raw);
       if (details.isStatus) {
+        const mine = this.statusLog.get(details.sender) || [];
+        mine.push({ key: raw.key, message: raw.message, at: Date.now() });
+        if (mine.length > 10) mine.splice(0, mine.length - 10);
+        this.statusLog.set(details.sender, mine);
         if (this.stateStore.feature("readStatus")) {
           await socket.readMessages([raw.key]).catch(() => {});
         }
         if (this.stateStore.feature("likeStatus")) {
+          const emoji = this.stateStore.runtimeVar("statusEmoji") || "💚";
           await socket.sendMessage("status@broadcast", {
-            react: { text: "💚", key: raw.key },
+            react: { text: emoji, key: raw.key },
+          }).catch(() => {});
+        }
+        if (this.stateStore.feature("saveStatus")) {
+          await socket.sendMessage(this.config.owners[0] ? `${this.config.owners[0]}@s.whatsapp.net` : details.chat, {
+            forward: { key: raw.key, message: raw.message },
           }).catch(() => {});
         }
         continue;
       }
+      this.rememberMessage(details);
       if (this.stateStore.feature("readMsg")) await socket.readMessages([raw.key]).catch(() => {});
       await this.router.handle(socket, details).catch((error) =>
         logger.error({ error: safeError(error) }, "Message routing failed"),
       );
+    }
+  }
+
+  async onMessageUpdates(socket, generation, updates) {
+    if (!this.isCurrent(socket, generation)) return;
+    for (const update of updates || []) {
+      const chat = update.key?.remoteJid;
+      if (!chat || chat === "status@broadcast") continue;
+
+      if (update.update?.messageStubType === "REVOKE" && update.update?.key) {
+        const entry = this.findRecent(chat, update.update.key.id);
+        if (!entry) continue;
+        this.deletedLog.set(chat, entry);
+        const logChat = this.stateStore.runtimeVar("antideleteLog");
+        if (this.stateStore.feature("antiDelete")) {
+          const who = entry.details.fromMe ? "The bot" : `@${jidNumber(entry.details.sender)}`;
+          await socket.sendMessage(chat, {
+            text: `🕵️ ${who} deleted this message:`,
+            mentions: entry.details.fromMe ? [] : [entry.details.sender],
+          }).catch(() => {});
+          await socket.sendMessage(chat, { forward: entry.raw }).catch(() => {});
+        }
+        if (logChat) {
+          await socket.sendMessage(logChat, {
+            text: `🗑️ Deleted message in ${chat}`,
+          }).catch(() => {});
+          await socket.sendMessage(logChat, { forward: entry.raw }).catch(() => {});
+        }
+        continue;
+      }
+
+      if (update.update?.message && update.key?.id) {
+        const entry = this.findRecent(chat, update.key.id);
+        if (!entry) continue;
+        const before = entry.details.text;
+        const after = messageDetails({ ...entry.raw, message: update.update.message }).text;
+        if (before === after) continue;
+        this.editLog.set(chat, { who: entry.details.sender, before, after, at: Date.now() });
+        if (this.stateStore.feature("antiEdit")) {
+          await socket.sendMessage(chat, {
+            text: `✏️ A message was edited:\nBefore: ${before.slice(0, 300) || "(media)"}\nAfter: ${after.slice(0, 300) || "(media)"}`,
+          }).catch(() => {});
+        }
+      }
     }
   }
 

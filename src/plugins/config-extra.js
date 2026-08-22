@@ -7,6 +7,9 @@ const FEATURE_COMMANDS = [
   ["rejectcall", "rejectCall", ["anticall"]],
   ["startupmsg", "startupMsg", []],
   ["likestatus", "likeStatus", []],
+  ["vvcmd", "vvCmd", ["vvcommand"]],
+  ["savestatusauto", "saveStatus", []],
+  ["forcejoin", "forceJoin", []],
 ];
 
 function booleanArgument(context) {

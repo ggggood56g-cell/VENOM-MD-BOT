@@ -1,4 +1,18 @@
+import { readFile } from "node:fs/promises";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
 import { formatDuration } from "../utils.js";
+
+const BANNER_PATH = path.join(path.dirname(fileURLToPath(import.meta.url)), "..", "..", "assets", "venom-md-banner.jpg");
+
+async function menuBanner() {
+  try {
+    return await readFile(BANNER_PATH);
+  } catch {
+    return null;
+  }
+}
 
 const CATEGORY_LABELS = {
   general: "HELP",
@@ -156,6 +170,15 @@ async function sendMenu(context) {
     current += `${section}\n\n`;
   }
   chunks.push(`${current}${footer}`.trim());
+  // The banner goes on top as its own message so the long menu text stays intact.
+  const banner = await menuBanner();
+  if (banner && context.send) {
+    await context.send({
+      image: banner,
+      mimetype: "image/jpeg",
+      caption: `⚡ ${context.config.botName} — command menu`,
+    });
+  }
   for (const chunk of chunks) await context.reply(chunk);
 }
 
