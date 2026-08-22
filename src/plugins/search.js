@@ -110,14 +110,30 @@ export default [
     description: "Find lyrics using artist and song title.",
     usage: "lyrics Wizkid | Essence",
     async execute(context) {
+      if (!context.query) throw new Error(`Use: ${context.prefix}lyrics artist | song title`);
       const [artist, title] = context.query.split("|").map((value) => value.trim());
-      if (!artist || !title) throw new Error(`Use: ${context.prefix}lyrics artist | song title`);
-      const payload = await fetchJson(`https://api.lyrics.ovh/v1/${encodeURIComponent(artist)}/${encodeURIComponent(title)}`, {
-        allowedHosts: ["api.lyrics.ovh"],
+      const parameters = new URLSearchParams();
+      if (artist && title) {
+        parameters.set("artist_name", artist);
+        parameters.set("track_name", title);
+      } else if (!artist && !title) {
+        parameters.set("q", context.query);
+      } else {
+        throw new Error(`Use: ${context.prefix}lyrics artist | song title`);
+      }
+      // LRCLIB is a free, key-less lyrics API (lyrics.ovh shut down in 2025).
+      const results = await fetchJson(`https://lrclib.net/api/search?${parameters.toString()}`, {
+        allowedHosts: ["lrclib.net"],
         maximumBytes: 512 * 1024,
       });
-      if (!payload.lyrics) throw new Error("Lyrics were not found.");
-      await context.reply(`🎵 *${artist} — ${title}*\n\n${String(payload.lyrics).slice(0, 5_500)}`);
+      if (!Array.isArray(results) || !results.length) throw new Error("Lyrics were not found.");
+      const hit = results.find((item) => item.plainLyrics) || results[0];
+      const lyrics = String(hit.plainLyrics || "")
+        || String(hit.syncedLyrics || "").replace(/\[[^\]]*\]/g, "").trim();
+      if (!lyrics.trim()) throw new Error("Lyrics were not found.");
+      await context.reply(
+        `🎵 *${hit.artistName || artist || "Unknown"} — ${hit.trackName || title || context.query}*\n\n${lyrics.slice(0, 5_500)}`,
+      );
     },
   },
   {

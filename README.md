@@ -1,5 +1,7 @@
 <div align="center">
 
+<img src="assets/venom-md-banner.jpg" alt="VENOM MD BOT" width="860"/>
+
 # ⚡ VENOM MD BOT
 
 **A fast and powerful WhatsApp multi-device bot.**
@@ -16,7 +18,7 @@
 
 ## 🐍 About
 
-VENOM MD BOT is a WhatsApp bot built with Baileys. It includes **539 commands** for group management, media, AI, games, downloads and useful everyday tools.
+VENOM MD BOT is a WhatsApp bot built with Baileys. It includes **543 commands** for group management, media, AI, games, downloads and useful everyday tools.
 
 ### Main features
 

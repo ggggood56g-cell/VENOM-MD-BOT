@@ -1,5 +1,6 @@
 import { translate } from "@vitalets/google-translate-api";
 
+import { synthesizeSpeech } from "../services/tts.js";
 import { downloadYouTube, searchYouTube } from "../services/youtube.js";
 
 function safeFilename(value, extension) {
@@ -92,11 +93,8 @@ export default [
       const language = hasLanguage ? context.args.shift() : "en";
       const text = context.args.join(" ").slice(0, 200);
       if (!text) throw new Error("Enter text to speak.");
-      const url =
-        "https://translate.google.com/translate_tts" +
-        `?ie=UTF-8&client=tw-ob&tl=${encodeURIComponent(language)}` +
-        `&q=${encodeURIComponent(text)}`;
-      await context.send({ audio: { url }, mimetype: "audio/mpeg", ptt: true });
+      const audio = await synthesizeSpeech(text, language);
+      await context.send({ audio, mimetype: "audio/mpeg", ptt: true });
     },
   },
 ];
