@@ -1,50 +1,52 @@
 {
   "name": "VENOM MD BOT",
-  "description": "A powerful, feature-rich WhatsApp multi-device bot engineered for speed, stability, security, and style — created by TAPRUSH EMP (Micheal).",
-  "keywords": ["whatsapp", "whatsapp-bot", "baileys", "venom-md"],
-  "website": "https://github.com/MykelGoal/VENOM-MD-BOT#readme",
-  "repository": "https://github.com/MykelGoal/VENOM-MD-BOT.git",
-  "logo": "https://raw.githubusercontent.com/MykelGoal/VENOM-MD-BOT/main/Assets/Venom.jpg",
-  "success_url": "/",
+  "description": "A clean, secure and extensible WhatsApp multi-device bot by TAPRUSH EMP (Micheal).",
+  "repository": "https://github.com/MykelGoal/VENOM-MD-BOT",
+  "keywords": ["whatsapp", "baileys", "venom-md", "whatsapp-bot"],
+  "success_url": "/health",
+  "stack": "container",
   "env": {
+    "SESSION_ID": {
+      "description": "Private credential from the official VENOM session website.",
+      "required": true
+    },
+    "SESSION_NAMESPACE": {
+      "description": "Safe name for this bot session.",
+      "value": "venom",
+      "required": false
+    },
+    "OWNER_NUMBER": {
+      "description": "Owner WhatsApp number with country code, digits only.",
+      "value": "2348021016309",
+      "required": true
+    },
+    "OWNER_NAME": {
+      "description": "Owner display name.",
+      "value": "TAPRUSH EMP (Micheal)",
+      "required": false
+    },
+    "BOT_NAME": {
+      "description": "Bot display name.",
+      "value": "VENOM MD BOT",
+      "required": false
+    },
     "PREFIX": {
       "description": "Command prefix.",
       "value": ".",
       "required": false
     },
-    "SESSION_NAMESPACE": {
-      "description": "Safe local/Mongo name for this WhatsApp session.",
-      "value": "venom",
+    "COMMAND_MODE": {
+      "description": "public or private command access.",
+      "value": "public",
       "required": false
     },
-    "SESSION_ID": {
-      "description": "Private credential from the existing external VENOM session site. Leave blank when MongoAuth already has a linked session.",
+    "DATABASE_URL": {
+      "description": "Optional MongoDB URL for settings and session backup.",
       "required": false
     },
-    "MODS": {
-      "description": "Deployment owner numbers, digits only and comma-separated.",
-      "value": "2348021016309",
-      "required": false
-    },
-    "PACKNAME": {
-      "description": "Sticker pack name.",
-      "value": "VENOM MD BOT",
-      "required": false
-    },
-    "AUTHOR": {
-      "description": "Sticker author.",
-      "value": "by: TAPRUSH EMP (Micheal)",
-      "required": false
-    },
-    "MONGODB": {
-      "description": "Your private MongoDB connection URL."
-    },
-    "GEMINI_API": {
-      "description": "Optional Gemini API key(s), comma-separated.",
+    "GEMINI_API_KEY": {
+      "description": "Optional Google Gemini key for the AI command.",
       "required": false
     }
-  },
-  "buildpacks": [
-    { "url": "heroku/nodejs" }
-  ]
+  }
 }

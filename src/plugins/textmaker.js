@@ -1,0 +1,72 @@
+import { renderTextStyle } from "../services/textmaker.js";
+
+const STYLES = [
+  "8d",
+  "amongus",
+  "angel",
+  "bear",
+  "blackpink",
+  "blue",
+  "codtext",
+  "crack",
+  "fire",
+  "floral",
+  "galaxy",
+  "galaxyw",
+  "gaming",
+  "glass2",
+  "glitch",
+  "glitter",
+  "glossy",
+  "glow",
+  "glow2",
+  "gold",
+  "green",
+  "hacker",
+  "letter",
+  "light",
+  "lightb",
+  "lolwlp",
+  "matrix",
+  "metal",
+  "neon3d",
+  "neondvl",
+  "neonlight",
+  "neontext",
+  "paper",
+  "pubglogo",
+  "pubgtext",
+  "sand",
+  "scifi",
+  "sketch",
+  "slight",
+  "steel",
+  "textmaker",
+  "thunder",
+  "ttp",
+  "ttpimg",
+  "typography",
+  "valorant",
+  "water",
+  "watercolor",
+  "wetglass",
+  "wood",
+  "zodiac",
+];
+
+export default STYLES.map((name) => ({
+  name,
+  category: "textmaker",
+  description: `Create an original ${name} styled text image.`,
+  usage: `${name} <text>`,
+  async execute(context) {
+    if (!context.query) throw new Error("Enter text to render.");
+    const image = await renderTextStyle(context.query, name, {
+      square: ["ttp", "ttpimg", "bear", "zodiac"].includes(name),
+    });
+    await context.send({
+      image,
+      caption: `✨ ${name.toUpperCase()} • ${context.config.botName}`,
+    });
+  },
+}));
