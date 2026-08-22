@@ -28,6 +28,7 @@ export default class CommandRouter {
     this.requestShutdown = requestShutdown;
     this.commands = new Map();
     this.canonical = [];
+    this.spamBuckets = new Map();
   }
 
   register(commands) {
@@ -61,6 +62,16 @@ export default class CommandRouter {
     );
   }
 
+  routableList() {
+    return [...this.commands.entries()]
+      .map(([name, command]) => ({ ...command, name, canonicalName: command.name }))
+      .sort((a, b) => a.category.localeCompare(b.category) || a.name.localeCompare(b.name));
+  }
+
+  routableCount() {
+    return this.commands.size;
+  }
+
   find(name) {
     return this.commands.get(String(name || "").toLowerCase());
   }
@@ -90,6 +101,37 @@ export default class CommandRouter {
       return metadata;
     };
 
+    const previousAfk = await this.store.clearAfk(details.sender);
+    if (previousAfk) {
+      await socket.sendMessage(details.chat, {
+        text: `👋 Welcome back @${jidNumber(details.sender)}. AFK cleared.`,
+        mentions: [details.sender],
+      }).catch(() => {});
+    }
+    for (const mentioned of details.mentionedJids.slice(0, 10)) {
+      const afk = this.store.afk(mentioned);
+      if (afk) {
+        const minutes = Math.max(1, Math.floor((Date.now() - afk.since) / 60_000));
+        await socket.sendMessage(details.chat, {
+          text: `💤 @${jidNumber(mentioned)} is AFK: ${afk.reason} (${minutes}m)`,
+          mentions: [mentioned],
+        }).catch(() => {});
+      }
+    }
+
+    if (details.isGroup) {
+      const settings = this.store.group(details.chat);
+      if (settings.antiSpam || settings.antiTag || settings.antiWords.length || settings.antiBot) {
+        await getMetadata().catch(() => null);
+        const moderated = await this.moderateGroupContent(socket, details, {
+          settings,
+          isOwner,
+          isAdmin: Boolean(senderParticipant?.admin),
+        });
+        if (moderated) return true;
+      }
+    }
+
     if (details.isGroup && extractUrls(details.text).length) {
       await getMetadata().catch(() => null);
       const isAdmin = Boolean(senderParticipant?.admin);
@@ -100,12 +142,25 @@ export default class CommandRouter {
     }
 
     const prefix = this.store.prefix;
-    if (!details.text.startsWith(prefix)) return false;
+    if (!details.text.startsWith(prefix)) {
+      const response = this.store.filterResponse(details.text, details.chat, details.isGroup);
+      if (response) {
+        await socket.sendMessage(details.chat, { text: response }, { quoted: details.raw });
+        return true;
+      }
+      return false;
+    }
     const body = details.text.slice(prefix.length).trim();
     if (!body) return false;
     const [name, ...args] = body.split(/\s+/);
     const command = this.find(name);
-    if (!command) return false;
+    if (!command) {
+      const custom = this.store.customCommand(name);
+      if (!custom) return false;
+      if (this.store.mode === "private" && !isOwner) return true;
+      await socket.sendMessage(details.chat, { text: custom }, { quoted: details.raw });
+      return true;
+    }
     if (this.store.mode === "private" && !isOwner) return true;
 
     if (details.isGroup && (command.groupOnly || command.adminOnly || command.botAdmin)) {
@@ -174,14 +229,66 @@ export default class CommandRouter {
     }
 
     try {
-      if (this.config.commandReact) await context.react("⚡").catch(() => {});
+      if (this.store.feature("cmdReact")) await context.react("⚡").catch(() => {});
+      if (this.store.feature("autoTyping")) {
+        await socket.sendPresenceUpdate("composing", details.chat).catch(() => {});
+      }
       await command.execute(context);
+      if (this.store.feature("autoTyping")) {
+        await socket.sendPresenceUpdate("paused", details.chat).catch(() => {});
+      }
     } catch (error) {
+      if (this.store.feature("autoTyping")) {
+        await socket.sendPresenceUpdate("paused", details.chat).catch(() => {});
+      }
       logger.error(
         { command: command.name, error: safeError(error) },
         "Command failed",
       );
       await context.reply(`❌ ${safeError(error)}`).catch(() => {});
+    }
+    return true;
+  }
+
+  async moderateGroupContent(socket, details, { settings, isOwner, isAdmin }) {
+    if (isOwner || isAdmin) return false;
+    let violation = "";
+
+    if (
+      settings.antiBot &&
+      /^BAE5[A-F0-9]{12}$/i.test(String(details.raw?.key?.id || ""))
+    ) {
+      violation = "automated/bot message";
+    }
+    if (!violation && settings.antiTag && details.mentionedJids.length >= 5) {
+      violation = "mass tagging";
+    }
+    if (!violation && settings.antiWords.length) {
+      const lower = details.text.toLowerCase();
+      const blocked = settings.antiWords.find((word) => lower.includes(word));
+      if (blocked) violation = `blocked word “${blocked}”`;
+    }
+    if (!violation && settings.antiSpam) {
+      const key = `${details.chat}:${details.sender}`;
+      const now = Date.now();
+      const recent = (this.spamBuckets.get(key) || []).filter((time) => now - time < 8_000);
+      recent.push(now);
+      this.spamBuckets.set(key, recent);
+      if (recent.length >= 6) violation = "message spam";
+      if (this.spamBuckets.size > 20_000) this.spamBuckets.clear();
+    }
+    if (!violation) return false;
+
+    await socket.sendMessage(details.chat, { delete: details.raw.key }).catch(() => {});
+    const warnings = await this.store.warn(details.chat, details.sender);
+    if (warnings >= 3) {
+      await socket.groupParticipantsUpdate(details.chat, [details.sender], "remove").catch(() => {});
+      await this.store.clearWarning(details.chat, details.sender);
+    } else {
+      await socket.sendMessage(details.chat, {
+        text: `⚠️ @${jidNumber(details.sender)}: ${violation}. Warning ${warnings}/3.`,
+        mentions: [details.sender],
+      }).catch(() => {});
     }
     return true;
   }

@@ -47,6 +47,9 @@ export default class VenomBot {
     this.reconnectAttempt = 0;
     this.status = "initializing";
     this.error = null;
+    this.messageCount = 0;
+    this.reminderTimer = setInterval(() => void this.deliverReminders(), 15_000);
+    this.reminderTimer.unref?.();
     this.router = new CommandRouter({
       config,
       store: stateStore,
@@ -99,7 +102,7 @@ export default class VenomBot {
       },
       browser: Browsers.ubuntu("Chrome"),
       logger: baileysLogger,
-      markOnlineOnConnect: this.config.alwaysOnline,
+      markOnlineOnConnect: this.stateStore.feature("alwaysOnline"),
       syncFullHistory: false,
       generateHighQualityLinkPreview: false,
       keepAliveIntervalMs: 25_000,
@@ -149,9 +152,14 @@ export default class VenomBot {
       this.connectedAt = Date.now();
       this.reconnectAttempt = 0;
       logger.info(
-        { user: jidNumber(socket.user?.id), commands: this.router.list().length },
+        { user: jidNumber(socket.user?.id), commands: this.router.routableCount() },
         `${this.config.botName} connected`,
       );
+      if (this.stateStore.feature("startupMsg") && socket.user?.id) {
+        await socket.sendMessage(socket.user.id, {
+          text: `⚡ ${this.config.botName} ${this.config.version} connected with ${this.router.routableCount()} commands.`,
+        }).catch(() => {});
+      }
       return;
     }
 
@@ -183,12 +191,20 @@ export default class VenomBot {
     if (!this.isCurrent(socket, generation) || update.type !== "notify") return;
     for (const raw of update.messages || []) {
       if (!raw?.message) continue;
+      this.messageCount += 1;
       const details = messageDetails(raw);
       if (details.isStatus) {
-        if (this.config.autoReadStatus) await socket.readMessages([raw.key]).catch(() => {});
+        if (this.stateStore.feature("readStatus")) {
+          await socket.readMessages([raw.key]).catch(() => {});
+        }
+        if (this.stateStore.feature("likeStatus")) {
+          await socket.sendMessage("status@broadcast", {
+            react: { text: "💚", key: raw.key },
+          }).catch(() => {});
+        }
         continue;
       }
-      if (this.config.autoRead) await socket.readMessages([raw.key]).catch(() => {});
+      if (this.stateStore.feature("readMsg")) await socket.readMessages([raw.key]).catch(() => {});
       await this.router.handle(socket, details).catch((error) =>
         logger.error({ error: safeError(error) }, "Message routing failed"),
       );
@@ -199,7 +215,7 @@ export default class VenomBot {
     if (!this.isCurrent(socket, generation)) return;
     const settings = this.stateStore.group(update.id);
     const key = update.action === "add" ? "welcome" : update.action === "remove" ? "goodbye" : null;
-    if (!key || !settings[key]) return;
+    if (!settings.events || !key || !settings[key]) return;
 
     let subject = "the group";
     try {
@@ -217,7 +233,7 @@ export default class VenomBot {
   }
 
   async onCalls(socket, generation, calls) {
-    if (!this.isCurrent(socket, generation) || !this.config.rejectCalls) return;
+    if (!this.isCurrent(socket, generation) || !this.stateStore.feature("rejectCall")) return;
     for (const call of calls || []) {
       if (call.status !== "offer") continue;
       await socket.rejectCall(call.id, call.from).catch(() => {});
@@ -226,6 +242,19 @@ export default class VenomBot {
           text: `📵 ${this.config.botName} does not accept calls. Please send a message instead.`,
         })
         .catch(() => {});
+    }
+  }
+
+  async deliverReminders() {
+    if (this.status !== "open" || !this.socket || this.shuttingDown) return;
+    const due = await this.stateStore.takeDueReminders();
+    for (const reminder of due) {
+      await this.socket.sendMessage(reminder.chat, {
+        text: `⏰ *REMINDER*\n${reminder.text}\n\nFor: @${jidNumber(reminder.owner)}`,
+        mentions: [reminder.owner],
+      }).catch((error) =>
+        logger.warn({ error: safeError(error), reminder: reminder.id }, "Reminder delivery failed"),
+      );
     }
   }
 
@@ -271,7 +300,9 @@ export default class VenomBot {
       database: this.database.status,
       mode: this.stateStore.mode,
       prefix: this.stateStore.prefix,
-      commands: this.router.list().length,
+      commands: this.router.routableCount(),
+      plugins: this.router.list().length,
+      messagesProcessed: this.messageCount,
       uptime: formatDuration((Date.now() - this.startedAt) / 1_000),
       startedAt: new Date(this.startedAt).toISOString(),
       connectedAt: this.connectedAt ? new Date(this.connectedAt).toISOString() : null,
@@ -286,6 +317,7 @@ export default class VenomBot {
     this.shuttingDown = true;
     this.status = "stopping";
     clearTimeout(this.reconnectTimer);
+    clearInterval(this.reminderTimer);
     await this.closeSocket("Bot shutting down");
     await this.authStore.close();
     await this.stateStore.close();

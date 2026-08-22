@@ -16,7 +16,7 @@ export default [
         `Creator: ${context.config.ownerName}`,
         `Version: ${context.config.version}`,
         `Status: ${status.status}`,
-        `Commands: ${context.registry.list().length}`,
+        `Commands: ${context.registry.routableCount()}`,
         context.config.repository,
       ].join("\n"));
     },
@@ -29,7 +29,7 @@ export default [
       const memory = process.memoryUsage();
       await context.reply([
         "📊 *VENOM STATISTICS*",
-        `Commands: ${context.registry.list().length}`,
+        `Commands: ${context.registry.routableCount()}`,
         `Uptime: ${formatDuration(process.uptime())}`,
         `RSS memory: ${(memory.rss / 1024 / 1024).toFixed(1)} MB`,
         `Heap used: ${(memory.heapUsed / 1024 / 1024).toFixed(1)} MB`,

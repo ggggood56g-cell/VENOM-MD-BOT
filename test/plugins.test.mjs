@@ -5,7 +5,7 @@ import test from "node:test";
 import plugins from "../src/plugins/index.js";
 
 test("the clean command catalogue is complete and collision-free", () => {
-  assert.equal(plugins.length, 372);
+  assert.equal(plugins.length, 469);
   const keys = new Set();
   for (const plugin of plugins) {
     assert.match(plugin.name, /^[a-z0-9][a-z0-9-]{0,31}$/);
@@ -16,6 +16,7 @@ test("the clean command catalogue is complete and collision-free", () => {
       keys.add(key);
     }
   }
+  assert.equal(keys.size, 539);
 });
 
 test("the bot does not contain a built-in pairing endpoint or remote code loader", () => {

@@ -30,8 +30,24 @@ test("state store persists economy transfers and bot bans", async (context) => {
 
   await store.setBanned(second, true);
   await store.setNote(first, "idea", "Build the best VENOM menu.");
+  await store.setFeature("autoTyping", true);
+  await store.setCustomCommand("rules", "Respect everyone.");
+  await store.setFilter("group", "test@g.us", "hello", "Welcome!");
+  await store.setAfk(first, "Testing VENOM");
+  await store.addReminder({
+    id: "test-reminder",
+    owner: first,
+    chat: "test@g.us",
+    text: "Run tests",
+    dueAt: Date.now() + 60_000,
+  });
   assert.equal(store.isBanned(second), true);
   assert.equal(store.notes(first).idea, "Build the best VENOM menu.");
+  assert.equal(store.feature("autoTyping"), true);
+  assert.equal(store.customCommand("rules"), "Respect everyone.");
+  assert.equal(store.filterResponse("HELLO", "test@g.us", true), "Welcome!");
+  assert.equal(store.afk(first).reason, "Testing VENOM");
+  assert.equal(store.reminders(first).length, 1);
   await store.close();
 
   const restored = await new StateStore(config, fakeDatabase()).init();
@@ -39,6 +55,11 @@ test("state store persists economy transfers and bot bans", async (context) => {
   assert.equal(restored.economy(second).wallet, 1_250);
   assert.equal(restored.isBanned(second), true);
   assert.equal(restored.notes(first).idea, "Build the best VENOM menu.");
+  assert.equal(restored.feature("autoTyping"), true);
+  assert.equal(restored.customCommand("rules"), "Respect everyone.");
+  assert.equal(restored.filterResponse("hello", "test@g.us", true), "Welcome!");
+  assert.equal(restored.afk(first).reason, "Testing VENOM");
+  assert.equal(restored.reminders(first)[0].text, "Run tests");
 });
 
 test("state store bounds invalid economy values", async (context) => {

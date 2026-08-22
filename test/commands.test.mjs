@@ -16,6 +16,17 @@ test("QR command generates a real PNG buffer", async () => {
   assert.deepEqual([...output.image.subarray(0, 8)], [137, 80, 78, 71, 13, 10, 26, 10]);
 });
 
+test("PDF command creates a real PDF document", async () => {
+  let output;
+  await command("pdf").execute({
+    query: "VENOM MD BOT test document",
+    send: async (content) => { output = content; },
+  });
+  assert.ok(Buffer.isBuffer(output.document));
+  assert.equal(output.document.subarray(0, 5).toString("ascii"), "%PDF-");
+  assert.equal(output.mimetype, "application/pdf");
+});
+
 test("tic-tac-toe command starts and accepts a valid move", async () => {
   const replies = [];
   const context = {

@@ -1,6 +1,7 @@
 export default [
   {
     name: "mode",
+    aliases: ["setmode"],
     category: "owner",
     description: "Switch between public and private command access.",
     usage: "mode public|private",

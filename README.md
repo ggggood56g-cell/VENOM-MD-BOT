@@ -7,7 +7,7 @@
 [![Node.js](https://img.shields.io/badge/Node.js-20%2B-22c55e?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org)
 [![Baileys](https://img.shields.io/badge/WhatsApp-Multi--Device-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://github.com/WhiskeySockets/Baileys)
 [![License](https://img.shields.io/badge/License-MIT-8b5cf6?style=for-the-badge)](LICENSE)
-[![Commands](https://img.shields.io/badge/Commands-316-ef4444?style=for-the-badge)](#-command-centre)
+[![Commands](https://img.shields.io/badge/Commands-539-ef4444?style=for-the-badge)](#-command-centre)
 
 **Created and maintained by TAPRUSH EMP (Micheal)**
 
@@ -29,7 +29,7 @@ VENOM MD BOT is an original WhatsApp multi-device bot foundation built for depen
 
 ## 🚀 Highlights
 
-- **372 tested command plugins (429 routable names including aliases)** with a polished dynamic menu
+- **469 implemented plugin objects with exactly 539 routable command names** and a polished dynamic menu
 - **External session compatibility** with the completed VENOM pairing website
 - **Persistent authentication** using protected local files and optional MongoDB backup
 - **Group management** including promote, demote, kick, add, open/close, link controls and tagging
@@ -110,24 +110,32 @@ COMMAND_MODE=public
 
 Open the live menu with `.menu`. Use `.help command` for command-specific instructions.
 
-| Category | Plugins | Examples |
+| Category | Routable names | Examples |
 |---|---:|---|
-| **Help/general** | 8 | `menu`, `help`, `ping`, `alive`, `runtime` |
-| **AI** | 16 | `ai`, `gemini`, `gpt`, `deepseek`, `groq`, `coder`, `summarize` |
-| **Anime** | 10 | `anime`, `manga`, `character`, `airing`, `waifu`, `animegif` |
-| **Fun/reactions** | 61 | `hug`, `kiss`, `slap`, `truth`, `dare`, `pokemon`, `wyr` |
-| **Downloader** | 5 | `ytsearch`, `song`, `video`, `translate`, `tts` |
-| **Converter** | 31 | `tomp3`, `bass`, `nightcore`, `reverse`, `gif`, `take`, `boomerang` |
-| **Search** | 11 | `country`, `github`, `npm`, `book`, `lyrics`, `wiki`, `websearch` |
-| **Economy** | 35 | `balance`, `daily`, `work`, `bankrob`, `shop`, `loan`, `leaderboard` |
-| **Textmaker** | 51 | `fire`, `blackpink`, `matrix`, `neontext`, `ttp`, `water`, `zodiac` |
+| **Help/general** | 16 | `menu`, `help`, `ping`, `alive`, `runtime` |
+| **AI** | 19 | `ai`, `gemini`, `gpt`, `deepseek`, `groq`, `imagine` |
+| **Anime** | 10 | `anime`, `manga`, `character`, `airing`, `waifu` |
+| **Fun/reactions** | 62 | `hug`, `kiss`, `slap`, `truth`, `pokemon`, `wyr` |
+| **Downloader** | 19 | `ytsearch`, `song`, `autodl`, `gitclone`, `gdrive`, `ytinfo` |
+| **Converter** | 36 | `tomp3`, `bass`, `nightcore`, `smooth`, `ptv`, `take` |
+| **Search** | 15 | `country`, `github`, `news`, `lyrics`, `wiki`, `websearch` |
+| **Economy** | 44 | `balance`, `daily`, `bankrob`, `shop`, `loan`, `leaderboard` |
+| **Textmaker** | 51 | `fire`, `blackpink`, `matrix`, `neontext`, `ttp`, `zodiac` |
 | **Games** | 8 | `hangman`, `ttt`, `wcg`, `guess`, `trivia` |
-| **Group admin** | 38 | `tagall`, `promote`, `antilink`, `poll`, `welcome`, `warn`, `vcf` |
-| **Image/media** | 15 | `blur2`, `enhance`, `pixelate`, `couple`, `sticker`, `toimg` |
-| **Image memes** | 29 | `wanted`, `wasted`, `jail`, `drake`, `trigger-meme`, `rainbow` |
-| **Bot/process** | 11 | `stats`, `backup`, `ban`, `grouplist`, `restart`, `shutdown` |
-| **Misc/utilities** | 36 | `calc`, `qrcode`, `weather`, `currency`, `addnote`, `quote`, `avatar` |
-| **Owner control** | 7 | `mode`, `prefix`, `setname`, `setbio`, `block`, `restart` |
+| **Group admin** | 58 | `tagall`, `antispam`, `antiword`, `poll`, `welcome`, `kickall` |
+| **Tools** | 21 | `afk`, `remind`, `setcmd`, `quotedinfo`, `ison`, `permit` |
+| **Image** | 12 | `blur2`, `enhance`, `pixelate`, `couple`, `rotate` |
+| **Image memes** | 29 | `wanted`, `wasted`, `jail`, `drake`, `trigger-meme` |
+| **Media** | 7 | `sticker`, `toimg`, `mediainfo` |
+| **Bot/process** | 18 | `stats`, `backup`, `ban`, `broadcast`, `restart`, `shutdown` |
+| **Misc** | 8 | `advice`, `quote`, `ebinary`, `flipcoin`, `rolldice` |
+| **Utilities** | 42 | `calc`, `qrcode`, `pdf`, `weather`, `currency`, `readqr` |
+| **Plugin control** | 4 | `plugins`, `plugin`, `delplugin`, `reload` |
+| **Config** | 23 | `alwaysonline`, `cmdreact`, `readstatus`, `setvar`, `roles` |
+| **User** | 16 | `bio`, `forward`, `pinchat`, `setpp`, `archive` |
+| **Privacy** | 7 | `privacy`, `lastseen`, `presence`, `mypp`, `read` |
+| **Auto reply** | 5 | `pfilter`, `gfilter`, `listfilters`, `pstop`, `gstop` |
+| **Owner control** | 9 | `mode`, `prefix`, `setname`, `setbio`, `block` |
 
 The menu count is generated from the real registry; it is never hard-coded. Run `.menu <category>` for one section or `.menu <command>` for details.
 

@@ -77,7 +77,7 @@ function menuHeader(context) {
     ` ✇ ▸ Creator: ${context.config.ownerName}`,
     ` ✇ ▸ Number: ${context.config.owners[0]}`,
     ` ✇ ▸ User: ${context.details.pushName || "USER"}`,
-    ` ✇ ▸ Plugins: ${context.registry.list().length}`,
+    ` ✇ ▸ Plugins: ${context.registry.routableCount()}`,
     ` ✇ ▸ Uptime: ${longUptime(process.uptime())}`,
     ` ✇ ▸ Memory: ${memoryText()}`,
     ` ✇ ▸ Version: ${context.config.version}`,
@@ -97,7 +97,7 @@ function categorySection(category, commands) {
 
 function groupedCommands(context) {
   const groups = new Map();
-  for (const command of context.registry.list()) {
+  for (const command of context.registry.routableList()) {
     if (command.hidden) continue;
     if (!groups.has(command.category)) groups.set(command.category, []);
     groups.get(command.category).push(command);
