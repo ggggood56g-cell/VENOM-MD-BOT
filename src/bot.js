@@ -11,6 +11,7 @@ import { messageDetails } from "./message.js";
 import plugins from "./plugins/index.js";
 import CommandRouter from "./router.js";
 import AiService from "./services/ai.js";
+import { channelChip, resolveChannelJid } from "./services/channel.js";
 import { formatDuration, jidNumber, sleep } from "./utils.js";
 
 function disconnectCode(error) {
@@ -68,6 +69,7 @@ export default class VenomBot {
 
   async start() {
     try {
+      this.channelJid = await resolveChannelJid(this.config);
       const initialized = await this.authStore.init();
       this.auth = initialized.state;
       this.saveCreds = initialized.saveCreds;
@@ -172,8 +174,11 @@ export default class VenomBot {
         `${this.config.botName} connected`,
       );
       if (this.stateStore.feature("startupMsg") && socket.user?.id) {
+        const { youtube, group } = this.config.community;
+        const chip = channelChip(this.channelJid);
         await socket.sendMessage(socket.user.id, {
-          text: `⚡ ${this.config.botName} ${this.config.version} connected with ${this.router.routableCount()} commands.`,
+          text: `⚡ ${this.config.botName} ${this.config.version} connected with ${this.router.routableCount()} commands.\n\n📺 Tutorials: ${youtube}\n👥 Community: ${group}`,
+          ...(Object.keys(chip).length ? { contextInfo: chip } : {}),
         }).catch(() => {});
       }
       return;

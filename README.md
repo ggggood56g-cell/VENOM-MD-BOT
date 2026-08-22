@@ -60,7 +60,7 @@
 
 ## 🐍 About
 
-VENOM MD BOT is a WhatsApp bot built with Baileys. It works out of the box with **no API keys**, and includes **631 commands** for group management, media, AI, games, downloads and useful everyday tools.
+VENOM MD BOT is a WhatsApp bot built with Baileys. It works out of the box with **no API keys**, and includes **633 commands** for group management, media, AI, games, downloads and useful everyday tools.
 
 ### Main features
 
