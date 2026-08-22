@@ -1,6 +1,9 @@
-node_modules
 .git
+.github
 .env
-venom.pid
-venom.log
-*.log
+node_modules
+npm-debug.log*
+coverage
+data
+session
+sessions

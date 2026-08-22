@@ -1,0 +1,69 @@
+{
+  "name": "venom-md-bot",
+  "type": "WEB",
+  "strategy": {
+    "type": "DEPLOYMENT_STRATEGY_TYPE_ROLLING"
+  },
+  "routes": [
+    {
+      "port": 10000,
+      "path": "/",
+      "security_policies": null
+    }
+  ],
+  "ports": [
+    {
+      "port": 10000,
+      "protocol": "http"
+    }
+  ],
+  "env": [
+    { "key": "PORT", "value": "10000" },
+    { "key": "NODE_ENV", "value": "production" },
+    { "key": "BOT_NAME", "value": "VENOM MD BOT" },
+    { "key": "OWNER_NAME", "value": "TAPRUSH EMP (Micheal)" },
+    { "key": "OWNER_NUMBER", "value": "2348021016309" },
+    { "key": "PREFIX", "value": "." },
+    { "key": "COMMAND_MODE", "value": "public" },
+    { "key": "TIMEZONE", "value": "Africa/Lagos" },
+    { "key": "SESSION_NAMESPACE", "value": "venom" },
+    { "key": "SESSION_ID", "value": "" },
+    { "key": "DATABASE_URL", "value": "" },
+    { "key": "GEMINI_API_KEY", "value": "" }
+  ],
+  "regions": ["fra"],
+  "scalings": [
+    {
+      "scopes": ["region:fra"],
+      "min": 0,
+      "max": 1
+    }
+  ],
+  "instance_types": [
+    {
+      "scopes": ["region:fra"],
+      "type": "free"
+    }
+  ],
+  "health_checks": [
+    {
+      "grace_period": 20,
+      "interval": 30,
+      "restart_limit": 3,
+      "timeout": 5,
+      "http": {
+        "port": 10000,
+        "path": "/health",
+        "method": "GET"
+      }
+    }
+  ],
+  "git": {
+    "repository": "github.com/MykelGoal/VENOM-MD-BOT",
+    "branch": "main",
+    "docker": {
+      "dockerfile": "/Dockerfile",
+      "privileged": false
+    }
+  }
+}

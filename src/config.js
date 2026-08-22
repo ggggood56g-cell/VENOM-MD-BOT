@@ -1,143 +1,130 @@
 import "dotenv/config";
 
-import { fileURLToPath } from "url";
-import path from "path";
-import BRAND from "../System/Branding.js";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-export const ROOT = path.resolve(__dirname, "..");
+const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
-const bool = (value, fallback = false) => {
+export function parseBoolean(value, fallback = false) {
   if (value === undefined || value === null || value === "") return fallback;
-  return ["true", "1", "yes", "on", "enable"].includes(
+  return ["1", "true", "yes", "on", "enable", "enabled"].includes(
     String(value).trim().toLowerCase(),
   );
-};
-
-const list = (value) =>
-  String(value || "")
-    .split(",")
-    .map((item) => item.replace(/[^0-9]/g, ""))
-    .filter((item) => item.length >= 7 && item.length <= 15)
-    .slice(0, 32);
-
-const firstKey = (...values) => {
-  for (const value of values) {
-    const key = String(value || "")
-      .split(",")
-      .map((item) => item.trim())
-      .find(Boolean);
-    if (key) return key;
-  }
-  return "";
-};
-
-const configuredOwners = list(process.env.MODS || process.env.OWNER_NUMBER);
-const mongoUri =
-  process.env.VENOM_TEST_ISOLATE === "1"
-    ? ""
-    : String(process.env.MONGODB || process.env.MONGO_URI || "").trim();
-
-/**
- * Compatibility configuration for VENOM's original command collection.
- * Transport/authentication remain owned by the hardened root application.
- */
-export const config = {
-  botName: BRAND.botName,
-  ownerName: BRAND.creator,
-  ownerNumbers:
-    configuredOwners.length > 0 ? configuredOwners : [BRAND.creatorNumber],
-  userTag: process.env.USER_TAG || "USER",
-  version: process.env.BOT_VERSION || "v4.1.0",
-  platform: process.env.PLATFORM || "nodejs",
-  prefix: process.env.PREFIX ?? ".",
-
-  // The compatibility layer does not manage WhatsApp authentication itself.
-  authMethod: "external",
-  pairNumber: "",
-  pairCustomCode: "",
-  sessionStore: "external",
-  sessionId: /^[a-zA-Z0-9_-]{1,64}$/.test(
-    String(process.env.SESSION_NAMESPACE || process.env.SESSION_ID || "").trim(),
-  )
-    ? String(process.env.SESSION_NAMESPACE || process.env.SESSION_ID).trim()
-    : "venom",
-  sessionDir: path.join(ROOT, "System", "session"),
-
-  botId: String(
-    process.env.BOT_ID || configuredOwners[0] || BRAND.creatorNumber,
-  )
-    .replace(/[^a-zA-Z0-9_]/g, "")
-    .slice(0, 32),
-
-  mongoUri,
-  mongoDb: String(process.env.MONGO_DB || "venom")
-    .replace(/[^a-zA-Z0-9_-]/g, "")
-    .slice(0, 64) || "venom",
-  sharedCluster: false,
-
-  // The root Express server owns keep-alive/health handling.
-  keepAlive: false,
-  keepAlivePort: Number.parseInt(process.env.PORT || "10000", 10) || 10000,
-
-  mode: (process.env.MODE || "public").toLowerCase(),
-  autoRead: bool(process.env.AUTO_READ),
-  autoReadStatus: bool(process.env.AUTO_READ_STATUS),
-  autoTyping: bool(process.env.AUTO_TYPING),
-  alwaysOnline: bool(process.env.ALWAYS_ONLINE),
-  rejectCall: bool(process.env.REJECT_CALL),
-  antiDelete: bool(process.env.ANTI_DELETE, true),
-  startupMessage: bool(process.env.STARTUP_MESSAGE, true),
-  cmdReact: bool(process.env.CMD_REACT, true),
-  cmdReactEmoji: process.env.CMD_REACT_EMOJI || "⚡",
-  autoDeleteCommands: bool(process.env.AUTO_DELETE_COMMANDS),
-
-  // Off by default: deployments should never auto-add users to a group.
-  forceJoin: bool(process.env.FORCE_JOIN, false),
-  forceAutoAdd: bool(process.env.FORCE_AUTOADD, false),
-  forceAutoAddHourly: Math.max(
-    1,
-    Number.parseInt(process.env.FORCE_AUTOADD_HOURLY || "20", 10) || 20,
-  ),
-  forceReAdd: bool(process.env.FORCE_READD, false),
-  supportGroupLink: String(
-    process.env.SUPPORT_GROUP_LINK || BRAND.supportGroup,
-  ).trim(),
-  menuImage: String(process.env.MENU_IMAGE || BRAND.logoPath).trim(),
-
-  dlSource: (process.env.DL_SOURCE || "auto").toLowerCase(),
-  dlProvider: (process.env.DL_PROVIDER || "auto").toLowerCase(),
-  dbRetainDays: Number(process.env.DB_RETAIN_DAYS || 90),
-  dbAutoClean: bool(process.env.DB_AUTOCLEAN, true),
-  schoolReward: Number(process.env.SCHOOL_REWARD || 100),
-  schoolGroup: String(process.env.SCHOOL_GROUP || "").trim(),
-  affiliateUrl: String(process.env.AFFILIATE_URL || BRAND.repository).trim(),
-  refReward: Number(process.env.REF_REWARD || 500),
-  refBonus: Number(process.env.REF_BONUS || 250),
-  refVipAt: Number(process.env.REF_VIP_AT || 5),
-
-  keys: {
-    openai: firstKey(process.env.OPENAI_API_KEY, process.env.OPENAI_API),
-    gemini: firstKey(process.env.GEMINI_API_KEY, process.env.GEMINI_API),
-    groq: firstKey(process.env.GROQ_API_KEY),
-    pexels: firstKey(process.env.PEXELS_KEY),
-    pixabay: firstKey(process.env.PIXABAY_KEY, process.env.PIXABAY_API_KEY),
-    weather: firstKey(
-      process.env.OPENWEATHER_KEY,
-      process.env.OPENWEATHER_API_KEY,
-    ),
-  },
-
-  pluginDir: path.join(ROOT, "plugins"),
-  tmpDir: path.join(ROOT, "tmp"),
-  startTime: Date.now(),
-};
-
-export function prefixes() {
-  const prefix = config.prefix;
-  if (prefix === "none" || prefix === "") return [""];
-  if (prefix === "multi") return [".", "/", "!", "#", "$", ","];
-  return [prefix];
 }
+
+export function parseNumberList(value) {
+  return [
+    ...new Set(
+      String(value || "")
+        .split(",")
+        .map((item) => item.replace(/\D/g, ""))
+        .filter((item) => item.length >= 7 && item.length <= 15),
+    ),
+  ].slice(0, 20);
+}
+
+export function parsePrefixes(value) {
+  const prefixes = String(value || ".")
+    .split(",")
+    .map((item) => item.trim())
+    .filter((item) => /^\S{1,4}$/u.test(item));
+  return [...new Set(prefixes)].slice(0, 8).length
+    ? [...new Set(prefixes)].slice(0, 8)
+    : ["."];
+}
+
+export function parseNamespace(value) {
+  const candidate = String(value || "venom").trim();
+  return /^[A-Za-z0-9_-]{1,48}$/.test(candidate) ? candidate : "venom";
+}
+
+function boundedInteger(value, fallback, minimum, maximum) {
+  const parsed = Number.parseInt(value, 10);
+  return Number.isFinite(parsed)
+    ? Math.min(maximum, Math.max(minimum, parsed))
+    : fallback;
+}
+
+function safeUrl(value, fallback = "") {
+  try {
+    const parsed = new URL(String(value || fallback));
+    return parsed.protocol === "https:" ? parsed.toString().replace(/\/$/, "") : fallback;
+  } catch {
+    return fallback;
+  }
+}
+
+const owners = parseNumberList(
+  process.env.OWNER_NUMBER || process.env.MODS || "2348021016309",
+);
+const namespace = parseNamespace(process.env.SESSION_NAMESPACE);
+let pendingSessionCredential = String(process.env.SESSION_ID || "").trim();
+const databaseUrl = String(
+  process.env.DATABASE_URL || process.env.MONGODB || process.env.MONGO_URI || "",
+).trim();
+
+// Consume the session credential once and remove it from process.env so command
+// modules and diagnostics cannot accidentally print it.
+delete process.env.SESSION_ID;
+export function consumeSessionCredential() {
+  const credential = pendingSessionCredential;
+  pendingSessionCredential = "";
+  return credential;
+}
+
+export const config = Object.freeze({
+  root: ROOT,
+  botName: String(process.env.BOT_NAME || "VENOM MD BOT").trim().slice(0, 64),
+  ownerName: String(
+    process.env.OWNER_NAME || process.env.BOT_OWNER || "TAPRUSH EMP (Micheal)",
+  )
+    .trim()
+    .slice(0, 64),
+  owners: Object.freeze(owners.length ? owners : ["2348021016309"]),
+  description: String(
+    process.env.DESCRIPTION || "Fast, secure and powerful WhatsApp automation.",
+  )
+    .trim()
+    .slice(0, 180),
+  repository: "https://github.com/MykelGoal/VENOM-MD-BOT",
+  prefixes: Object.freeze(
+    parsePrefixes(process.env.PREFIXES || process.env.PREFIX),
+  ),
+  mode: String(process.env.COMMAND_MODE || process.env.MODE || "public").toLowerCase() ===
+    "private"
+    ? "private"
+    : "public",
+  timezone: String(process.env.TIMEZONE || "Africa/Lagos").trim().slice(0, 64),
+  packname: String(process.env.PACKNAME || "VENOM MD BOT").trim().slice(0, 64),
+  author: String(
+    process.env.AUTHOR || "TAPRUSH EMP (Micheal)",
+  )
+    .trim()
+    .slice(0, 64),
+  sessionNamespace: namespace,
+  sessionSite: safeUrl(
+    process.env.SESSION_SITE_URL,
+    "https://session-site-2odn.onrender.com",
+  ),
+  sessionDir: path.join(ROOT, "data", "sessions", namespace),
+  databaseUrl: /^mongodb(?:\+srv)?:\/\//i.test(databaseUrl) ? databaseUrl : "",
+  databaseName: String(process.env.MONGO_DB || "venom")
+    .replace(/[^A-Za-z0-9_-]/g, "")
+    .slice(0, 48) || "venom",
+  geminiKey: String(
+    process.env.GEMINI_API_KEY || process.env.GEMINI_API || "",
+  ).trim(),
+  port: boundedInteger(process.env.PORT, 10_000, 1, 65_535),
+  trustProxy: parseBoolean(process.env.TRUST_PROXY),
+  autoRead: parseBoolean(process.env.AUTO_READ),
+  autoReadStatus: parseBoolean(process.env.AUTO_READ_STATUS),
+  alwaysOnline: parseBoolean(process.env.ALWAYS_ONLINE),
+  rejectCalls: parseBoolean(process.env.REJECT_CALL, true),
+  commandReact: parseBoolean(process.env.COMMAND_REACT, true),
+  logLevel: String(process.env.LOG_LEVEL || "info").trim(),
+  baileysLogLevel: String(process.env.BAILEYS_LOG_LEVEL || "silent").trim(),
+  maxMediaBytes:
+    boundedInteger(process.env.MEDIA_MAX_MB, 32, 5, 64) * 1024 * 1024,
+});
 
 export default config;
