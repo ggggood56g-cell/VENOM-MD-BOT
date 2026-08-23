@@ -52,7 +52,7 @@
 [![Join Telegram](https://img.shields.io/badge/Join%20Us-Telegram-229ED9?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/+PYae7FAKkbEwM2E0)
 [![Join WhatsApp](https://img.shields.io/badge/Join%20Us-WhatsApp%20Group-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://chat.whatsapp.com/CWpMOawc88e9DWGwfjW5Ia)
 
-[**GET SESSION ID**](https://session-site-2odn.onrender.com) · [**FORK REPOSITORY**](https://github.com/MykelGoal/VENOM-MD-BOT/fork)
+[**GET SESSION ID**](https://session-site-2odn.onrender.com) · [**GET BOT TOKEN**](https://t.me/BotFather) · [**FORK REPOSITORY**](https://github.com/MykelGoal/VENOM-MD-BOT/fork)
 
 </div>
 
@@ -74,7 +74,7 @@ VENOM MD BOT runs on **WhatsApp and Telegram from one deploy**. It works out of 
 
 ---
 
-## 🔑 Get a Session ID
+## 🔑 Get a Session ID (WhatsApp)
 
 <div align="center">
 
@@ -91,9 +91,54 @@ VENOM MD BOT runs on **WhatsApp and Telegram from one deploy**. It works out of 
 
 ---
 
+## 🤖 Get a Bot Token (Telegram)
+
+<div align="center">
+
+[![Open BotFather](https://img.shields.io/badge/OPEN-@BotFather-229ED9?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/BotFather)
+[![Get your ID](https://img.shields.io/badge/GET%20YOUR%20ID-@userinfobot-0088cc?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/userinfobot)
+
+<sub>No session website · No QR code · <b>No ban risk</b></sub>
+
+</div>
+
+Two taps and you have everything Telegram needs — it takes about 40 seconds.
+
+| ① Create the bot | ② Find your user ID |
+|---|---|
+| Open **[@BotFather](https://t.me/BotFather)** and send `/newbot` | Open **[@userinfobot](https://t.me/userinfobot)** and send `/start` |
+| Choose a display name, then a username ending in `bot` — for example `VenomMdBot` | It instantly replies with `Id: 123456789` |
+| BotFather replies with a token like `8123456789:AAF-abc123def456` | Copy the number |
+| Save it as **`TELEGRAM_BOT_TOKEN`** | Save it as **`TELEGRAM_OWNER_ID`** |
+| 🔒 Treat it like a password | 👑 This makes you the owner, exactly like `OWNER_NUMBER` on WhatsApp |
+
+> **Important:** while you are still in [@BotFather](https://t.me/BotFather), send `/setprivacy`, pick your bot and choose **Disable**. Without this your bot cannot read group messages, so anti-link and anti-spam will not work.
+
+<details>
+<summary><b>Optional — polish your bot in BotFather</b></summary>
+
+<br/>
+
+| Command | What it does |
+|---|---|
+| `/setdescription` | Text shown before a user presses Start |
+| `/setabouttext` | Short bio on the bot's profile |
+| `/setuserpic` | Profile picture — use `assets/venom-md-banner-v2.jpg` |
+| `/setjoingroups` | **Enable** so the bot can be added to groups |
+| `/setprivacy` | **Disable** so it can read group messages |
+| `/revoke` | Generate a fresh token if yours ever leaks |
+
+</details>
+
+> **Keep your bot token private**, exactly like a session ID. If it leaks, run `/revoke` in BotFather and paste the new token into your host.
+
+📖 Full walkthrough: **[docs/TELEGRAM.md](docs/TELEGRAM.md)**
+
+---
+
 ## 🚀 Quick Deploy
 
-**Three steps, about ten minutes:** ① [Fork the repo](https://github.com/MykelGoal/VENOM-MD-BOT/fork) → ② [Get your Session ID](https://session-site-2odn.onrender.com) → ③ deploy with one click below.
+**Three steps, about ten minutes:** ① [Fork the repo](https://github.com/MykelGoal/VENOM-MD-BOT/fork) → ② get your credential — [Session ID](https://session-site-2odn.onrender.com) for WhatsApp or a [BotFather token](https://t.me/BotFather) for Telegram → ③ deploy with one click below.
 
 | Platform | Deploy |
 |---|---|
@@ -124,9 +169,16 @@ bill.
 | `telegram` | Telegram only | `TELEGRAM_BOT_TOKEN`, `TELEGRAM_OWNER_ID` |
 | `both` | Both at once, one process | all four |
 
-For a **Telegram deploy**, set `PLATFORM=telegram` plus your
-[@BotFather](https://t.me/BotFather) token, and leave `SESSION_ID` and
-`OWNER_NUMBER` blank — no session website, no ban risk.
+For a **Telegram deploy**, set `PLATFORM=telegram` plus your BotFather token,
+and leave `SESSION_ID` and `OWNER_NUMBER` blank — no session website, no ban
+risk.
+
+<div align="center">
+
+[![Open BotFather](https://img.shields.io/badge/TOKEN-@BotFather-229ED9?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/BotFather)
+[![Get your ID](https://img.shields.io/badge/YOUR%20ID-@userinfobot-0088cc?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/userinfobot)
+
+</div>
 
 The startup log always states which mode it picked and what is missing:
 
