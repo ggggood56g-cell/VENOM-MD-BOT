@@ -90,6 +90,13 @@ export function mediaMessage(details) {
 
 export async function downloadMedia(socket, rawMessage, maximumBytes) {
   if (!rawMessage?.message) throw new Error("Reply to an image, video, sticker or audio file.");
+  // Platform dispatch: the Telegram adapter stores a `file_id` on the message
+  // instead of Baileys media keys, so it resolves downloads its own way. This
+  // keeps every plugin's `downloadMedia(context.socket, …)` call unchanged.
+  if (socket?.platform === "telegram") {
+    const { downloadTelegramMedia } = await import("./adapters/telegram-message.js");
+    return downloadTelegramMedia(socket, rawMessage, maximumBytes);
+  }
   const buffer = await downloadMediaMessage(
     rawMessage,
     "buffer",

@@ -1,4 +1,4 @@
-import { jidNumber } from "../utils.js";
+import { inviteUrl, jidNumber } from "../utils.js";
 
 const settingCommand = (name, setting, message) => ({
   name,
@@ -76,7 +76,7 @@ export default [
     botAdmin: true,
     async execute(context) {
       const code = await context.socket.groupInviteCode(context.chat);
-      await context.reply(`🔗 https://chat.whatsapp.com/${code}`);
+      await context.reply(`🔗 ${inviteUrl(context.socket, code)}`);
     },
   },
   {

@@ -67,3 +67,15 @@ export function extractUrls(text) {
 export function escapeRegExp(value) {
   return String(value).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
+
+/**
+ * Build a group invite URL for whichever platform the socket belongs to.
+ * Telegram's exportChatInviteLink already returns a full https://t.me/… URL,
+ * so the adapter hands back only its trailing segment for parity with
+ * Baileys' bare invite code.
+ */
+export function inviteUrl(socket, code) {
+  return socket?.platform === "telegram"
+    ? `https://t.me/${String(code).startsWith("+") ? code : `+${code}`}`
+    : `https://chat.whatsapp.com/${code}`;
+}

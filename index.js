@@ -7,7 +7,11 @@ import { createServer } from "./src/server.js";
 import StateStore from "./src/state-store.js";
 
 logger.info(
-  { version: process.env.npm_package_version || "1.0.0", node: process.version },
+  {
+    version: process.env.npm_package_version || "1.0.0",
+    node: process.version,
+    platform: config.platformMode,
+  },
   `Starting ${config.botName}`,
 );
 
@@ -18,7 +22,7 @@ const authStore = new AuthStore(config, database);
 
 let shuttingDown = false;
 let server;
-let bot;
+const bots = [];
 
 async function shutdown(signal, exitCode = 0) {
   if (shuttingDown) return;
@@ -27,24 +31,37 @@ async function shutdown(signal, exitCode = 0) {
 
   const forceExit = setTimeout(() => process.exit(exitCode || 1), 12_000);
   forceExit.unref?.();
-  await bot?.stop().catch((error) =>
-    logger.error({ error: safeError(error) }, "Bot shutdown failed"),
-  );
+  for (const bot of bots) {
+    await bot?.stop().catch((error) =>
+      logger.error({ error: safeError(error) }, "Bot shutdown failed"),
+    );
+  }
   await database.close();
   await new Promise((resolve) => server?.close(resolve));
   clearTimeout(forceExit);
   process.exit(exitCode);
 }
 
-bot = new VenomBot({
+const shared = {
   config,
   database,
-  authStore,
   stateStore,
   requestRestart: () => void shutdown("owner restart", 1),
   requestShutdown: () => void shutdown("owner shutdown", 0),
-});
-server = createServer(config, bot);
+};
+
+// PLATFORM=whatsapp (default) | telegram | both.
+// Adapters are imported lazily so a Telegram-only deploy never loads Baileys
+// and a WhatsApp-only deploy never loads Telegraf.
+if (config.platformMode === "whatsapp" || config.platformMode === "both") {
+  bots.push(new VenomBot({ ...shared, authStore }));
+}
+if (config.platformMode === "telegram" || config.platformMode === "both") {
+  const { default: TelegramBot } = await import("./src/adapters/telegram.js");
+  bots.push(new TelegramBot(shared));
+}
+
+server = createServer(config, bots);
 server.on("listening", () =>
   logger.info({ port: config.port }, "Health server listening"),
 );
@@ -53,7 +70,7 @@ server.on("error", (error) => {
   void shutdown("server error", 1);
 });
 
-await bot.start();
+await Promise.all(bots.map((bot) => bot.start()));
 
 process.once("SIGINT", () => void shutdown("SIGINT"));
 process.once("SIGTERM", () => void shutdown("SIGTERM"));

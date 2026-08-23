@@ -1,4 +1,4 @@
-import { jidNumber } from "../utils.js";
+import { inviteUrl, jidNumber } from "../utils.js";
 
 function requireTarget(context) {
   const target = context.targetJid();
@@ -124,7 +124,7 @@ export default [
     botAdmin: true,
     async execute(context) {
       const code = await context.socket.groupInviteCode(context.chat);
-      await context.reply(`🔗 https://chat.whatsapp.com/${code}`);
+      await context.reply(`🔗 ${inviteUrl(context.socket, code)}`);
     },
   },
   {

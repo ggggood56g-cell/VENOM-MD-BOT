@@ -1,6 +1,21 @@
 import express from "express";
 
 export function createServer(config, bot) {
+  // Accepts a single bot (legacy) or an array of adapters (PLATFORM=both).
+  const bots = Array.isArray(bot) ? bot.filter(Boolean) : [bot].filter(Boolean);
+  const status = () => {
+    const all = bots.map((instance) => instance.publicStatus());
+    if (all.length <= 1) return all[0] || { status: "no-adapter", connected: false };
+    return {
+      ...all[0],
+      platform: "both",
+      connected: all.some((entry) => entry.connected),
+      adapters: Object.fromEntries(
+        all.map((entry) => [entry.platform || "whatsapp", entry]),
+      ),
+    };
+  };
+
   const app = express();
   app.disable("x-powered-by");
   app.set("trust proxy", config.trustProxy ? 1 : false);
@@ -20,11 +35,11 @@ export function createServer(config, bot) {
   });
 
   app.get("/health", (_request, response) => {
-    response.json({ ok: true, ...bot.publicStatus() });
+    response.json({ ok: true, ...status() });
   });
 
   app.get("/api/status", (_request, response) => {
-    response.json(bot.publicStatus());
+    response.json(status());
   });
 
   app.use((_request, response) => {
