@@ -109,6 +109,17 @@ export const config = Object.freeze({
     "https://session-site-2odn.onrender.com",
   ),
   sessionDir: path.join(ROOT, "data", "sessions", namespace),
+  channelUrl: safeUrl(
+    process.env.CHANNEL_URL,
+    "https://whatsapp.com/channel/0029Vb8bQew4dTnRwa7hlw2V",
+  ),
+  channelJid: String(process.env.CHANNEL_JID || "").trim(),
+  community: Object.freeze({
+    repo: "https://github.com/MykelGoal/VENOM-MD-BOT",
+    youtube: "https://www.youtube.com/@venommdbot?sub_confirmation=1",
+    telegram: "https://t.me/+PYae7FAKkbEwM2E0",
+    group: "https://chat.whatsapp.com/CWpMOawc88e9DWGwfjW5Ia",
+  }),
   databaseUrl: /^mongodb(?:\+srv)?:\/\//i.test(databaseUrl) ? databaseUrl : "",
   databaseName: String(process.env.MONGO_DB || "venom")
     .replace(/[^A-Za-z0-9_-]/g, "")

@@ -2,6 +2,7 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { chipOptions } from "../services/channel.js";
 import { formatDuration } from "../utils.js";
 
 const BANNER_PATH = path.join(path.dirname(fileURLToPath(import.meta.url)), "..", "..", "assets", "venom-md-banner.jpg");
@@ -179,7 +180,9 @@ async function sendMenu(context) {
       caption: `⚡ ${context.config.botName} — command menu`,
     });
   }
-  for (const chunk of chunks) await context.reply(chunk);
+  for (const [index, chunk] of chunks.entries()) {
+    await context.reply(chunk, index === 0 ? chipOptions(context.runtime) : {});
+  }
 }
 
 export default [
@@ -233,7 +236,32 @@ export default [
     category: "general",
     description: "Show the bot's live status.",
     async execute(context) {
-      await context.reply(`⚡ *${context.config.botName} is online*\n\n${context.config.description}\nUptime: ${formatDuration(process.uptime())}`);
+      await context.reply(
+        `⚡ *${context.config.botName} is online*\n\n${context.config.description}\nUptime: ${formatDuration(process.uptime())}\n\n📺 ${context.config.community.youtube}`,
+        chipOptions(context.runtime),
+      );
+    },
+  },
+  {
+    name: "community",
+    aliases: ["links"],
+    category: "general",
+    description: "Show the official VENOM MD links (repo, YouTube, community).",
+    async execute(context) {
+      const { repo, youtube, telegram, group } = context.config.community;
+      await context.reply(
+        [
+          `⚡ *${context.config.botName} — official links*`,
+          "",
+          `📦 Repo: ${repo}`,
+          `📺 Tutorials: ${youtube}`,
+          `✈️ Telegram: ${telegram}`,
+          `👥 WhatsApp group: ${group}`,
+          "",
+          "⭐ *Star the repo & subscribe* — it keeps VENOM MD alive.",
+        ].join("\n"),
+        chipOptions(context.runtime),
+      );
     },
   },
   {

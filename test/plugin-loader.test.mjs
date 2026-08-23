@@ -20,8 +20,8 @@ test("production plugin directory is auto-discovered without a manual import reg
   }
   await walk(path.resolve("src/plugins"));
   assert.deepEqual([...pluginFiles], diskFiles.sort());
-  assert.equal(plugins.length, 551);
-  assert.equal(routableCount, 631);
+  assert.equal(plugins.length, 552);
+  assert.equal(routableCount, 633);
   assert.ok(plugins.every((command) => pluginFiles.includes(command.sourceFile)));
 });
 

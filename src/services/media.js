@@ -23,7 +23,7 @@ export async function imageToSticker(buffer) {
 export async function addStickerMetadata(buffer, packname, author) {
   const metadata = Buffer.from(
     JSON.stringify({
-      "sticker-pack-id": "com.venom.md",
+      "sticker-pack-id": "https://github.com/MykelGoal/VENOM-MD-BOT",
       "sticker-pack-name": String(packname || "VENOM MD BOT").slice(0, 64),
       "sticker-pack-publisher": String(author || "TAPRUSH EMP (Micheal)").slice(0, 64),
       emojis: ["⚡"],

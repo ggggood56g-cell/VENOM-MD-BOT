@@ -4,7 +4,7 @@
 
 # ⚡ VENOM MD BOT
 
-**A fast and powerful WhatsApp multi-device bot.**
+**A fast, powerful WhatsApp multi-device bot — up and running in about 10 minutes.**
 
 [![Node.js](https://img.shields.io/badge/Node.js-20%2B-22c55e?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org)
 [![WhatsApp](https://img.shields.io/badge/WhatsApp-Multi--Device-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://github.com/WhiskeySockets/Baileys)
@@ -12,7 +12,7 @@
 
 <!-- ===== LIVE STATS ===== -->
 <a href="https://www.youtube.com/@venommdbot?sub_confirmation=1" target="_blank">
-  <img src="https://img.shields.io/youtube/channel/subscribers/UC9vkZyWIRN2iX66uupikjfw?style=for-the-badge&label=YouTube%20Subscribers&labelColor=ff0000&color=ff0000&logo=youtube&logoColor=white" alt="YouTube subscribers"/>
+  <img src="https://img.shields.io/badge/dynamic/json?url=https://api.socialcounts.org/youtube-live-subscriber-count/UC9vkZyWIRN2iX66uupikjfw&query=counters.estimation.subscriberCount&style=for-the-badge&label=YouTube%20Subscribers&labelColor=ff0000&color=ff0000&logo=youtube&logoColor=white" alt="YouTube subscribers"/>
 </a>
 <a href="https://github.com/MykelGoal/VENOM-MD-BOT/stargazers">
   <img src="https://img.shields.io/github/stars/MykelGoal/VENOM-MD-BOT?style=for-the-badge&label=Stars&labelColor=1f2937&color=facc15&logo=github&logoColor=white" alt="GitHub stars"/>
@@ -49,6 +49,9 @@
 </tr>
 </table>
 
+[![Join Telegram](https://img.shields.io/badge/Join%20Us-Telegram-229ED9?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/+PYae7FAKkbEwM2E0)
+[![Join WhatsApp](https://img.shields.io/badge/Join%20Us-WhatsApp%20Group-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://chat.whatsapp.com/CWpMOawc88e9DWGwfjW5Ia)
+
 [**GET SESSION ID**](https://session-site-2odn.onrender.com) · [**FORK REPOSITORY**](https://github.com/MykelGoal/VENOM-MD-BOT/fork)
 
 </div>
@@ -57,13 +60,13 @@
 
 ## 🐍 About
 
-VENOM MD BOT is a WhatsApp bot built with Baileys. It includes **631 commands** for group management, media, AI, games, downloads and useful everyday tools.
+VENOM MD BOT is a WhatsApp bot built with Baileys. It works out of the box with **no API keys**, and includes **633 commands** for group management, media, AI, games, downloads and useful everyday tools.
 
 ### Main features
 
+- **AI commands with 8 optional providers** (Gemini, OpenAI, Groq, DeepSeek, Mistral, OpenRouter, Cerebras, Cohere)
 - Group administration, welcome messages and anti-link protection
 - Stickers, media conversion and download tools
-- AI commands with multiple optional providers
 - Games, economy, search and utility commands
 - Local storage with optional MongoDB backup
 - Support for Render, Railway, Koyeb, Heroku, Docker and VPS
@@ -89,6 +92,8 @@ VENOM MD BOT is a WhatsApp bot built with Baileys. It includes **631 commands** 
 
 ## 🚀 Quick Deploy
 
+**Three steps, about ten minutes:** ① [Fork the repo](https://github.com/MykelGoal/VENOM-MD-BOT/fork) → ② [Get your Session ID](https://session-site-2odn.onrender.com) → ③ deploy with one click below.
+
 | Platform | Deploy |
 |---|---|
 | **Render** | [![Render](https://img.shields.io/badge/Deploy-Render-00c7b7?style=for-the-badge&logo=render&logoColor=white)](https://render.com/deploy?repo=https%3A%2F%2Fgithub.com%2FMykelGoal%2FVENOM-MD-BOT) |
@@ -102,6 +107,8 @@ For **Render Quick Deploy**, enter both values when Render asks for environment 
 - `OWNER_NUMBER`: your WhatsApp number with country code, digits only (for example, `2348021016309` — do not include `+`).
 
 The Render blueprint deliberately marks `OWNER_NUMBER` as a deploy-time secret, so each person who forks the repository can provide their own number instead of using the repository owner's number. If Render does not show the field, add `OWNER_NUMBER` manually under **Environment Variables** before deploying.
+
+> **Every platform:** always set `OWNER_NUMBER` to your own WhatsApp number. Some deploy templates pre-fill it with the repository owner's number by default.
 
 ---
 
@@ -121,6 +128,14 @@ Optionally set a `PING_URL` environment variable to any URL the bot should ping 
 ## 🛠️ Manual Installation
 
 Requires **Node.js 20.18+**. FFmpeg is recommended for media commands.
+
+**VPS (Ubuntu/Debian) one-liner** — installs Node.js and FFmpeg if missing, clones the repo and prepares `.env`:
+
+```bash
+bash <(curl -fsSL https://raw.githubusercontent.com/MykelGoal/VENOM-MD-BOT/main/scripts/install.sh)
+```
+
+Or step by step:
 
 ```bash
 git clone https://github.com/MykelGoal/VENOM-MD-BOT.git
@@ -152,17 +167,11 @@ Use this bot only with accounts and groups you are authorized to manage. Do not 
 - **Developer:** [TAPRUSH EMP (Micheal)](https://github.com/MykelGoal)
 - **Core library:** [Baileys](https://github.com/WhiskeySockets/Baileys)
 - **YouTube:** [VENOM MD Tech](https://www.youtube.com/@venommdbot?sub_confirmation=1)
+- **Community:** [Telegram](https://t.me/+PYae7FAKkbEwM2E0) · [WhatsApp Group](https://chat.whatsapp.com/CWpMOawc88e9DWGwfjW5Ia)
 - **License:** [MIT](LICENSE)
 
 <div align="center">
 
-<a href="https://www.youtube.com/@venommdbot?sub_confirmation=1" target="_blank">
-  <img src="https://img.shields.io/badge/Subscribe-VENOM%20MD%20Tech-ff0000?style=for-the-badge&logo=youtube&logoColor=white" alt="Subscribe on YouTube"/>
-</a>
-<a href="https://github.com/MykelGoal/VENOM-MD-BOT/stargazers">
-  <img src="https://img.shields.io/badge/Star%20%E2%AD%90-Support%20the%20repo-facc15?style=for-the-badge&logo=github&logoColor=1f2937" alt="Star the repo"/>
-</a>
-
-**VENOM MD BOT — Built by TAPRUSH EMP**
+**VENOM MD BOT** — Built by [TAPRUSH EMP](https://github.com/MykelGoal) · 📺 [VENOM MD Tech](https://www.youtube.com/@venommdbot?sub_confirmation=1) · ⭐ [Support the repo](https://github.com/MykelGoal/VENOM-MD-BOT)
 
 </div>
