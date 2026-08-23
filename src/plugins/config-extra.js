@@ -104,7 +104,11 @@ export default [
     category: "config",
     description: "Show configured bot-owner numbers.",
     async execute(context) {
-      await context.reply(`👑 *BOT OWNERS*\n${context.config.owners.map((number) => `• +${number}`).join("\n")}`);
+      await context.reply(
+        context.config.owners.length
+          ? `👑 *BOT OWNERS*\n${context.config.owners.map((number) => `• +${number}`).join("\n")}`
+          : "👑 *BOT OWNERS*\n• none configured — set OWNER_NUMBER in your environment.",
+      );
     },
   },
   {

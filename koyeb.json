@@ -22,7 +22,7 @@
     { "key": "NODE_ENV", "value": "production" },
     { "key": "BOT_NAME", "value": "VENOM MD BOT" },
     { "key": "OWNER_NAME", "value": "TAPRUSH EMP (Micheal)" },
-    { "key": "OWNER_NUMBER", "value": "2348021016309" },
+    { "key": "OWNER_NUMBER", "value": "" },
     { "key": "PREFIX", "value": "." },
     { "key": "COMMAND_MODE", "value": "public" },
     { "key": "TIMEZONE", "value": "Africa/Lagos" },

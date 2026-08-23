@@ -54,9 +54,11 @@ function safeUrl(value, fallback = "") {
   }
 }
 
-const owners = parseNumberList(
-  process.env.OWNER_NUMBER || process.env.MODS || "2348021016309",
-);
+// No hardcoded fallback: an unset OWNER_NUMBER means "this deployment has no
+// configured owner" rather than silently pointing at the upstream author's
+// personal number. Owner-only commands still work for the linked account
+// itself, because the router also grants owner rights on `fromMe` messages.
+const owners = parseNumberList(process.env.OWNER_NUMBER || process.env.MODS || "");
 const namespace = parseNamespace(process.env.SESSION_NAMESPACE);
 let pendingSessionCredential = String(process.env.SESSION_ID || "").trim();
 const databaseUrl = String(
@@ -80,7 +82,7 @@ export const config = Object.freeze({
   )
     .trim()
     .slice(0, 64),
-  owners: Object.freeze(owners.length ? owners : ["2348021016309"]),
+  owners: Object.freeze(owners),
   description: String(
     process.env.DESCRIPTION || "Fast, secure and powerful WhatsApp automation.",
   )

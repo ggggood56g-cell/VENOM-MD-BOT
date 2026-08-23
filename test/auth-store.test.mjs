@@ -19,7 +19,7 @@ function validCredential() {
     },
     registrationId: 1234,
     advSecretKey: "a".repeat(32),
-    me: { id: "2348021016309@s.whatsapp.net", name: "VENOM" },
+    me: { id: "15551234567@s.whatsapp.net", name: "VENOM" },
     registered: true,
   };
   return Buffer.from(JSON.stringify(credentials, BufferJSON.replacer)).toString("base64");
@@ -29,7 +29,7 @@ test("session decoder accepts the pairing site's base64 creds format", () => {
   const result = decodeSessionCredential(validCredential());
   const parsed = JSON.parse(result, BufferJSON.reviver);
   assert.equal(parsed.registered, true);
-  assert.equal(parsed.me.id, "2348021016309@s.whatsapp.net");
+  assert.equal(parsed.me.id, "15551234567@s.whatsapp.net");
   assert.ok(Buffer.isBuffer(parsed.noiseKey.private));
 });
 
