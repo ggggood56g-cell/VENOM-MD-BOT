@@ -149,7 +149,7 @@ export const config = Object.freeze({
     repo: "https://github.com/MykelGoal/VENOM-MD-BOT",
     youtube: "https://www.youtube.com/@venommdbot?sub_confirmation=1",
     telegram: "https://t.me/+PYae7FAKkbEwM2E0",
-    group: "https://chat.whatsapp.com/CWpMOawc88e9DWGwfjW5Ia",
+    group: "https://chat.whatsapp.com/IH8cgTeBAiGF46IuBgXAHj?s=cl&p=a&mlu=0",
   }),
   databaseUrl: /^mongodb(?:\+srv)?:\/\//i.test(databaseUrl) ? databaseUrl : "",
   databaseName: String(process.env.MONGO_DB || "venom")

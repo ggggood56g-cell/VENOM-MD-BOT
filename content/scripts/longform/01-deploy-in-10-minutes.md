@@ -219,7 +219,7 @@ VENOM MD BOT has 633 commands: music downloads, AI, stickers, group management a
 🍴 Fork it: https://github.com/MykelGoal/VENOM-MD-BOT/fork
 🔑 Get Session ID: https://session-site-2odn.onrender.com
 💬 Telegram: https://t.me/+PYae7FAKkbEwM2E0
-📱 WhatsApp Group: https://chat.whatsapp.com/CWpMOawc88e9DWGwfjW5Ia
+📱 WhatsApp Group: https://chat.whatsapp.com/IH8cgTeBAiGF46IuBgXAHj?s=cl&p=a&mlu=0
 📺 Subscribe: https://www.youtube.com/@venommdbot?sub_confirmation=1
 
 ⚠️ Never share your Session ID with anyone. It gives full access to your WhatsApp.
