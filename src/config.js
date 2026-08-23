@@ -107,6 +107,9 @@ export const config = Object.freeze({
   // NOTE: `platform` below is the runtime host string shown in .menu
   // ("nodejs"); this is the adapter selector. Distinct keys on purpose.
   platformMode: parsePlatform(process.env.PLATFORM),
+  // Whether a WhatsApp credential was supplied. The credential itself is
+  // consumed once and wiped from process.env, so only this flag is exposed.
+  hasSessionCredential: Boolean(pendingSessionCredential),
   telegramToken,
   telegramOwners: Object.freeze(telegramOwners),
   description: String(

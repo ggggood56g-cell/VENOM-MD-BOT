@@ -60,7 +60,7 @@
 
 ## 🐍 About
 
-VENOM MD BOT is a WhatsApp bot built with Baileys. It works out of the box with **no API keys**, and includes **633 commands** for group management, media, AI, games, downloads and useful everyday tools.
+VENOM MD BOT runs on **WhatsApp and Telegram from one deploy**. It works out of the box with **no API keys**, and includes **633 commands** for group management, media, AI, games, downloads and useful everyday tools — the same commands on both platforms.
 
 ### Main features
 
@@ -69,6 +69,7 @@ VENOM MD BOT is a WhatsApp bot built with Baileys. It works out of the box with 
 - Stickers, media conversion and download tools
 - Games, economy, search and utility commands
 - Local storage with optional MongoDB backup
+- **Telegram support with a tappable button menu** — one `PLATFORM` variable switches it on
 - Support for Render, Railway, Koyeb, Heroku, Docker and VPS
 
 ---
@@ -109,6 +110,31 @@ For **Render Quick Deploy**, enter both values when Render asks for environment 
 The Render blueprint deliberately marks `OWNER_NUMBER` as a deploy-time secret, so each person who forks the repository can provide their own number instead of using the repository owner's number. If Render does not show the field, add `OWNER_NUMBER` manually under **Environment Variables** before deploying.
 
 > **Every platform:** always set `OWNER_NUMBER` to your own WhatsApp number. Some deploy templates pre-fill it with the repository owner's number by default.
+
+### Choosing WhatsApp, Telegram, or both
+
+One deploy serves either platform. A single variable, **`PLATFORM`**, decides
+which one starts — you do not need a second service, a second repo or a second
+bill.
+
+| `PLATFORM` | What runs | Variables you must set |
+|---|---|---|
+| *(not set)* | WhatsApp only | `SESSION_ID`, `OWNER_NUMBER` |
+| `whatsapp` | WhatsApp only | `SESSION_ID`, `OWNER_NUMBER` |
+| `telegram` | Telegram only | `TELEGRAM_BOT_TOKEN`, `TELEGRAM_OWNER_ID` |
+| `both` | Both at once, one process | all four |
+
+For a **Telegram deploy**, set `PLATFORM=telegram` plus your
+[@BotFather](https://t.me/BotFather) token, and leave `SESSION_ID` and
+`OWNER_NUMBER` blank — no session website, no ban risk.
+
+The startup log always states which mode it picked and what is missing:
+
+```
+Running in telegram mode   { whatsapp: "off", telegram: "ready" }
+```
+
+Full walkthrough: **[docs/TELEGRAM.md](docs/TELEGRAM.md)**.
 
 ---
 

@@ -50,6 +50,58 @@ const shared = {
   requestShutdown: () => void shutdown("owner shutdown", 0),
 };
 
+// Say out loud which platform(s) this deploy will serve and what is still
+// missing. A blank PLATFORM silently defaulting to WhatsApp is the single
+// most common deploy mistake, so it gets stated plainly in the logs.
+function announcePlatform() {
+  const mode = config.platformMode;
+  const requested = String(process.env.PLATFORM || "").trim();
+  const wants = {
+    whatsapp: mode === "whatsapp" || mode === "both",
+    telegram: mode === "telegram" || mode === "both",
+  };
+
+  if (requested && requested.toLowerCase() !== mode) {
+    logger.warn(
+      { requested, using: mode },
+      `PLATFORM="${requested}" is not valid. Use whatsapp, telegram or both. Falling back to ${mode}.`,
+    );
+  } else if (!requested) {
+    logger.info(
+      { platform: mode },
+      "PLATFORM is not set, defaulting to whatsapp. Set PLATFORM=telegram or PLATFORM=both to add Telegram.",
+    );
+  }
+
+  const missing = [];
+  if (wants.whatsapp && !config.hasSessionCredential) {
+    missing.push(`WhatsApp needs SESSION_ID — get one at ${config.sessionSite}`);
+  }
+  if (wants.telegram && !config.telegramToken) {
+    missing.push("Telegram needs TELEGRAM_BOT_TOKEN — get one from @BotFather");
+  }
+  for (const note of missing) logger.warn(note);
+
+  logger.info(
+    {
+      platform: mode,
+      whatsapp: wants.whatsapp
+        ? config.hasSessionCredential
+          ? "ready"
+          : "missing SESSION_ID"
+        : "off",
+      telegram: wants.telegram
+        ? config.telegramToken
+          ? "ready"
+          : "missing TELEGRAM_BOT_TOKEN"
+        : "off",
+    },
+    `Running in ${mode} mode`,
+  );
+}
+
+announcePlatform();
+
 // PLATFORM=whatsapp (default) | telegram | both.
 // Adapters are imported lazily so a Telegram-only deploy never loads Baileys
 // and a WhatsApp-only deploy never loads Telegraf.

@@ -71,18 +71,89 @@ npm start
 
 Message your bot `/menu`. That's it.
 
-### On Render / Railway / Koyeb / Heroku
+### On Render
 
-Deploy exactly as documented in the main README, then set these environment
-variables instead of `SESSION_ID`:
+Nothing about the deploy changes. It is the same repo, the same Dockerfile and
+the same free web service — **one environment variable decides everything.**
 
-| Variable | Value |
+1. Render Dashboard → **New +** → **Web Service** → connect your fork.
+2. Render reads `render.yaml`, so build and start commands fill themselves in.
+3. Open the **Environment** tab and set:
+
+| Key | Value |
 |---|---|
 | `PLATFORM` | `telegram` |
-| `TELEGRAM_BOT_TOKEN` | your BotFather token |
-| `TELEGRAM_OWNER_ID` | your numeric Telegram id |
+| `TELEGRAM_BOT_TOKEN` | `8123456789:AAF-your-token-from-botfather` |
+| `TELEGRAM_OWNER_ID` | `123456789` |
 
-Keep the UptimeRobot monitor on `/health` so free tiers stay awake.
+4. Leave `SESSION_ID` and `OWNER_NUMBER` **empty**. Telegram does not use them.
+5. **Create Web Service**, then watch the log for the line that confirms it:
+
+```
+Running in telegram mode   { platform: "telegram", whatsapp: "off", telegram: "ready" }
+```
+
+Message your bot `/start` and the button menu opens.
+
+Railway, Koyeb and Heroku are identical — set the same three variables in their
+Variables / Environment tab. Keep the UptimeRobot monitor on `/health` so free
+tiers stay awake.
+
+### How does one deploy know which platform to run?
+
+`PLATFORM` is the only switch. At startup `index.js` reads it and imports only
+the adapter you asked for:
+
+| `PLATFORM` | What starts | What you must provide |
+|---|---|---|
+| *(not set)* | WhatsApp only | `SESSION_ID`, `OWNER_NUMBER` |
+| `whatsapp` | WhatsApp only | `SESSION_ID`, `OWNER_NUMBER` |
+| `telegram` | Telegram only | `TELEGRAM_BOT_TOKEN`, `TELEGRAM_OWNER_ID` |
+| `both` | Both, one process | all four |
+
+Imports are lazy, so a Telegram-only deploy never loads Baileys and a
+WhatsApp-only deploy never loads Telegraf. Nothing is "unknown" — if you leave
+`PLATFORM` blank it defaults to `whatsapp` and says so in the log.
+
+Every boot prints exactly what it is doing and what is missing:
+
+```
+PLATFORM is not set, defaulting to whatsapp. Set PLATFORM=telegram or PLATFORM=both to add Telegram.
+Telegram needs TELEGRAM_BOT_TOKEN — get one from @BotFather
+Running in telegram mode
+```
+
+A typo is caught too — `PLATFORM=Telegran` warns and falls back to WhatsApp
+rather than booting nothing.
+
+You can also just ask the running service:
+
+```bash
+curl https://your-app.onrender.com/health
+```
+
+```json
+{
+  "ok": true,
+  "platform": "telegram",
+  "username": "@VenomMdBot",
+  "status": "open",
+  "connected": true,
+  "commands": 633
+}
+```
+
+Before the token is set, the same endpoint tells you precisely what is wrong:
+
+```json
+{ "status": "awaiting-token", "error": "Set TELEGRAM_BOT_TOKEN from @BotFather, then restart." }
+```
+
+### Switching later
+
+Changing platform is an env-var edit, not a redeploy from scratch. Add
+`TELEGRAM_BOT_TOKEN`, flip `PLATFORM` to `both`, hit **Save** — Render restarts
+the service and WhatsApp keeps its session because it lives in the database.
 
 ---
 
