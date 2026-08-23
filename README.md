@@ -8,17 +8,17 @@
 
 [![WhatsApp](https://img.shields.io/badge/WhatsApp-Multi--Device-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://github.com/WhiskeySockets/Baileys)
 [![Telegram](https://img.shields.io/badge/Telegram-Bot%20API-229ED9?style=for-the-badge&logo=telegram&logoColor=white)](docs/TELEGRAM.md)
-[![Commands](https://img.shields.io/badge/Commands-633-f97316?style=for-the-badge)](#-about)
+[![Commands](https://img.shields.io/badge/Commands-633-f97316?style=for-the-badge)](#--about)
 
 [![Node.js](https://img.shields.io/badge/Node.js-20%2B-22c55e?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org)
-[![No API Keys](https://img.shields.io/badge/API%20Keys-Not%20Required-10b981?style=for-the-badge)](#-about)
+[![No API Keys](https://img.shields.io/badge/API%20Keys-Not%20Required-10b981?style=for-the-badge)](#--about)
 [![License](https://img.shields.io/badge/License-MIT-8b5cf6?style=for-the-badge)](LICENSE)
 
 <!-- ===== LIVE STATS ===== -->
 <a href="https://www.youtube.com/@venommdbot?sub_confirmation=1" target="_blank">
   <img src="https://img.shields.io/badge/dynamic/json?url=https://api.socialcounts.org/youtube-live-subscriber-count/UC9vkZyWIRN2iX66uupikjfw&query=counters.estimation.subscriberCount&style=for-the-badge&label=YouTube%20Subscribers&labelColor=ff0000&color=ff0000&logo=youtube&logoColor=white" alt="YouTube subscribers"/>
 </a>
-<a href="https://github.com/MykelGoal/VENOM-MD-BOT/stargazers">
+<a href="https://github.com/MykelGoal/VENOM-MD-BOT">
   <img src="https://img.shields.io/github/stars/MykelGoal/VENOM-MD-BOT?style=for-the-badge&label=Stars&labelColor=1f2937&color=facc15&logo=github&logoColor=white" alt="GitHub stars"/>
 </a>
 <a href="https://github.com/MykelGoal/VENOM-MD-BOT/network/members">
@@ -54,7 +54,7 @@
 </table>
 
 [![Join Telegram](https://img.shields.io/badge/Join%20Us-Telegram-229ED9?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/+PYae7FAKkbEwM2E0)
-[![Join WhatsApp](https://img.shields.io/badge/Join%20Us-WhatsApp%20Group-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://chat.whatsapp.com/CWpMOawc88e9DWGwfjW5Ia)
+[![Join WhatsApp](https://img.shields.io/badge/Join%20Us-WhatsApp%20Group-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://chat.whatsapp.com/IH8cgTeBAiGF46IuBgXAHj?s=cl&p=a&mlu=0)
 
 [**GET SESSION ID**](https://session-site-2odn.onrender.com) · [**GET BOT TOKEN**](https://t.me/BotFather) · [**FORK REPOSITORY**](https://github.com/MykelGoal/VENOM-MD-BOT/fork)
 
@@ -268,7 +268,7 @@ Use this bot only with accounts and groups you are authorized to manage. Do not 
 - **Developer:** [TAPRUSH EMP (Micheal)](https://github.com/MykelGoal)
 - **Core library:** [Baileys](https://github.com/WhiskeySockets/Baileys)
 - **YouTube:** [VENOM MD Tech](https://www.youtube.com/@venommdbot?sub_confirmation=1)
-- **Community:** [Telegram](https://t.me/+PYae7FAKkbEwM2E0) · [WhatsApp Group](https://chat.whatsapp.com/CWpMOawc88e9DWGwfjW5Ia)
+- **Community:** [Telegram](https://t.me/+PYae7FAKkbEwM2E0) · [WhatsApp Group](https://chat.whatsapp.com/IH8cgTeBAiGF46IuBgXAHj?s=cl&p=a&mlu=0)
 - **License:** [MIT](LICENSE)
 
 <div align="center">
