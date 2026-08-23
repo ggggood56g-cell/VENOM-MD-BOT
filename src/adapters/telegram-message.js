@@ -62,8 +62,9 @@ function rawMessage(message, botId) {
 }
 
 export function telegramDetails(update, botId) {
-  const message = update.message || update.edited_message || update.channel_post;
-  if (!message) return null;
+  const message =
+    update?.message || update?.edited_message || update?.channel_post;
+  if (!message?.chat) return null;
 
   const chat = jidFromChat(message.chat);
   const sender = message.chat?.type === "private" ? chat : jidFromUser(message.from);

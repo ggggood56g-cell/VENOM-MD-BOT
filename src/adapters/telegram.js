@@ -15,6 +15,13 @@ import { formatDuration } from "../utils.js";
 
 import { telegramDetails } from "./telegram-message.js";
 import TelegramSocket from "./telegram-socket.js";
+import {
+  categoryKeyboard,
+  categoryText,
+  helpCard,
+  homeKeyboard,
+  homeText,
+} from "./telegram-ui.js";
 
 export default class TelegramBot {
   constructor({ config, database, stateStore, requestRestart, requestShutdown }) {
@@ -67,6 +74,13 @@ export default class TelegramBot {
         );
       });
 
+      // The interactive menu is Telegram-native, so it is intercepted before
+      // the shared router: /menu with no arguments opens an inline keyboard
+      // instead of printing the 633-line text menu WhatsApp needs.
+      this.telegraf.command(["menu", "start", "commands", "list"], (ctx) =>
+        this.onMenuCommand(ctx),
+      );
+      this.telegraf.on("callback_query", (ctx) => this.onCallback(ctx));
       this.telegraf.on("message", (ctx) => this.onMessage(ctx));
       this.telegraf.on("channel_post", (ctx) => this.onMessage(ctx));
 
@@ -114,9 +128,107 @@ export default class TelegramBot {
     return text === details.text ? details : { ...details, text };
   }
 
+  links() {
+    return {
+      repo: this.config.community?.repo,
+      youtube: this.config.community?.youtube,
+    };
+  }
+
+  /** `/menu` and `/start` open the inline keyboard. `/menu ai` still works. */
+  async onMenuCommand(ctx) {
+    const argument = String(ctx.message?.text || "")
+      .split(/\s+/)
+      .slice(1)
+      .join(" ")
+      .trim();
+
+    // With an argument the user wants the classic text listing, so hand the
+    // message to the shared plugin exactly as before.
+    if (argument) return this.onMessage(ctx);
+
+    await ctx
+      .reply(homeText(this.config, this.router), {
+        parse_mode: "HTML",
+        reply_markup: homeKeyboard(this.router, this.links()),
+      })
+      .catch((error) => logger.error({ error: safeError(error) }, "Menu render failed"));
+    return undefined;
+  }
+
+  async onCallback(ctx) {
+    const data = String(ctx.callbackQuery?.data || "");
+    if (!data.startsWith("m")) return;
+
+    // Always answer: Telegram shows a spinner on the button until we do.
+    const ack = (text) => ctx.answerCbQuery(text).catch(() => {});
+    const parts = data.split(":");
+    const action = parts[1] || "";
+
+    try {
+      if (action === "noop") return void (await ack());
+
+      if (action === "x") {
+        await ack("Closed");
+        return void (await ctx.deleteMessage().catch(() => {}));
+      }
+
+      if (action === "") {
+        await ack();
+        return void (await ctx.editMessageText(homeText(this.config, this.router), {
+          parse_mode: "HTML",
+          reply_markup: homeKeyboard(this.router, this.links()),
+        }).catch(() => {}));
+      }
+
+      if (action === "c") {
+        const category = parts[2];
+        const info = categoryKeyboard(this.router, category, Number.parseInt(parts[3], 10) || 0);
+        await ack();
+        return void (await ctx.editMessageText(
+          categoryText(category, info, this.stateStore.prefix),
+          { parse_mode: "HTML", reply_markup: info.keyboard },
+        ).catch(() => {}));
+      }
+
+      if (action === "h") {
+        const command = this.router.find(parts[2]);
+        if (!command) return void (await ack("Command not found"));
+        const card = helpCard(command, this.stateStore.prefix);
+        await ack();
+        return void (await ctx.editMessageText(card.text, {
+          parse_mode: "HTML",
+          reply_markup: card.keyboard,
+        }).catch(() => {}));
+      }
+
+      if (action === "r") {
+        const command = this.router.find(parts[2]);
+        if (!command) return void (await ack("Command not found"));
+        await ack(`Running ${command.name}…`);
+        // Re-enter the shared router so the command runs through the exact
+        // same path (permissions, rate limits, features) as a typed message.
+        const message = {
+          message_id: ctx.callbackQuery.message?.message_id,
+          date: Math.floor(Date.now() / 1000),
+          chat: ctx.callbackQuery.message?.chat,
+          from: ctx.callbackQuery.from,
+          text: `${this.stateStore.prefix}${command.name}`,
+        };
+        const details = telegramDetails({ message }, this.botInfo?.id);
+        if (details) await this.router.handle(this.socket, details);
+        return undefined;
+      }
+    } catch (error) {
+      logger.error({ error: safeError(error), data }, "Telegram callback failed");
+      await ack("Something went wrong");
+    }
+    return undefined;
+  }
+
   async onMessage(ctx) {
     if (this.shuttingDown) return;
-    const details = telegramDetails(ctx.update, this.botInfo?.id);
+    const details = telegramDetails(ctx?.update || ctx, this.botInfo?.id);
     if (!details) return;
 
     this.messageCount += 1;
@@ -134,7 +246,7 @@ export default class TelegramBot {
    */
   async publishCommandList() {
     const featured = [
-      "menu", "help", "ping", "alive", "ai", "gemini", "gpt", "imagine",
+      "start", "menu", "help", "ping", "alive", "ai", "gemini", "gpt", "imagine",
       "song", "video", "tiktok", "instagram", "facebook", "spotify",
       "sticker", "toimg", "tomp3", "translate", "qrcode", "ss",
       "lyrics", "weather", "wiki", "google", "define", "calc",
@@ -144,7 +256,11 @@ export default class TelegramBot {
     ];
 
     const commands = featured
-      .map((name) => this.router.find(name))
+      .map((name) =>
+        name === "start"
+          ? { name: "start", description: "Open the interactive menu." }
+          : this.router.find(name),
+      )
       .filter(Boolean)
       .filter((command, index, all) => all.findIndex((c) => c.name === command.name) === index)
       .slice(0, 100)

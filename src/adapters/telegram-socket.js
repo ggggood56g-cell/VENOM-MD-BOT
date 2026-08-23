@@ -101,7 +101,7 @@ export default class TelegramSocket {
     this.metadataCache = new Map();
   }
 
-  static extra(options = {}) {
+  static extra(options = {}, content = {}) {
     const extra = { parse_mode: "HTML" };
     if (options.quoted?.key?.id) {
       extra.reply_parameters = { message_id: Number(options.quoted.key.id), allow_sending_without_reply: true };
@@ -109,7 +109,11 @@ export default class TelegramSocket {
     if (options.replyTo) {
       extra.reply_parameters = { message_id: Number(options.replyTo), allow_sending_without_reply: true };
     }
-    if (options.buttons) extra.reply_markup = { inline_keyboard: options.buttons };
+    // Inline keyboards may arrive either as a ready-made reply_markup or as a
+    // plain array of button rows, whichever is convenient for the caller.
+    const markup = options.reply_markup || content?.reply_markup;
+    if (markup) extra.reply_markup = markup;
+    else if (options.buttons) extra.reply_markup = { inline_keyboard: options.buttons };
     return extra;
   }
 
@@ -119,7 +123,7 @@ export default class TelegramSocket {
    */
   async sendMessage(jid, content = {}, options = {}) {
     const chatId = chatIdFromJid(jid);
-    const extra = TelegramSocket.extra(options);
+    const extra = TelegramSocket.extra(options, content);
 
     try {
       if (content.delete) {
@@ -152,7 +156,7 @@ export default class TelegramSocket {
       }
       if (content.sticker) {
         // Telegram wants .webp/.tgs — the media service already emits webp.
-        return await this.telegram.sendSticker(chatId, sourceOf(content.sticker), TelegramSocket.extra(options));
+        return await this.telegram.sendSticker(chatId, sourceOf(content.sticker), TelegramSocket.extra(options, content));
       }
       if (content.audio) {
         const method = content.ptt ? "sendVoice" : "sendAudio";
