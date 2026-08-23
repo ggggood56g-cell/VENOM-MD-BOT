@@ -124,10 +124,47 @@ The 44 most useful commands appear in Telegram's `/` autocomplete menu. All
 633 remain available by typing them.
 
 ```
-/menu          all commands, grouped by category
-/menu ai       one category
+/start         interactive button menu
+/menu          same thing
+/menu ai       plain-text listing of one category
 /help sticker  help for a single command
 ```
+
+### The button menu
+
+`/start` and `/menu` do not dump text at you. They open a real Telegram
+inline keyboard you tap through:
+
+```
+⚡ VENOM MD BOT
+633 commands across 25 categories.
+
+[🎉 Fun 61]      [👥 Group 52]
+[🎨 Text Art 51] [🧰 Utility 45]
+[💰 Economy 40]  [⚙️ Config 37]
+...
+[⭐ Star on GitHub] [▶️ YouTube]
+```
+
+Tap a category and you get its commands, 24 per page, three to a row:
+
+```
+🎨 Text Art — 51 commands
+Page 1 of 3
+
+[8d]      [amongus] [angel]
+[bear]    [blackpink] [blue]
+...
+[◀️ Prev] [1/3] [Next ▶️]
+[🏠 All categories] [✖️ Close]
+```
+
+Tap a command for a help card with its usage, aliases and any permission
+requirements. Commands that need no arguments get a **▶️ Run** button that
+executes them on the spot.
+
+Browsing edits the message in place, so the menu never floods the chat, and
+`✖️ Close` deletes it.
 
 ---
 
@@ -140,6 +177,7 @@ src/
   adapters/
     telegram.js          adapter: lifecycle, polling, /-prefix handling
     telegram-socket.js   Baileys-shaped facade over the Telegram Bot API
+    telegram-ui.js       inline keyboards for the button menu
     telegram-message.js  Telegram update → the same `details` object
   bot.js             WhatsApp (Baileys) adapter
 ```
@@ -154,6 +192,7 @@ lazily — a Telegram-only deploy never loads Baileys.
 | Capability | WhatsApp | Telegram |
 |---|---|---|
 | Setup | session id from a pairing site | token from @BotFather |
+| Menu | text listing (`.menu`) | tappable inline-keyboard browser |
 | Ban risk | high (unofficial protocol) | none (official API) |
 | Upload cap | 32 MB (`MEDIA_MAX_MB`) | up to 2 GB |
 | Mentions | `@number` + mentions array | tappable `tg://user?id=` links |
