@@ -15,7 +15,7 @@ test("message parser unwraps ephemeral text and captions", () => {
 
 test("message details preserve mentions and quoted messages", () => {
   const raw = {
-    key: { remoteJid: "12345@g.us", participant: "2348021016309:2@s.whatsapp.net" },
+    key: { remoteJid: "12345@g.us", participant: "15551234567:2@s.whatsapp.net" },
     message: {
       extendedTextMessage: {
         text: ".ship @2348000000000",

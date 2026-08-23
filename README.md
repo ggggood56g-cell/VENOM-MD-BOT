@@ -4,10 +4,14 @@
 
 # ⚡ VENOM MD BOT
 
-**A fast, powerful WhatsApp multi-device bot — up and running in about 10 minutes.**
+**One bot on WhatsApp *and* Telegram — 633 commands, up and running in about 10 minutes.**
+
+[![WhatsApp](https://img.shields.io/badge/WhatsApp-Multi--Device-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://github.com/WhiskeySockets/Baileys)
+[![Telegram](https://img.shields.io/badge/Telegram-Bot%20API-229ED9?style=for-the-badge&logo=telegram&logoColor=white)](docs/TELEGRAM.md)
+[![Commands](https://img.shields.io/badge/Commands-633-f97316?style=for-the-badge)](#-about)
 
 [![Node.js](https://img.shields.io/badge/Node.js-20%2B-22c55e?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org)
-[![WhatsApp](https://img.shields.io/badge/WhatsApp-Multi--Device-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://github.com/WhiskeySockets/Baileys)
+[![No API Keys](https://img.shields.io/badge/API%20Keys-Not%20Required-10b981?style=for-the-badge)](#-about)
 [![License](https://img.shields.io/badge/License-MIT-8b5cf6?style=for-the-badge)](LICENSE)
 
 <!-- ===== LIVE STATS ===== -->
@@ -52,7 +56,7 @@
 [![Join Telegram](https://img.shields.io/badge/Join%20Us-Telegram-229ED9?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/+PYae7FAKkbEwM2E0)
 [![Join WhatsApp](https://img.shields.io/badge/Join%20Us-WhatsApp%20Group-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://chat.whatsapp.com/CWpMOawc88e9DWGwfjW5Ia)
 
-[**GET SESSION ID**](https://session-site-2odn.onrender.com) · [**FORK REPOSITORY**](https://github.com/MykelGoal/VENOM-MD-BOT/fork)
+[**GET SESSION ID**](https://session-site-2odn.onrender.com) · [**GET BOT TOKEN**](https://t.me/BotFather) · [**FORK REPOSITORY**](https://github.com/MykelGoal/VENOM-MD-BOT/fork)
 
 </div>
 
@@ -60,7 +64,18 @@
 
 ## 🐍 About
 
-VENOM MD BOT is a WhatsApp bot built with Baileys. It works out of the box with **no API keys**, and includes **633 commands** for group management, media, AI, games, downloads and useful everyday tools.
+VENOM MD BOT runs on **WhatsApp and Telegram from one deploy**. It works out of the box with **no API keys**, and includes **633 commands** for group management, media, AI, games, downloads and useful everyday tools — the same commands on both platforms.
+
+<div align="center">
+
+![Platforms](https://img.shields.io/badge/Platforms-WhatsApp%20%2B%20Telegram-6366f1?style=flat-square)
+![Commands](https://img.shields.io/badge/Commands-633-f97316?style=flat-square)
+![Plugins](https://img.shields.io/badge/Plugins-36-8b5cf6?style=flat-square)
+![AI Providers](https://img.shields.io/badge/AI%20Providers-8%20optional-06b6d4?style=flat-square)
+![Deploy](https://img.shields.io/badge/One--click%20deploy-4%20hosts-00c7b7?style=flat-square)
+![Ban Risk](https://img.shields.io/badge/Telegram-No%20ban%20risk-229ED9?style=flat-square)
+
+</div>
 
 ### Main features
 
@@ -69,11 +84,12 @@ VENOM MD BOT is a WhatsApp bot built with Baileys. It works out of the box with 
 - Stickers, media conversion and download tools
 - Games, economy, search and utility commands
 - Local storage with optional MongoDB backup
+- **Telegram support with a tappable button menu** — one `PLATFORM` variable switches it on
 - Support for Render, Railway, Koyeb, Heroku, Docker and VPS
 
 ---
 
-## 🔑 Get a Session ID
+## 🔑 Get a Session ID (WhatsApp)
 
 <div align="center">
 
@@ -90,9 +106,54 @@ VENOM MD BOT is a WhatsApp bot built with Baileys. It works out of the box with 
 
 ---
 
+## 🤖 Get a Bot Token (Telegram)
+
+<div align="center">
+
+[![Open BotFather](https://img.shields.io/badge/OPEN-@BotFather-229ED9?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/BotFather)
+[![Get your ID](https://img.shields.io/badge/GET%20YOUR%20ID-@userinfobot-0088cc?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/userinfobot)
+
+<sub>No session website · No QR code · <b>No ban risk</b></sub>
+
+</div>
+
+Two taps and you have everything Telegram needs — it takes about 40 seconds.
+
+| ① Create the bot | ② Find your user ID |
+|---|---|
+| Open **[@BotFather](https://t.me/BotFather)** and send `/newbot` | Open **[@userinfobot](https://t.me/userinfobot)** and send `/start` |
+| Choose a display name, then a username ending in `bot` — for example `VenomMdBot` | It instantly replies with `Id: 123456789` |
+| BotFather replies with a token like `8123456789:AAF-abc123def456` | Copy the number |
+| Save it as **`TELEGRAM_BOT_TOKEN`** | Save it as **`TELEGRAM_OWNER_ID`** |
+| 🔒 Treat it like a password | 👑 This makes you the owner, exactly like `OWNER_NUMBER` on WhatsApp |
+
+> **Important:** while you are still in [@BotFather](https://t.me/BotFather), send `/setprivacy`, pick your bot and choose **Disable**. Without this your bot cannot read group messages, so anti-link and anti-spam will not work.
+
+<details>
+<summary><b>Optional — polish your bot in BotFather</b></summary>
+
+<br/>
+
+| Command | What it does |
+|---|---|
+| `/setdescription` | Text shown before a user presses Start |
+| `/setabouttext` | Short bio on the bot's profile |
+| `/setuserpic` | Profile picture — use `assets/venom-md-banner-v2.jpg` |
+| `/setjoingroups` | **Enable** so the bot can be added to groups |
+| `/setprivacy` | **Disable** so it can read group messages |
+| `/revoke` | Generate a fresh token if yours ever leaks |
+
+</details>
+
+> **Keep your bot token private**, exactly like a session ID. If it leaks, run `/revoke` in BotFather and paste the new token into your host.
+
+📖 Full walkthrough: **[docs/TELEGRAM.md](docs/TELEGRAM.md)**
+
+---
+
 ## 🚀 Quick Deploy
 
-**Three steps, about ten minutes:** ① [Fork the repo](https://github.com/MykelGoal/VENOM-MD-BOT/fork) → ② [Get your Session ID](https://session-site-2odn.onrender.com) → ③ deploy with one click below.
+**Three steps, about ten minutes:** ① [Fork the repo](https://github.com/MykelGoal/VENOM-MD-BOT/fork) → ② get your credential — [Session ID](https://session-site-2odn.onrender.com) for WhatsApp or a [BotFather token](https://t.me/BotFather) for Telegram → ③ deploy with one click below.
 
 | Platform | Deploy |
 |---|---|
@@ -101,14 +162,54 @@ VENOM MD BOT is a WhatsApp bot built with Baileys. It works out of the box with 
 | **Koyeb** | [![Koyeb](https://img.shields.io/badge/Deploy-Koyeb-121212?style=for-the-badge&logo=koyeb&logoColor=white)](https://app.koyeb.com/deploy?type=git&builder=dockerfile&repository=github.com/MykelGoal/VENOM-MD-BOT&branch=main&name=venom-md-bot&ports=10000%3Bhttp%3B%2F) |
 | **Heroku** | [![Heroku](https://img.shields.io/badge/Deploy-Heroku-430098?style=for-the-badge&logo=heroku&logoColor=white)](https://heroku.com/deploy?template=https://github.com/MykelGoal/VENOM-MD-BOT) |
 
-For **Render Quick Deploy**, enter both values when Render asks for environment variables:
+When your host asks for environment variables, fill in the set that matches
+the platform you want.
+
+**For WhatsApp:**
 
 - `SESSION_ID`: the private session ID generated by the session website.
-- `OWNER_NUMBER`: your WhatsApp number with country code, digits only (for example, `2348021016309` — do not include `+`).
+- `OWNER_NUMBER`: your WhatsApp number with country code, digits only (for example, `234XXXXXXXXXX` — do not include `+`).
+
+**For Telegram** — set `PLATFORM=telegram` and leave the two values above blank:
+
+- `TELEGRAM_BOT_TOKEN`: your token from [@BotFather](https://t.me/BotFather).
+- `TELEGRAM_OWNER_ID`: your numeric ID from [@userinfobot](https://t.me/userinfobot).
 
 The Render blueprint deliberately marks `OWNER_NUMBER` as a deploy-time secret, so each person who forks the repository can provide their own number instead of using the repository owner's number. If Render does not show the field, add `OWNER_NUMBER` manually under **Environment Variables** before deploying.
 
 > **Every platform:** always set `OWNER_NUMBER` to your own WhatsApp number. Some deploy templates pre-fill it with the repository owner's number by default.
+
+### Choosing WhatsApp, Telegram, or both
+
+One deploy serves either platform. A single variable, **`PLATFORM`**, decides
+which one starts — you do not need a second service, a second repo or a second
+bill.
+
+| `PLATFORM` | What runs | Variables you must set |
+|---|---|---|
+| *(not set)* | WhatsApp only | `SESSION_ID`, `OWNER_NUMBER` |
+| `whatsapp` | WhatsApp only | `SESSION_ID`, `OWNER_NUMBER` |
+| `telegram` | Telegram only | `TELEGRAM_BOT_TOKEN`, `TELEGRAM_OWNER_ID` |
+| `both` | Both at once, one process | all four |
+
+For a **Telegram deploy**, set `PLATFORM=telegram` plus your BotFather token,
+and leave `SESSION_ID` and `OWNER_NUMBER` blank — no session website, no ban
+risk.
+
+<div align="center">
+
+[![Open BotFather](https://img.shields.io/badge/TOKEN-@BotFather-229ED9?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/BotFather)
+[![Get your ID](https://img.shields.io/badge/YOUR%20ID-@userinfobot-0088cc?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/userinfobot)
+
+</div>
+
+The startup log always states which mode it picked and what is missing:
+
+```
+Running in telegram mode   { whatsapp: "off", telegram: "ready" }
+```
+
+Full walkthrough: **[docs/TELEGRAM.md](docs/TELEGRAM.md)**.
 
 ---
 
@@ -149,7 +250,7 @@ Add at least these values to `.env`:
 
 ```env
 SESSION_ID=your_private_session_id
-OWNER_NUMBER=2348021016309
+OWNER_NUMBER=234XXXXXXXXXX
 PREFIX=.
 COMMAND_MODE=public
 ```

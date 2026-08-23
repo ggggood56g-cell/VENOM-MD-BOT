@@ -1,23 +1,44 @@
 {
   "name": "VENOM MD BOT",
-  "description": "A clean, secure and extensible WhatsApp multi-device bot by TAPRUSH EMP (Micheal).",
+  "description": "A clean, secure and extensible bot for WhatsApp and Telegram by TAPRUSH EMP (Micheal). 633 commands, one deploy.",
   "repository": "https://github.com/MykelGoal/VENOM-MD-BOT",
-  "keywords": ["whatsapp", "baileys", "venom-md", "whatsapp-bot"],
+  "keywords": [
+    "whatsapp",
+    "telegram",
+    "baileys",
+    "telegraf",
+    "venom-md",
+    "whatsapp-bot",
+    "telegram-bot"
+  ],
   "success_url": "/health",
   "stack": "container",
   "env": {
-    "SESSION_ID": {
-      "description": "Private credential from the official VENOM session website.",
+    "PLATFORM": {
+      "description": "Which platform to run: whatsapp, telegram, or both.",
+      "value": "whatsapp",
       "required": true
+    },
+    "TELEGRAM_BOT_TOKEN": {
+      "description": "Telegram bot token from @BotFather. Required only when PLATFORM is telegram or both.",
+      "required": false
+    },
+    "TELEGRAM_OWNER_ID": {
+      "description": "Your numeric Telegram user id from @userinfobot. Grants owner-only commands.",
+      "required": false
+    },
+    "SESSION_ID": {
+      "description": "WhatsApp credential from the official VENOM session website. Leave blank for a Telegram-only deploy.",
+      "required": false
+    },
+    "OWNER_NUMBER": {
+      "description": "Owner WhatsApp number with country code, digits only. Leave blank for a Telegram-only deploy.",
+      "required": false
     },
     "SESSION_NAMESPACE": {
       "description": "Safe name for this bot session.",
       "value": "venom",
       "required": false
-    },
-    "OWNER_NUMBER": {
-      "description": "Owner WhatsApp number with country code, digits only. Use your own number.",
-      "required": true
     },
     "OWNER_NAME": {
       "description": "Owner display name.",

@@ -16,8 +16,8 @@ test("boolean configuration recognizes explicit enabled values", () => {
 
 test("owner numbers are normalized, validated and deduplicated", () => {
   assert.deepEqual(
-    parseNumberList("+234 802 101 6309, 2348021016309, bad, 123"),
-    ["2348021016309"],
+    parseNumberList("+1 555 123 4567, 15551234567, bad, 123"),
+    ["15551234567"],
   );
 });
 

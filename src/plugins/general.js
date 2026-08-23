@@ -90,7 +90,7 @@ function menuHeader(context) {
   return [
     `┌────═━┈ ${context.config.botName} ┈━═────┐`,
     ` ✇ ▸ Creator: ${context.config.ownerName}`,
-    ` ✇ ▸ Number: ${context.config.owners[0]}`,
+    ` ✇ ▸ Number: ${context.config.owners[0] || "not configured"}`,
     ` ✇ ▸ User: ${context.details.pushName || "USER"}`,
     ` ✇ ▸ Plugins: ${context.registry.routableCount()}`,
     ` ✇ ▸ Uptime: ${longUptime(process.uptime())}`,
@@ -159,7 +159,9 @@ async function sendMenu(context) {
   const footer = [
     `💡 *New here?* Use *${context.prefix}menu <category>* or *${context.prefix}menu <command>* to learn what a command does.`,
     `🤖 *Want your own ${context.config.botName}?* Contact the original creator with *${context.prefix}owner*.`,
-    `📞 https://wa.me/${context.config.owners[0]}`,
+    context.config.owners[0]
+      ? `📞 https://wa.me/${context.config.owners[0]}`
+      : `📦 ${context.config.repository}`,
   ].join("\n");
   const chunks = [];
   let current = `${menuHeader(context)}\n\n`;
@@ -279,6 +281,12 @@ export default [
     description: "Show the bot owner's contact.",
     async execute(context) {
       const number = context.config.owners[0];
+      if (!number) {
+        await context.reply(
+          `👑 *${context.config.ownerName}*\n\nThis deployment has no OWNER_NUMBER configured.\nSet OWNER_NUMBER in your environment to show a contact here.\n\n📦 ${context.config.repository}`,
+        );
+        return;
+      }
       await context.reply(`👑 *${context.config.ownerName}*\nhttps://wa.me/${number}`);
     },
   },

@@ -33,6 +33,11 @@ export function parsePrefixes(value) {
     : ["."];
 }
 
+export function parsePlatform(value) {
+  const candidate = String(value || "whatsapp").trim().toLowerCase();
+  return ["whatsapp", "telegram", "both"].includes(candidate) ? candidate : "whatsapp";
+}
+
 export function parseNamespace(value) {
   const candidate = String(value || "venom").trim();
   return /^[A-Za-z0-9_-]{1,48}$/.test(candidate) ? candidate : "venom";
@@ -54,10 +59,26 @@ function safeUrl(value, fallback = "") {
   }
 }
 
-const owners = parseNumberList(
-  process.env.OWNER_NUMBER || process.env.MODS || "2348021016309",
-);
+// No hardcoded fallback: an unset OWNER_NUMBER means "this deployment has no
+// configured owner" rather than silently pointing at the upstream author's
+// personal number. Owner-only commands still work for the linked account
+// itself, because the router also grants owner rights on `fromMe` messages.
+const owners = parseNumberList(process.env.OWNER_NUMBER || process.env.MODS || "");
 const namespace = parseNamespace(process.env.SESSION_NAMESPACE);
+
+// Consumed once and deleted, exactly like SESSION_ID, so no plugin or
+// diagnostic output can ever echo the bot token back to a chat.
+const telegramToken = String(process.env.TELEGRAM_BOT_TOKEN || "").trim();
+delete process.env.TELEGRAM_BOT_TOKEN;
+const telegramOwners = [
+  ...new Set(
+    String(process.env.TELEGRAM_OWNER_ID || "")
+      .split(",")
+      .map((item) => item.replace(/\D/g, ""))
+      .filter((item) => item.length >= 5 && item.length <= 15),
+  ),
+].slice(0, 20);
+
 let pendingSessionCredential = String(process.env.SESSION_ID || "").trim();
 const databaseUrl = String(
   process.env.DATABASE_URL || process.env.MONGODB || process.env.MONGO_URI || "",
@@ -80,7 +101,17 @@ export const config = Object.freeze({
   )
     .trim()
     .slice(0, 64),
-  owners: Object.freeze(owners.length ? owners : ["2348021016309"]),
+  // Owner identities are matched by digits only, and the Telegram adapter maps
+  // a user id to "<id>@s.whatsapp.net", so both platforms share one allow-list.
+  owners: Object.freeze([...new Set([...owners, ...telegramOwners])]),
+  // NOTE: `platform` below is the runtime host string shown in .menu
+  // ("nodejs"); this is the adapter selector. Distinct keys on purpose.
+  platformMode: parsePlatform(process.env.PLATFORM),
+  // Whether a WhatsApp credential was supplied. The credential itself is
+  // consumed once and wiped from process.env, so only this flag is exposed.
+  hasSessionCredential: Boolean(pendingSessionCredential),
+  telegramToken,
+  telegramOwners: Object.freeze(telegramOwners),
   description: String(
     process.env.DESCRIPTION || "Fast, secure and powerful WhatsApp automation.",
   )

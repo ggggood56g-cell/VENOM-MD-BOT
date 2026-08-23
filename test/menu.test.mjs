@@ -32,7 +32,7 @@ test("v2 menu reports real branding, user and plugin count", async () => {
     config: {
       botName: "VENOM MD BOT",
       ownerName: "TAPRUSH EMP (Micheal)",
-      owners: ["2348021016309"],
+      owners: ["15551234567"],
       version: "v2.0.0",
       platform: "nodejs",
     },
@@ -42,7 +42,7 @@ test("v2 menu reports real branding, user and plugin count", async () => {
   assert.equal(replies.length, 1);
   assert.match(replies[0], /VENOM MD BOT/);
   assert.match(replies[0], /Creator: TAPRUSH EMP \(Micheal\)/);
-  assert.match(replies[0], /Number: 2348021016309/);
+  assert.match(replies[0], /Number: 15551234567/);
   assert.match(replies[0], /User: Test User/);
   assert.match(replies[0], /Plugins: 633/);
   assert.match(replies[0], /Version: v2\.0\.0/);
@@ -58,7 +58,7 @@ test("full menu renders every real category within WhatsApp-safe chunks", async 
     config: {
       botName: "VENOM MD BOT",
       ownerName: "TAPRUSH EMP (Micheal)",
-      owners: ["2348021016309"],
+      owners: ["15551234567"],
       version: "v2.0.0",
       platform: "nodejs",
     },
@@ -71,7 +71,7 @@ test("full menu renders every real category within WhatsApp-safe chunks", async 
   assert.match(complete, /𝙰𝙽𝙸𝙼𝙴/);
   assert.match(complete, /𝙴𝙲𝙾𝙽𝙾𝙼𝚈/);
   assert.match(complete, /𝚃𝙴𝚇𝚃𝙼𝙰𝙺𝙴𝚁/);
-  assert.match(complete, /https:\/\/wa\.me\/2348021016309/);
+  assert.match(complete, /https:\/\/wa\.me\/15551234567/);
 });
 
 test("menu command lookup shows contextual usage", async () => {
@@ -83,7 +83,7 @@ test("menu command lookup shows contextual usage", async () => {
     config: {
       botName: "VENOM MD BOT",
       ownerName: "TAPRUSH EMP (Micheal)",
-      owners: ["2348021016309"],
+      owners: ["15551234567"],
       version: "v2.0.0",
       platform: "nodejs",
     },

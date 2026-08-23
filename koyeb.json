@@ -18,30 +18,84 @@
     }
   ],
   "env": [
-    { "key": "PORT", "value": "10000" },
-    { "key": "NODE_ENV", "value": "production" },
-    { "key": "BOT_NAME", "value": "VENOM MD BOT" },
-    { "key": "OWNER_NAME", "value": "TAPRUSH EMP (Micheal)" },
-    { "key": "OWNER_NUMBER", "value": "2348021016309" },
-    { "key": "PREFIX", "value": "." },
-    { "key": "COMMAND_MODE", "value": "public" },
-    { "key": "TIMEZONE", "value": "Africa/Lagos" },
-    { "key": "SESSION_NAMESPACE", "value": "venom" },
-    { "key": "SESSION_ID", "value": "" },
-    { "key": "DATABASE_URL", "value": "" },
-    { "key": "GEMINI_API_KEY", "value": "" }
+    {
+      "key": "PORT",
+      "value": "10000"
+    },
+    {
+      "key": "NODE_ENV",
+      "value": "production"
+    },
+    {
+      "key": "PLATFORM",
+      "value": "whatsapp"
+    },
+    {
+      "key": "TELEGRAM_BOT_TOKEN",
+      "value": ""
+    },
+    {
+      "key": "TELEGRAM_OWNER_ID",
+      "value": ""
+    },
+    {
+      "key": "BOT_NAME",
+      "value": "VENOM MD BOT"
+    },
+    {
+      "key": "OWNER_NAME",
+      "value": "TAPRUSH EMP (Micheal)"
+    },
+    {
+      "key": "OWNER_NUMBER",
+      "value": ""
+    },
+    {
+      "key": "PREFIX",
+      "value": "."
+    },
+    {
+      "key": "COMMAND_MODE",
+      "value": "public"
+    },
+    {
+      "key": "TIMEZONE",
+      "value": "Africa/Lagos"
+    },
+    {
+      "key": "SESSION_NAMESPACE",
+      "value": "venom"
+    },
+    {
+      "key": "SESSION_ID",
+      "value": ""
+    },
+    {
+      "key": "DATABASE_URL",
+      "value": ""
+    },
+    {
+      "key": "GEMINI_API_KEY",
+      "value": ""
+    }
   ],
-  "regions": ["fra"],
+  "regions": [
+    "fra"
+  ],
   "scalings": [
     {
-      "scopes": ["region:fra"],
+      "scopes": [
+        "region:fra"
+      ],
       "min": 0,
       "max": 1
     }
   ],
   "instance_types": [
     {
-      "scopes": ["region:fra"],
+      "scopes": [
+        "region:fra"
+      ],
       "type": "free"
     }
   ],
