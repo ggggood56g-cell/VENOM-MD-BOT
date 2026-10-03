@@ -1,517 +1,278 @@
-<!-- VENOM MD BOT — by TAPRUSH EMP (Micheal) -->
-
 <div align="center">
 
-<img src="assets/menu.jpg" width="100%" style="border-radius:12px;" />
+<img src="assets/venom-md-banner.jpg" alt="VENOM MD BOT" width="860"/>
 
-<br/>
+# ⚡ VENOM MD BOT
 
-[![Typing SVG](https://readme-typing-svg.herokuapp.com?font=Orbitron&weight=900&size=22&duration=3000&pause=800&color=8A2BE2&center=true&vCenter=true&width=600&lines=%E2%9A%A1+VENOM+MD+BOT;BUILT+BY+TAPRUSH+EMP+%F0%9F%87%B3%F0%9F%87%AC;464+PLUGINS+%C2%B7+23+CATEGORIES;FORK+%26+DEPLOY+IN+MINUTES)](https://git.io/typing-svg)
+**One bot on WhatsApp *and* Telegram — 633 commands, up and running in about 10 minutes.**
 
-<br/>
+[![WhatsApp](https://img.shields.io/badge/WhatsApp-Multi--Device-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://github.com/WhiskeySockets/Baileys)
+[![Telegram](https://img.shields.io/badge/Telegram-Bot%20API-229ED9?style=for-the-badge&logo=telegram&logoColor=white)](docs/TELEGRAM.md)
+[![Commands](https://img.shields.io/badge/Commands-633-f97316?style=for-the-badge)](#--about)
 
-[![GitHub](https://img.shields.io/badge/MykelGoal-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/MykelGoal)
-[![Baileys](https://img.shields.io/badge/Baileys-v7-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://www.npmjs.com/package/baileys)
-[![Node](https://img.shields.io/badge/Node-20%2B-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)](https://nodejs.org)
-[![Session ID](https://img.shields.io/badge/Get%20Session%20ID-5500ff?style=for-the-badge&logo=key&logoColor=white)](https://session-site-2odn.onrender.com)
+[![Node.js](https://img.shields.io/badge/Node.js-20%2B-22c55e?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org)
+[![No API Keys](https://img.shields.io/badge/API%20Keys-Not%20Required-10b981?style=for-the-badge)](#--about)
+[![License](https://img.shields.io/badge/License-MIT-8b5cf6?style=for-the-badge)](LICENSE)
 
-<br/>
+<!-- ===== LIVE STATS ===== -->
+<a href="https://www.youtube.com/@venommdbot?sub_confirmation=1" target="_blank">
+  <img src="https://img.shields.io/badge/dynamic/json?url=https://api.socialcounts.org/youtube-live-subscriber-count/UC9vkZyWIRN2iX66uupikjfw&query=counters.estimation.subscriberCount&style=for-the-badge&label=YouTube%20Subscribers&labelColor=ff0000&color=ff0000&logo=youtube&logoColor=white" alt="YouTube subscribers"/>
+</a>
+<a href="https://github.com/MykelGoal/VENOM-MD-BOT">
+  <img src="https://img.shields.io/github/stars/MykelGoal/VENOM-MD-BOT?style=for-the-badge&label=Stars&labelColor=1f2937&color=facc15&logo=github&logoColor=white" alt="GitHub stars"/>
+</a>
+<a href="https://github.com/MykelGoal/VENOM-MD-BOT/network/members">
+  <img src="https://img.shields.io/github/forks/MykelGoal/VENOM-MD-BOT?style=for-the-badge&label=Forks&labelColor=1f2937&color=60a5fa&logo=github&logoColor=white" alt="GitHub forks"/>
+</a>
 
-[![Stars](https://img.shields.io/github/stars/MykelGoal/VENOM-MD-BOT?style=flat-square&color=8A2BE2&label=Stars)](https://github.com/MykelGoal/VENOM-MD-BOT/stargazers)
-[![Forks](https://img.shields.io/github/forks/MykelGoal/VENOM-MD-BOT?style=flat-square&color=8A2BE2&label=Forks)](https://github.com/MykelGoal/VENOM-MD-BOT/network/members)
-[![Watchers](https://img.shields.io/github/watchers/MykelGoal/VENOM-MD-BOT?style=flat-square&color=8A2BE2&label=Watchers)](https://github.com/MykelGoal/VENOM-MD-BOT/watchers)
-[![Repo Size](https://img.shields.io/github/repo-size/MykelGoal/VENOM-MD-BOT?style=flat-square&color=8A2BE2)](https://github.com/MykelGoal/VENOM-MD-BOT)
-[![License](https://img.shields.io/badge/License-MIT-8A2BE2?style=flat-square)](LICENSE)
+<!-- ===== CALL TO ACTION ===== -->
+<table>
+<tr>
+<td align="center" width="280">
+
+**📺 Love the tutorials?**
+
+<a href="https://www.youtube.com/@venommdbot?sub_confirmation=1" target="_blank">
+  <img src="https://custom-icon-badges.demolab.com/badge/-SUBSCRIBE-ff0000?style=for-the-badge&logo=video&logoColor=white&labelColor=cc0000" alt="Subscribe on YouTube" height="38"/>
+</a>
+
+<sub>Watch on <b>VENOM MD Tech</b></sub>
+
+</td>
+<td align="center" width="280">
+
+**⭐ Enjoy the bot?**
+
+<a href="https://github.com/MykelGoal/VENOM-MD-BOT">
+  <img src="https://custom-icon-badges.demolab.com/badge/-STAR%20THE%20REPO-facc15?style=for-the-badge&logo=star&logoColor=1f2937&labelColor=eab308" alt="Star the repo" height="38"/>
+</a>
+
+<sub>Starring helps others find VENOM MD</sub>
+
+</td>
+</tr>
+</table>
+
+[![Join Telegram](https://img.shields.io/badge/Join%20Us-Telegram-229ED9?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/+PYae7FAKkbEwM2E0)
+[![Join WhatsApp](https://img.shields.io/badge/Join%20Us-WhatsApp%20Group-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://chat.whatsapp.com/IH8cgTeBAiGF46IuBgXAHj?s=cl&p=a&mlu=0)
+
+[**GET SESSION ID**](https://session-site-2odn.onrender.com) · [**GET BOT TOKEN**](https://t.me/BotFather) · [**FORK REPOSITORY**](https://github.com/MykelGoal/VENOM-MD-BOT/fork)
 
 </div>
 
 ---
 
-## 🐍 What is VENOM MD?
+## 🐍 About
 
-**VENOM MD** is a modular, plugin-driven WhatsApp bot built on **Baileys v7** — engineered for speed, clean code, and honest documentation. Every command is auto-discovered from `plugins/`, hot-reloadable, and audited live. Maintained by **TAPRUSH EMP (Micheal) 🇳🇬**.
+VENOM MD BOT runs on **WhatsApp and Telegram from one deploy**. It works out of the box with **no API keys**, and includes **633 commands** for group management, media, AI, games, downloads and useful everyday tools — the same commands on both platforms.
 
 <div align="center">
 
-| 🔌 Plugins | 🗂️ Categories | ⌨️ Command Names | ✅ Broken |
-|:---:|:---:|:---:|:---:|
-| **464** | **23** | **810** | **0** |
+![Platforms](https://img.shields.io/badge/Platforms-WhatsApp%20%2B%20Telegram-6366f1?style=flat-square)
+![Commands](https://img.shields.io/badge/Commands-633-f97316?style=flat-square)
+![Plugins](https://img.shields.io/badge/Plugins-36-8b5cf6?style=flat-square)
+![AI Providers](https://img.shields.io/badge/AI%20Providers-8%20optional-06b6d4?style=flat-square)
+![Deploy](https://img.shields.io/badge/One--click%20deploy-4%20hosts-00c7b7?style=flat-square)
+![Ban Risk](https://img.shields.io/badge/Telegram-No%20ban%20risk-229ED9?style=flat-square)
 
 </div>
 
+### Main features
+
+- **AI commands with 8 optional providers** (Gemini, OpenAI, Groq, DeepSeek, Mistral, OpenRouter, Cerebras, Cohere)
+- Group administration, welcome messages and anti-link protection
+- Stickers, media conversion and download tools
+- Games, economy, search and utility commands
+- Local storage with optional MongoDB backup
+- **Telegram support with a tappable button menu** — one `PLATFORM` variable switches it on
+- Support for Render, Railway, Koyeb, Heroku, Docker and VPS
+
 ---
 
-## ⚡ Quick Deploy
+## 🔑 Get a Session ID (WhatsApp)
 
 <div align="center">
+
+[![Get Session ID](https://img.shields.io/badge/GET%20SESSION%20ID-OPEN%20SITE-ef4444?style=for-the-badge&logo=whatsapp&logoColor=white)](https://session-site-2odn.onrender.com)
+
+</div>
+
+1. Open the session website.
+2. Link your WhatsApp account using QR or phone-number pairing.
+3. Copy the generated session ID.
+4. Add it to your deployment as `SESSION_ID`.
+
+> **Keep your session ID private.** Anyone with it may be able to access your WhatsApp account.
+
+---
+
+## 🤖 Get a Bot Token (Telegram)
+
+<div align="center">
+
+[![Open BotFather](https://img.shields.io/badge/OPEN-@BotFather-229ED9?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/BotFather)
+[![Get your ID](https://img.shields.io/badge/GET%20YOUR%20ID-@userinfobot-0088cc?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/userinfobot)
+
+<sub>No session website · No QR code · <b>No ban risk</b></sub>
+
+</div>
+
+Two taps and you have everything Telegram needs — it takes about 40 seconds.
+
+| ① Create the bot | ② Find your user ID |
+|---|---|
+| Open **[@BotFather](https://t.me/BotFather)** and send `/newbot` | Open **[@userinfobot](https://t.me/userinfobot)** and send `/start` |
+| Choose a display name, then a username ending in `bot` — for example `VenomMdBot` | It instantly replies with `Id: 123456789` |
+| BotFather replies with a token like `8123456789:AAF-abc123def456` | Copy the number |
+| Save it as **`TELEGRAM_BOT_TOKEN`** | Save it as **`TELEGRAM_OWNER_ID`** |
+| 🔒 Treat it like a password | 👑 This makes you the owner, exactly like `OWNER_NUMBER` on WhatsApp |
+
+> **Important:** while you are still in [@BotFather](https://t.me/BotFather), send `/setprivacy`, pick your bot and choose **Disable**. Without this your bot cannot read group messages, so anti-link and anti-spam will not work.
+
+<details>
+<summary><b>Optional — polish your bot in BotFather</b></summary>
+
+<br/>
+
+| Command | What it does |
+|---|---|
+| `/setdescription` | Text shown before a user presses Start |
+| `/setabouttext` | Short bio on the bot's profile |
+| `/setuserpic` | Profile picture — use `assets/venom-md-banner-v2.jpg` |
+| `/setjoingroups` | **Enable** so the bot can be added to groups |
+| `/setprivacy` | **Disable** so it can read group messages |
+| `/revoke` | Generate a fresh token if yours ever leaks |
+
+</details>
+
+> **Keep your bot token private**, exactly like a session ID. If it leaks, run `/revoke` in BotFather and paste the new token into your host.
+
+📖 Full walkthrough: **[docs/TELEGRAM.md](docs/TELEGRAM.md)**
+
+---
+
+## 🚀 Quick Deploy
+
+**Three steps, about ten minutes:** ① [Fork the repo](https://github.com/MykelGoal/VENOM-MD-BOT/fork) → ② get your credential — [Session ID](https://session-site-2odn.onrender.com) for WhatsApp or a [BotFather token](https://t.me/BotFather) for Telegram → ③ deploy with one click below.
 
 | Platform | Deploy |
-|----------|--------|
-| **Render** | [![Render](https://img.shields.io/badge/Deploy-Render-46E3B7?style=for-the-badge&logo=render&logoColor=black)](https://dashboard.render.com/web/new) |
-| **Koyeb** | [![Koyeb](https://img.shields.io/badge/Deploy-Koyeb-FF009D?style=for-the-badge&logo=koyeb&logoColor=white)](https://app.koyeb.com/services/deploy?type=git&repository=MykelGoal/VENOM-MD-BOT) |
-| **Railway** | [![Railway](https://img.shields.io/badge/Deploy-Railway-FF8700?style=for-the-badge&logo=railway&logoColor=white)](https://railway.app/new) |
-| **Heroku** | [![Heroku](https://img.shields.io/badge/Deploy-Heroku-430098?style=for-the-badge&logo=heroku&logoColor=white)](https://dashboard.heroku.com/new?template=https://github.com/MykelGoal/VENOM-MD-BOT) |
-| **Panel/ZIP** | [![ZIP](https://img.shields.io/badge/Download-ZIP-CC00FF?style=for-the-badge&logo=files&logoColor=white)](https://github.com/MykelGoal/VENOM-MD-BOT/archive/refs/heads/main.zip) |
+|---|---|
+| **Render** | [![Render](https://img.shields.io/badge/Deploy-Render-00c7b7?style=for-the-badge&logo=render&logoColor=white)](https://render.com/deploy?repo=https%3A%2F%2Fgithub.com%2FMykelGoal%2FVENOM-MD-BOT) |
+| **Railway** | [![Railway](https://img.shields.io/badge/Deploy-Railway-7c3aed?style=for-the-badge&logo=railway&logoColor=white)](https://railway.app/new/template?template=https://github.com/MykelGoal/VENOM-MD-BOT) |
+| **Koyeb** | [![Koyeb](https://img.shields.io/badge/Deploy-Koyeb-121212?style=for-the-badge&logo=koyeb&logoColor=white)](https://app.koyeb.com/deploy?type=git&builder=dockerfile&repository=github.com/MykelGoal/VENOM-MD-BOT&branch=main&name=venom-md-bot&ports=10000%3Bhttp%3B%2F) |
+| **Heroku** | [![Heroku](https://img.shields.io/badge/Deploy-Heroku-430098?style=for-the-badge&logo=heroku&logoColor=white)](https://heroku.com/deploy?template=https://github.com/MykelGoal/VENOM-MD-BOT) |
+
+When your host asks for environment variables, fill in the set that matches
+the platform you want.
+
+**For WhatsApp:**
+
+- `SESSION_ID`: the private session ID generated by the session website.
+- `OWNER_NUMBER`: your WhatsApp number with country code, digits only (for example, `234XXXXXXXXXX` — do not include `+`).
+
+**For Telegram** — set `PLATFORM=telegram` and leave the two values above blank:
+
+- `TELEGRAM_BOT_TOKEN`: your token from [@BotFather](https://t.me/BotFather).
+- `TELEGRAM_OWNER_ID`: your numeric ID from [@userinfobot](https://t.me/userinfobot).
+
+The Render blueprint deliberately marks `OWNER_NUMBER` as a deploy-time secret, so each person who forks the repository can provide their own number instead of using the repository owner's number. If Render does not show the field, add `OWNER_NUMBER` manually under **Environment Variables** before deploying.
+
+> **Every platform:** always set `OWNER_NUMBER` to your own WhatsApp number. Some deploy templates pre-fill it with the repository owner's number by default.
+
+### Choosing WhatsApp, Telegram, or both
+
+One deploy serves either platform. A single variable, **`PLATFORM`**, decides
+which one starts — you do not need a second service, a second repo or a second
+bill.
+
+| `PLATFORM` | What runs | Variables you must set |
+|---|---|---|
+| *(not set)* | WhatsApp only | `SESSION_ID`, `OWNER_NUMBER` |
+| `whatsapp` | WhatsApp only | `SESSION_ID`, `OWNER_NUMBER` |
+| `telegram` | Telegram only | `TELEGRAM_BOT_TOKEN`, `TELEGRAM_OWNER_ID` |
+| `both` | Both at once, one process | all four |
+
+For a **Telegram deploy**, set `PLATFORM=telegram` plus your BotFather token,
+and leave `SESSION_ID` and `OWNER_NUMBER` blank — no session website, no ban
+risk.
+
+<div align="center">
+
+[![Open BotFather](https://img.shields.io/badge/TOKEN-@BotFather-229ED9?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/BotFather)
+[![Get your ID](https://img.shields.io/badge/YOUR%20ID-@userinfobot-0088cc?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/userinfobot)
 
 </div>
 
+The startup log always states which mode it picked and what is missing:
+
+```
+Running in telegram mode   { whatsapp: "off", telegram: "ready" }
+```
+
+Full walkthrough: **[docs/TELEGRAM.md](docs/TELEGRAM.md)**.
+
 ---
 
-## 🛠️ Manual Deployment
+## ⏰ Run 24/7 with UptimeRobot (free)
+
+Free hosting platforms sleep idle apps. VENOM MD keeps itself awake by pinging its own `/health` endpoint every 4 minutes, and you can add extra protection with a free [UptimeRobot](https://uptimerobot.com) monitor:
+
+1. Deploy the bot and copy your public URL (for example `https://your-app.onrender.com`).
+2. Create a free UptimeRobot account → **Add New Monitor**.
+3. Type: **HTTP(s)** — URL: `https://your-app.onrender.com/health` — interval: **5 minutes**.
+4. Save. UptimeRobot now pings the bot forever, so it never sleeps.
+
+Optionally set a `PING_URL` environment variable to any URL the bot should ping itself (an UptimeRobot monitor or your app URL) for double cover.
+
+---
+
+## 🛠️ Manual Installation
+
+Requires **Node.js 20.18+**. FFmpeg is recommended for media commands.
+
+**VPS (Ubuntu/Debian) one-liner** — installs Node.js and FFmpeg if missing, clones the repo and prepares `.env`:
 
 ```bash
-# 1. Clone the repo
-git clone https://github.com/MykelGoal/VENOM-MD-BOT
+bash <(curl -fsSL https://raw.githubusercontent.com/MykelGoal/VENOM-MD-BOT/main/scripts/install.sh)
+```
+
+Or step by step:
+
+```bash
+git clone https://github.com/MykelGoal/VENOM-MD-BOT.git
 cd VENOM-MD-BOT
-
-# 2. Install dependencies
-npm install
-
-# 3. Fetch yt-dlp (downloaders)
-npm run setup
-
-# 4. Configure your environment
+npm ci
 cp .env.example .env
-#    → set OWNER_NUMBER and OWNER_NAME
-
-# 5. Start the bot
 npm start
 ```
 
-> ⚠️ Minimum required in `.env`:
->
-> ```env
-> OWNER_NUMBER=2348012345678     # digits only, no + or spaces
-> OWNER_NAME=Your Name
-> ```
-
-**Strongly recommended** — both are free and take two minutes:
+Add at least these values to `.env`:
 
 ```env
-MONGO_URI=mongodb+srv://...    # free tier, never sleeps
-GROQ_API_KEY=gsk_...           # makes every AI command fast
+SESSION_ID=your_private_session_id
+OWNER_NUMBER=234XXXXXXXXXX
+PREFIX=.
+COMMAND_MODE=public
 ```
 
-Neither is required — the bot falls back to JSON files and a keyless AI endpoint. Set a key without touching a file: `.setkey groq gsk_xxxxx`
+See [`.env.example`](.env.example) for optional settings and AI keys. After startup, send `.menu` in WhatsApp to view all commands.
 
 ---
 
-## 🔑 Session ID (skip the QR)
+## ⚠️ Notice
 
-<div align="center">
-
-[![Session ID](https://img.shields.io/badge/GENERATE%20SESSION%20ID-session--site-5500ff?style=for-the-badge&logo=key&logoColor=white)](https://session-site-2odn.onrender.com)
-
-**Generator:** <https://session-site-2odn.onrender.com>
-
-</div>
-
-<details>
-<summary><b>How it works</b></summary>
-
-<br/>
-
-The session generator produces a session ID so the bot starts already authenticated — useful on Render, Pterodactyl, or anywhere without a terminal.
-
-1. Open **<https://session-site-2odn.onrender.com>** (it runs on Render's free tier, so the first load can take ~30 s to wake up).
-2. Choose **QR code** or **8-digit pairing code**. For pairing, enter your number with country code, digits only — e.g. `2348012345678`.
-3. On your phone: **WhatsApp → Linked devices → Link a device**, then scan the QR or type the pairing code.
-4. Copy the session ID into `.env`:
-
-```env
-SESSION_ID=eyJub2lzZUtleSI6...
-```
-
-The bot decodes it at boot and connects with no QR. Invalid values are rejected with a clear log line and it falls back to normal login.
-
-> ⚠️ **Treat your session ID like a password.** Anyone holding it controls your WhatsApp account — never post it publicly, commit it to Git, or share it in chats.
-
-</details>
-
----
-
-## 📋 Command Categories
-
-<div align="center">
-
-| Category | # | Highlights |
-|:---|:---:|:---|
-| **FUN** | 58 | 43 anime reaction GIFs (`hug` `slap` `kiss` `dance`…), `ship`, `truth`, `dare`, `emojimix`, `pokemon` |
-| **TEXTMAKER** | 48 | 47 text effects rendered locally — `neonlight` `hacker` `glitch` `galaxy` `fire` `gaming` `zodiac` |
-| **GROUP** | 40 | `kick` `add` `promote` `demote` `mute` `tagall` `warn` `antilink` `antiword` `antispam` `welcome` |
-| **ECONOMY** | 38 | `daily` `work` `mine` `fish` `hunt` `crime` `rob` `heist`, banking, loans, shop, `slots` `blackjack` |
-| **CONVERTER** | 34 | `sticker` `take` `photo` `mp4` `gif` `tomp3` `ptv` `circlestk` `exif` `doc` + 18 audio effects |
-| **UTILITIES** | 32 | `weather` `wiki` `define` `bible` `calc` `tts` `ip` `tinyurl` `ss` `qrcode` `readqr` `pdf` `font` |
-| **CONFIG** | 28 | `setvar` `getvar` `allvar` `mode` `setsudo` `antidelete` `antiedit` `readstatus` `savecmd` |
-| **IMAGE-MEME** | 28 | `wanted` `jail` `drip` `drake` `pooh` `oogway` `wasted` `triggered` `stonks` `carbon` |
-| **AI** | 22 | 8 providers with failover — `ai` `gpt` `gemini` `groq` `deepseek` `cerebras` `imagine` |
-| **DOWNLOADER** | 19 | `play` `video` `tiktok` `instagram` `facebook` `twitter` `autodl` `gitclone` `mediafire` `apk` |
-| **USER** | 18 | `pp` `setpp` `setname` `bio` `block` `blocklist` `forward` `archive` `pinchat` `jid` |
-| **TOOLS** | 15 | `afk` `msgs` `listonline` `listoffline` `setcmd` `delcmd` `permit` `areact` `element` |
-| **BOT** | 14 | `ping` `stats` `owner` `uptime` `ban` `unban` `banlist` `repo` `ignore` |
-| **SEARCH** | 11 | `websearch` `img` `wallpaper` `github` `npm` `lyrics` `country` `book` `urban` `shazam` |
-| **ANIME** | 10 | `anime` `manga` `character` `airing` `animerec` `animequote` `waifu` `animenews` |
-| **IMAGE** | 10 | Local sharp filters — `grey` `sepia` `sharpen` `flipv` `negate` `pixelate` `blur2` `compress` |
-| **MISC** | 10 | `quote` `fact` `advice` `8ball` `choose` `ebinary` `dbinary` `q` |
-| **GAME** | 8 | `ttt` `hangman` `wcg` `trivia` `guess` |
-| **PRIVACY** | 8 | `lastseen` `online` `mypp` `mystatus` `read` `allow-gcadd` `privacy` |
-| **AUTOREPLY** | 5 | `pfilter` `pstop` `gfilter` `gstop` `listfilters` |
-| **PLUGINS** | 4 | `plugin` `plugins` `reload` `remove` |
-| **PROCESS** | 3 | `restart` `shutdown` `pstatus` |
-| **HELP** | 1 | `menu` — the full styled command list |
-| **Total** | **464** | across 23 categories · 810 names including aliases |
-
-</div>
-
-> 💡 Type `.menu` for the full list · `.menu <category>` for one section · `.menu <command>` for a help card.
-
----
-
-## 🧩 Writing a Plugin
-
-Drop a file under `plugins/`. Picked up on the next `.reload` — no restart.
-
-```js
-// plugins/fun/myplugin.js
-export default {
-  name: 'hello',
-  alias: ['hi'],
-  category: 'FUN',        // becomes a menu section automatically
-  desc: 'Say hello',
-  usage: '.hello',
-  cooldown: 5,            // seconds, per user
-  owner: false,           // owner/sudo only
-  admin: false,           // group admins only
-  botAdmin: false,        // bot must be admin
-  group: false,           // groups only
-  private: false,         // DM only
-  hidden: false,          // hide from .menu
-
-  async run({ sock, m, args, text, command, prefix, config, DB, getVar }) {
-    await m.reply(`Hello ${m.pushName}!`)
-  }
-}
-```
-
-Export an **array** for several commands in one file.
-
-<details>
-<summary><b>The <code>m</code> object</b></summary>
-
-<br/>
-
-```js
-m.body / m.text     // text of any message type
-m.chat  m.sender  m.senderNumber  m.pushName
-m.isGroup  m.isOwner  m.isSudo  m.isAdmin  m.isBotAdmin
-m.groupName  m.groupMetadata  m.participants
-m.mentions          // tagged jids
-m.quoted            // { text, sender, type, download(), key } or null
-await m.reply('hi')                     // reply quoting the user
-await m.send('hi')                      // send without quoting
-await m.react('🔥')
-const buf  = await m.download()         // this message's media
-const buf2 = await m.quoted.download()  // the replied-to media
-```
-
-</details>
-
-<details>
-<summary><b>Hooks</b></summary>
-
-<br/>
-
-```js
-export default {
-  name: 'watcher', category: 'TOOLS', desc: '...',
-  async run({ m }) {},
-  async before({ sock, m }) { return false },        // every message; true = stop
-  async onGroupUpdate({ sock, event, metadata }) {}, // joins / leaves
-  async onDelete({ sock, key, messageStore }) {}     // anti-delete
-}
-```
-
-</details>
-
----
-
-## 🏗️ Architecture
-
-<details>
-<summary><b>File map</b></summary>
-
-<br/>
-
-| File | Role |
-|:---|:---|
-| `index.js` | Boot: DB → vars → plugins → socket. Crash-resistant, clean shutdown. |
-| `src/connection.js` | QR + pairing login, backoff reconnect, group cache, call rejection. |
-| `src/handler.js` | Prefix parsing, permission gates, cooldowns, mode gating, ban checks. |
-| `src/lib/serialize.js` | Flattens any message shape into one clean `m` object. |
-| `src/lib/pluginLoader.js` | Recursive auto-discovery + hot reload. |
-| `src/lib/database.js` | MongoDB with automatic JSON fallback. |
-| `src/lib/mongoAuth.js` | Session in Mongo — **survives Pterodactyl redeploys**. |
-| `src/lib/media.js` | Bundled ffmpeg: stickers, EXIF, audio FX, PTV. |
-| `src/lib/api.js` | HTTP helper with multi-source failover. |
-| `src/lib/economy.js` | Shared economy state, items, cooldowns, XP. |
-| `src/lib/vars.js` | Runtime config persisted to DB. |
-| `src/lib/keepalive.js` | Tiny HTTP health server — lets UptimeRobot keep Render awake. |
-| `test/fulltest.js` | 124 assertions across every subsystem. |
-
-</details>
-
----
-
-## 🗄️ Database
-
-<details>
-<summary><b>MongoDB setup (recommended)</b></summary>
-
-<br/>
-
-Your data is document-shaped — nested inventories, per-group flag sets that plugins extend freely — which Mongo stores natively with no migrations. Atlas's free M0 tier never sleeps.
-
-1. Create a free **M0** cluster at <https://cloud.mongodb.com>
-2. **Database Access** → add a user, copy the password
-3. **Network Access** → allow `0.0.0.0/0` (your host's IP is not fixed)
-4. **Connect → Drivers** → copy the connection string
-
-```env
-MONGO_URI=mongodb+srv://user:pass@cluster0.xxxxx.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
-MONGO_DB=venom
-```
-
-If the password contains `@ : / ? # [ ] %`, URL-encode it — otherwise the driver misreads the URI.
-
-**No `MONGO_URI`?** The bot writes JSON files to `./data` and boots fine. Good for local testing, but most free hosts wipe the disk on redeploy, so you would lose economy balances and group settings.
-
-`.stats` shows which backend is live.
-
-</details>
-
----
-
-## ⚙️ Runtime Configuration
-
-No redeploy needed — values persist in the database:
-
-```
-.setvar MODE private      .allvar         .getvar MODE
-.setvar AUTO_READ true    .delvar MODE    .mode public
-```
-
-**Keys:** `PREFIX` `MODE` `AUTO_READ` `AUTO_READ_STATUS` `AUTO_TYPING` `ALWAYS_ONLINE` `REJECT_CALL` `ANTI_DELETE` `STARTUP_MESSAGE` `CMD_REACT` `CMD_REACT_EMOJI` `BOT_NAME` `OWNER_NAME` `USER_TAG`
-
-**Modes:** `public` · `private` (owner only) · `group` · `inbox`
-**Prefix:** one character, `multi` (`. / ! # $ ,`), or `none`
-
-<details>
-<summary><b>Command reactions</b></summary>
-
-<br/>
-
-Every command reacts so you can see it was received, even before the reply arrives:
-
-| Reaction | Meaning |
-|:---:|:---|
-| ⚡ | command accepted, now running |
-| ✅ | finished successfully |
-| ❌ | failed — the reply explains why |
-| 🚫 | refused (wrong chat type, or you lack permission) |
-| ⏳ | on cooldown |
-
-Slow commands (downloads, image generation) show their own progress emoji instead — `.play` reacts ⏳ then ✅, and the handler does not override it.
-
-Turn it off with `.setvar CMD_REACT false`, or change the trigger emoji with `.setvar CMD_REACT_EMOJI 🔥`.
-
-</details>
-
----
-
-## 🚀 Hosting
-
-<details>
-<summary><b>Render — and keeping it awake 24/7</b></summary>
-
-<br/>
-
-Render's free tier sleeps after ~15 minutes with no inbound traffic. A WhatsApp bot never receives HTTP traffic on its own, so it naps — and while it naps it can't answer messages. Two-part fix:
-
-1. **Run as a Web Service, not a background worker.** Workers have no public URL, so nothing can ping them. A Web Service gets `https://your-bot.onrender.com` and Render injects a `PORT`.
-2. **This bot already runs a keep-alive HTTP server** (`src/lib/keepalive.js`), enabled by default. It answers `200 OK` on `/` with a small JSON status.
-
-**Step by step**
-
-1. On Render: **New → Web Service**, connect the Git repo.
-   - **Build command:** `npm install`
-   - **Start command:** `npm start`
-   - **Runtime:** Node 20+
-2. Add env vars — at minimum `OWNER_NUMBER`. Set a [`SESSION_ID`](https://session-site-2odn.onrender.com) to skip the QR — there is no terminal on Render to scan one, so generate the session ID first. Set `MONGO_URI` so data and session survive redeploys. Leave `PORT` alone — Render sets it.
-3. Deploy, then open `https://your-bot.onrender.com`:
-   ```json
-   { "ok": true, "name": "VENOM MD BOT", "connected": true }
-   ```
-4. Free **UptimeRobot** account → **New monitor** → HTTP(s), your URL, every 5 minutes. That ping counts as traffic, so Render never sleeps.
-
-Alternatives: [cron-job.org](https://cron-job.org), [Better Uptime](https://betterstack.com), or a GitHub Actions workflow that curls the URL.
-
-**Troubleshooting**
-
-- **"Deploy failed, port not listening"** — the bot binds `0.0.0.0:$PORT`. Check logs for a keep-alive bind error.
-- **Bot disconnects right after waking** — a sleeping instance takes seconds to re-open the socket. The 5-minute ping prevents this; drop to 1 minute if needed.
-
-</details>
-
-<details>
-<summary><b>Pterodactyl</b></summary>
-
-<br/>
-
-1. Upload the folder (skip `node_modules`) or point the panel at your Git repo.
-2. **Startup:** `npm start` · **Node:** 20+
-3. Set `MONGO_URI` and `SESSION_STORE=mongo` — this is what stops redeploys logging the bot out.
-4. Link once with `AUTH_METHOD=pair`, then switch back to `qr`.
-
-ffmpeg is bundled via `ffmpeg-static` — no system install needed for stickers or audio.
-
-</details>
-
----
-
-## 🧪 Testing
-
-```bash
-node test/fulltest.js       # 124 assertions, offline + live APIs
-node test/selftest.js       # quick smoke test
-node test/dltest.js         # downloader assertions (fast)
-node test/dltest.js --full  # + real YouTube/TikTok downloads (~3 min)
-```
-
-Tests never touch your production database. `test/_isolate.js` is imported first by every suite and strips `MONGO_URI`, so fixtures go to JSON files in `./data`. Run against the real cluster deliberately with `--live-db`.
-
-<details>
-<summary><b>Live command audit — all 464 dispatched through the real handler</b></summary>
-
-<br/>
-
-| Result | Count |
-|:---|:---:|
-| Fully working | 354 |
-| Correct guard (needs media, a key, or an argument) | 79 |
-| Skipped as destructive (`restart`, `kickall`, `logout`…) | 26 |
-| **Broken** | **0** |
-| Responded without a reaction | **0** |
-
-All suites are deterministic — they reset their own DB state, so repeated runs give identical results. Third-party API outages are reported separately so an external failure never looks like a bug in your code.
-
-</details>
-
----
-
-## 📥 Downloaders
-
-<div align="center">
-
-| Platform | Status | How |
-|:---|:---:|:---|
-| **YouTube** | ✅ Keyless | `yt-dlp` with the `android_vr` player client |
-| **TikTok** | ✅ No watermark | tikwm JSON API, `yt-dlp` fallback |
-| **Twitter/X, Facebook** | ✅ Working | `yt-dlp` (public posts) |
-| **1800+ other sites** | ✅ Working | `.autodl <link>` |
-| **Instagram** | ⚠️ Needs cookies | See below |
-
-</div>
-
-<details>
-<summary><b>Three real obstacles I hit and solved</b></summary>
-
-<br/>
-
-1. **YouTube's pre-muxed stream (format 18) returns HTTP 403 from server IPs.** Most player clients (`web`, `ios`, `tv`, `mweb`) refuse to list formats at all. Only `android_vr` works — and then only with *separate* DASH video+audio merged by ffmpeg. That combination is what the code uses.
-
-2. **YouTube throttles bursts from one IP.** A single download nearly always works; the second or third in quick succession gets a 403. Fixed with a serialising queue (6s gap), client rotation, format cycling, and exponential retry. Measured: a burst that failed 1-in-4 now passes 6/6.
-
-3. **Instagram genuinely requires a login session.** yt-dlp returns "empty media response", the GraphQL endpoint 403s, `?__a=1` is dead, and public scraper sites are IP-blocked. I tested nine routes — none work anonymously from a server.
-
-**To enable Instagram:** install the *Get cookies.txt LOCALLY* browser extension, log into Instagram, export cookies, save as `cookies.txt` in the bot folder. The bot picks it up automatically (`.dlstatus` confirms). The same file unlocks private/age-restricted YouTube and Facebook content.
-
-**Size limits:** audio capped at 30 min, video at 15 min and 64MB (WhatsApp's ceiling). Use `.video <link> 240` for a smaller file.
-
-</details>
-
----
-
-## 🤖 AI Providers
-
-The bot ships with 8 providers and automatic failover. **Groq and Gemini are genuinely free** and take two minutes to set up.
-
-<div align="center">
-
-| Provider | Free tier | Get a key |
-|:---|:---|:---|
-| **Groq** | Yes, generous — fastest | [console.groq.com/keys](https://console.groq.com/keys) |
-| **Gemini** | Yes, very capable | [aistudio.google.com/apikey](https://aistudio.google.com/apikey) |
-| **Cerebras** | Yes, fastest inference | [cloud.cerebras.ai](https://cloud.cerebras.ai) |
-| **OpenRouter** | Yes, many `:free` models | [openrouter.ai/keys](https://openrouter.ai/keys) |
-| **Mistral** | Free experiment tier | [console.mistral.ai](https://console.mistral.ai/api-keys) |
-| **Cohere** | Free trial | [dashboard.cohere.com](https://dashboard.cohere.com/api-keys) |
-| **DeepSeek** | Paid, very cheap | [platform.deepseek.com](https://platform.deepseek.com/api_keys) |
-| **OpenAI** | Paid | [platform.openai.com](https://platform.openai.com/api-keys) |
-
-</div>
-
-Add keys to `.env`, or from WhatsApp with `.setkey groq gsk_xxx` — that command deletes your message immediately and verifies the key with a real call before confirming. `.aikeys` lists every provider, `.aistatus` latency-tests the ones you configured.
-
----
-
-## ⚠️ Notes & Honest Limitations
-
-<details>
-<summary><b>Read before you open an issue</b></summary>
-
-<br/>
-
-- **Baileys v7 is ESM-only** — use `import`, not `require`. `printQRInTerminal` was removed; the QR is rendered from the `connection.update` event.
-- **Keyless AI is effectively over.** Pollinations' legacy text API returns `402 Payment Required`, and DuckDuckGo's free chat endpoint demands a browser challenge. Use Groq or Gemini — both free.
-- **Third-party APIs rot.** Every network command has multi-source failover and a clear error instead of a crash, but expect to swap an endpoint occasionally. `restcountries` was already dead during the build and was replaced with World Bank + countriesnow.
-- **Textmaker is rendered locally, not scraped.** ephoto360 and textpro.me both block automated form submission — every request returns `{"success":false,"code":-1}`. Rather than ship 45 dead commands, the 47 effects are drawn with SVG + sharp: instant, offline, impossible to break from outside.
-- **Still missing (26 of the original 380, ~7%):** the `gfx1-12` photo templates, `remini` upscaler and `naturewlp` need paid AI image services. `shazam` needs an AudD/ACRCloud key, `audio2text` needs an OpenAI key, and `subtitle` returns search links because every subtitle site blocks automated downloads. Each becomes a ~30-line plugin the moment you supply a key.
-- **Screenshots, QR, memes and PDF are local or keyless.** `.ss` uses thum.io with a microlink fallback and refuses private/internal addresses (SSRF guard). `.qrcode`/`.readqr` run offline. Meme overlays and `.carbon` are drawn with sharp + SVG. `.pdf` hand-builds a valid PDF — verified with a real parser.
-- Keep `.env` out of Git — `.gitignore` covers it plus `session/`, `data/`, `tmp/`.
-- This is an unofficial library. **Don't spam** — WhatsApp bans numbers for bulk unsolicited messaging. Test with a spare SIM first.
-
-</details>
-
----
+Use this bot only with accounts and groups you are authorized to manage. Do not use it to spam, abuse services or violate WhatsApp's terms.
 
 ## 📜 Credits
 
-<div align="center">
-
-| Role | Credit |
-|:---|:---|
-| 👨‍💻 Developer | **TAPRUSH EMP (Micheal)** — [@MykelGoal](https://github.com/MykelGoal) |
-| 📦 Core Library | [Baileys v7](https://www.npmjs.com/package/baileys) |
-| 🎞️ Media | [ffmpeg-static](https://www.npmjs.com/package/ffmpeg-static) · [sharp](https://sharp.pixelplumbing.com) |
-
-</div>
-
----
-
-## ⚖️ Notice
-
-> This bot is built for **educational purposes only**.
-> **DO NOT misuse** this software.
-> Redistribution without credit to the original author is **strictly prohibited**.
-
-Licensed under [MIT](LICENSE).
-
----
+- **Developer:** [TAPRUSH EMP (Micheal)](https://github.com/MykelGoal)
+- **Core library:** [Baileys](https://github.com/WhiskeySockets/Baileys)
+- **YouTube:** [VENOM MD Tech](https://www.youtube.com/@venommdbot?sub_confirmation=1)
+- **Community:** [Telegram](https://t.me/+PYae7FAKkbEwM2E0) · [WhatsApp Group](https://chat.whatsapp.com/IH8cgTeBAiGF46IuBgXAHj?s=cl&p=a&mlu=0)
+- **License:** [MIT](LICENSE)
 
 <div align="center">
 
-### ⭐ Star the repo if VENOM MD helped you
-
-**《 POWERED BY TAPRUSH EMP 🇳🇬 》**
+**VENOM MD BOT** — Built by [TAPRUSH EMP](https://github.com/MykelGoal) · 📺 [VENOM MD Tech](https://www.youtube.com/@venommdbot?sub_confirmation=1) · ⭐ [Support the repo](https://github.com/MykelGoal/VENOM-MD-BOT)
 
 </div>

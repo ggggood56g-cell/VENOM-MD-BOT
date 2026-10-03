@@ -1,0 +1,62 @@
+services:
+  - type: web
+    name: venom-md-bot
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /health
+    autoDeployTrigger: commit
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      # whatsapp | telegram | both  — decides which adapter(s) start.
+      # Change this in the Render dashboard to add or drop a platform.
+      - key: PLATFORM
+        value: whatsapp
+      # Only needed when PLATFORM is telegram or both. From @BotFather.
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+      # Your numeric Telegram id, from @userinfobot. Grants owner commands.
+      - key: TELEGRAM_OWNER_ID
+        sync: false
+      - key: BOT_NAME
+        value: VENOM MD BOT
+      - key: OWNER_NAME
+        value: TAPRUSH EMP (Micheal)
+      # Ask every fork/deployer for their own WhatsApp owner number.
+      # `sync: false` makes Render show this field on the deploy form.
+      # Leave blank for a Telegram-only deploy.
+      - key: OWNER_NUMBER
+        sync: false
+      - key: PREFIX
+        value: .
+      - key: COMMAND_MODE
+        value: public
+      - key: TIMEZONE
+        value: Africa/Lagos
+      - key: SESSION_NAMESPACE
+        value: venom
+      # Leave blank for a Telegram-only deploy.
+      - key: SESSION_ID
+        sync: false
+      - key: DATABASE_URL
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: DEEPSEEK_API_KEY
+        sync: false
+      - key: GROQ_API_KEY
+        sync: false
+      - key: MISTRAL_API_KEY
+        sync: false
+      - key: OPENROUTER_API_KEY
+        sync: false
+      - key: CEREBRAS_API_KEY
+        sync: false
+      - key: COHERE_API_KEY
+        sync: false

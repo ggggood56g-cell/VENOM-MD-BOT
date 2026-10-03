@@ -1,0 +1,72 @@
+{
+  "name": "VENOM MD BOT",
+  "description": "A clean, secure and extensible bot for WhatsApp and Telegram by TAPRUSH EMP (Micheal). 633 commands, one deploy.",
+  "repository": "https://github.com/MykelGoal/VENOM-MD-BOT",
+  "keywords": [
+    "whatsapp",
+    "telegram",
+    "baileys",
+    "telegraf",
+    "venom-md",
+    "whatsapp-bot",
+    "telegram-bot"
+  ],
+  "success_url": "/health",
+  "stack": "container",
+  "env": {
+    "PLATFORM": {
+      "description": "Which platform to run: whatsapp, telegram, or both.",
+      "value": "whatsapp",
+      "required": true
+    },
+    "TELEGRAM_BOT_TOKEN": {
+      "description": "Telegram bot token from @BotFather. Required only when PLATFORM is telegram or both.",
+      "required": false
+    },
+    "TELEGRAM_OWNER_ID": {
+      "description": "Your numeric Telegram user id from @userinfobot. Grants owner-only commands.",
+      "required": false
+    },
+    "SESSION_ID": {
+      "description": "WhatsApp credential from the official VENOM session website. Leave blank for a Telegram-only deploy.",
+      "required": false
+    },
+    "OWNER_NUMBER": {
+      "description": "Owner WhatsApp number with country code, digits only. Leave blank for a Telegram-only deploy.",
+      "required": false
+    },
+    "SESSION_NAMESPACE": {
+      "description": "Safe name for this bot session.",
+      "value": "venom",
+      "required": false
+    },
+    "OWNER_NAME": {
+      "description": "Owner display name.",
+      "value": "TAPRUSH EMP (Micheal)",
+      "required": false
+    },
+    "BOT_NAME": {
+      "description": "Bot display name.",
+      "value": "VENOM MD BOT",
+      "required": false
+    },
+    "PREFIX": {
+      "description": "Command prefix.",
+      "value": ".",
+      "required": false
+    },
+    "COMMAND_MODE": {
+      "description": "public or private command access.",
+      "value": "public",
+      "required": false
+    },
+    "DATABASE_URL": {
+      "description": "Optional MongoDB URL for settings and session backup.",
+      "required": false
+    },
+    "GEMINI_API_KEY": {
+      "description": "Optional Google Gemini key for the AI command.",
+      "required": false
+    }
+  }
+}
